@@ -1,0 +1,52 @@
+# version 1.0.0
+# author(s):
+# reviewer(s):
+# textdomain: block_league
+
+# init.lua
+red=
+blue=
+
+# scoreboard.lua
+Team=
+
+# achievements.lua
+killing spree=
+unstoppable=
+bloodbath=
+shutdown!=
+first blood=
+two in one=
+three in one=
+[!] This player doesn't exist!=
+@1 ACHIEVEMENTS=
+
+# commands.lua
+mod management=
+
+# items.lua
+THE END!=
+
+# privs.lua
+It allows to use the /block_leagueadmin command=
+
+# _arena_lib/arena_manager.lua
+Score to win=
+
+# _weapons/pixelgun.lua
+pixelgun=
+
+# _weapons/rocket_launcher.lua
+Rocket Launcher=
+
+# _weapons/weapons.lua
+You can't hit @1 due to immunity=
+has been stopped by @1=
+has killed @1 players in a row!=
+YOU'VE KILLED @1=
+You've been killed by @1=
+drew first blood=
+is on a @1=
+is @1=
+made a @1=
+You've killed yourself=
