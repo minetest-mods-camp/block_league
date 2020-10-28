@@ -1,3 +1,9 @@
+local function weapon_reload() end
+local function gestione_sparo() end
+local function shoot_generic() end
+local function after_shoot() end
+local function kill() end
+
 function block_league.register_weapon(name, def)
   minetest.register_node(name, {
     name = name,
@@ -17,12 +23,12 @@ function block_league.register_weapon(name, def)
     bullet = def.bullet or nil,
     reload = def.reload or nil,
 
+    -- Q = reload
     on_drop = function(itemstack, user, pointed_thing)
-
       weapon_reload(user, def, name)
-
     end,
 
+    -- RMB = secondary use
     on_place = function(itemstack, user, pointed_thing)
 
       if not def.on_right_click then return end
@@ -49,10 +55,6 @@ function block_league.register_weapon(name, def)
       end
 
       local p_name = user:get_player_name()
-
-      -- Check if the player is in the arena and is fighting, if not it exits
-      if not arena_lib.is_player_in_arena(p_name) then return end
-
       local arena = arena_lib.get_arena_by_player(p_name)
 
       if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
@@ -62,10 +64,10 @@ function block_league.register_weapon(name, def)
       end
     end,
 
+    -- LMB = first fire
     on_use = function(itemstack, user, pointed_thing)
 
       local p_name = user:get_player_name()
-
 
       if not gestione_sparo(p_name, user, def, name, nil) then return end
 
@@ -201,124 +203,7 @@ function block_league.register_weapon(name, def)
 
 end
 
-function weapon_reload(user, def, name)
-  local p_name = user:get_player_name()
 
-  if not arena_lib.is_player_in_arena(p_name) then return false end
-
-  local arena = arena_lib.get_arena_by_player(p_name)
-
-  if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
-
-  if def.type == 3 then return end
-
-  if def.reload and def.reload > 0 and user:get_meta():get_int("reloading") == 0 then
-    user:get_meta():set_int("reloading", 1)
-    minetest.after(def.reload_delay, function()
-      if user and user:get_meta() then
-        local inv = user:get_inventory()
-        if inv:contains_item("main", "block_league:match_over") then return false end
-        user:get_meta():set_int("blockleague_weap_delay", 0)
-        user:get_meta():set_int("reloading", 0)
-        block_league.weapons_hud_update(arena, p_name, name, nil, def.reload)
-        arena.players[p_name].weapons_reload[name] = 0
-      end
-    end)
-
-  end
-
-end
-
-function gestione_sparo(p_name, user, def, name, inv)
-  -- Check if the player is in the arena and is fighting, if not it exits
-  if not arena_lib.is_player_in_arena(p_name) then return false end
-
-  local arena = arena_lib.get_arena_by_player(p_name)
-
-  ----- gestione delay dell'arma -----
-  if user:get_meta():get_int("blockleague_weap_delay") == 1 or
-  user:get_meta():get_int("blockleague_death_delay") == 1 or
-  user:get_meta():get_int("reloading") == 1 then
-    return false end
-
-  user:get_meta():set_int("blockleague_weap_delay", 1)
-  if def.reload then
-    if not arena.players[p_name].weapons_reload[name] then
-      arena.players[p_name].weapons_reload[name] = 0
-    end
-  end
-
-  if not inv then
-    inv = user:get_inventory()
-  end
-
-  minetest.after(def.weap_delay, function()
-    if user and user:get_meta() then
-      if inv:contains_item("main", "block_league:match_over") then return false end
-      if def.reload and user:get_meta():get_int("reloading") == 0 then
-        user:get_meta():set_int("blockleague_weap_delay", 0)
-      elseif not def.reload then
-        user:get_meta():set_int("blockleague_weap_delay", 0)
-      end
-    end
-  end)
-  ----- fine gestione delay -----
-
-  -- se sono immune e sparo, perdo l'immunità
-  if user:get_armor_groups().immortal and user:get_armor_groups().immortal == 1 then
-    user:set_armor_groups({immortal = nil})
-  end
-
-
-  if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return false end
-
-  if def.consume_bullets then
-    if inv:contains_item("main", def.bullet) then
-      inv:remove_item("main", def.bullet)
-      block_league.weapons_hud_update(arena, p_name, name, nil, nil)
-    else
-      return false
-    end
-  end
-
-  if def.reload and def.reload > 0 then
-    arena.players[p_name].weapons_reload[name] = arena.players[p_name].weapons_reload[name] + 1
-    if arena.players[p_name].weapons_reload[name] == def.reload and user:get_meta():get_int("reloading") == 0  then
-      user:get_meta():set_int("reloading", 1)
-      minetest.after(def.reload_delay, function()
-        if user and user:get_meta() then
-          if inv:contains_item("main", "block_league:match_over") then return false end
-          user:get_meta():set_int("blockleague_weap_delay", 0)
-          user:get_meta():set_int("reloading", 0)
-          block_league.weapons_hud_update(arena, p_name, name, nil, def.reload)
-          arena.players[p_name].weapons_reload[name] = 0
-        end
-      end)
-    end
-  end
-
-  if def.type and def.type ~= 3 then
-    block_league.weapons_hud_update(arena, p_name, name, nil, nil)
-  end
-  return true
-end
-
-
-function shoot_generic(def, name, itemstack, user, pointed_thing)
-  if def.type == 1 or def.type == 2 then
-      local bullet_definition = def.bullet and minetest.registered_nodes[def.bullet] or nil
-      if def.type == 1 then
-          block_league.shoot_hitscan(name, def, bullet_definition, itemstack, user, pointed_thing)
-      elseif def.type == 2 then
-          block_league.shoot_bullet(name, def, bullet_definition, itemstack, user, pointed_thing)
-      end
-  elseif def.type == 3 then
-      if pointed_thing.type == "object" and pointed_thing.ref:is_player() then
-          local dir = user:get_look_dir()
-          block_league.shoot(user, pointed_thing.ref, def.weap_damage, def.knockback, false, dir)
-      end
-  end
-end
 
 function block_league.shoot_hitscan(name, def, bullet_definition, itemstack, user, pointed_thing)
   local dir = user:get_look_dir()
@@ -329,6 +214,8 @@ function block_league.shoot_hitscan(name, def, bullet_definition, itemstack, use
     block_league.shoot(user, pointed_players, bullet_definition.bullet_damage, bullet_definition.knockback, bullet_definition.decrease_damage_with_distance)
   end
 end
+
+
 
 function block_league.shoot_bullet(name, def, def2, itemstack, user, pointed_thing)
   local yaw = user:get_look_horizontal()
@@ -362,6 +249,7 @@ function block_league.shoot_bullet(name, def, def2, itemstack, user, pointed_thi
 
 
 end
+
 
 
 function block_league.get_dist(pos1, pos2)
@@ -551,6 +439,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
 end
 
 
+
 --block_league.shoot(user, pointed_players, bullet_definition.bullet_damage, bullet_definition.knockback, bullet_definition.decrease_damage_with_distance)
 -- può avere uno o più target: formato ObjectRef
 function block_league.shoot(user, targets, damage, knockback, decrease_damage_with_distance, knockback_dir)
@@ -610,6 +499,154 @@ function block_league.shoot(user, targets, damage, knockback, decrease_damage_wi
 
   -- calcoli post-danno
   after_shoot(arena, p_name, killed_players)
+end
+
+
+
+function block_league.add_default_weapons(inv, arena)
+  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
+  for i, weapon_name in pairs(default_weapons) do
+    inv:add_item("main", ItemStack(weapon_name))
+  end
+end
+
+
+
+function block_league.remove_default_weapons(inv, arena)
+  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
+  for i, weapon_name in pairs(default_weapons) do
+    inv:remove_item("main", ItemStack(weapon_name .. "99"))
+  end
+end
+
+
+
+
+
+----------------------------------------------
+---------------FUNZIONI LOCALI----------------
+----------------------------------------------
+
+function weapon_reload(user, def, name)
+  local p_name = user:get_player_name()
+
+  if not arena_lib.is_player_in_arena(p_name) then return false end
+
+  local arena = arena_lib.get_arena_by_player(p_name)
+
+  if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
+
+  if def.type == 3 then return end
+
+  if def.reload and def.reload > 0 and user:get_meta():get_int("reloading") == 0 then
+    user:get_meta():set_int("reloading", 1)
+    minetest.after(def.reload_delay, function()
+      if user and user:get_meta() then
+        local inv = user:get_inventory()
+        if inv:contains_item("main", "block_league:match_over") then return false end
+        user:get_meta():set_int("blockleague_weap_delay", 0)
+        user:get_meta():set_int("reloading", 0)
+        block_league.weapons_hud_update(arena, p_name, name, nil, def.reload)
+        arena.players[p_name].weapons_reload[name] = 0
+      end
+    end)
+
+  end
+
+end
+
+
+
+function gestione_sparo(p_name, user, def, name, inv)
+  -- Check if the player is in the arena and is fighting, if not it exits
+  if not arena_lib.is_player_in_arena(p_name) then return false end
+
+  local arena = arena_lib.get_arena_by_player(p_name)
+
+  ----- gestione delay dell'arma -----
+  if user:get_meta():get_int("blockleague_weap_delay") == 1 or
+  user:get_meta():get_int("blockleague_death_delay") == 1 or
+  user:get_meta():get_int("reloading") == 1 then
+    return false end
+
+  user:get_meta():set_int("blockleague_weap_delay", 1)
+  if def.reload then
+    if not arena.players[p_name].weapons_reload[name] then
+      arena.players[p_name].weapons_reload[name] = 0
+    end
+  end
+
+  if not inv then
+    inv = user:get_inventory()
+  end
+
+  minetest.after(def.weap_delay, function()
+    if user and user:get_meta() then
+      if inv:contains_item("main", "block_league:match_over") then return false end
+      if def.reload and user:get_meta():get_int("reloading") == 0 then
+        user:get_meta():set_int("blockleague_weap_delay", 0)
+      elseif not def.reload then
+        user:get_meta():set_int("blockleague_weap_delay", 0)
+      end
+    end
+  end)
+  ----- fine gestione delay -----
+
+  -- se sono immune e sparo, perdo l'immunità
+  if user:get_armor_groups().immortal and user:get_armor_groups().immortal == 1 then
+    user:set_armor_groups({immortal = nil})
+  end
+
+
+  if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return false end
+
+  if def.consume_bullets then
+    if inv:contains_item("main", def.bullet) then
+      inv:remove_item("main", def.bullet)
+      block_league.weapons_hud_update(arena, p_name, name, nil, nil)
+    else
+      return false
+    end
+  end
+
+  if def.reload and def.reload > 0 then
+    arena.players[p_name].weapons_reload[name] = arena.players[p_name].weapons_reload[name] + 1
+    if arena.players[p_name].weapons_reload[name] == def.reload and user:get_meta():get_int("reloading") == 0  then
+      user:get_meta():set_int("reloading", 1)
+      minetest.after(def.reload_delay, function()
+        if user and user:get_meta() then
+          if inv:contains_item("main", "block_league:match_over") then return false end
+          user:get_meta():set_int("blockleague_weap_delay", 0)
+          user:get_meta():set_int("reloading", 0)
+          block_league.weapons_hud_update(arena, p_name, name, nil, def.reload)
+          arena.players[p_name].weapons_reload[name] = 0
+        end
+      end)
+    end
+  end
+
+  if def.type and def.type ~= 3 then
+    block_league.weapons_hud_update(arena, p_name, name, nil, nil)
+  end
+  return true
+end
+
+
+
+function shoot_generic(def, name, itemstack, user, pointed_thing)
+  if def.type == 1 or def.type == 2 then
+      local bullet_definition = def.bullet and minetest.registered_nodes[def.bullet] or nil
+      if def.type == 1 then
+          block_league.shoot_hitscan(name, def, bullet_definition, itemstack, user, pointed_thing)
+      elseif def.type == 2 then
+          block_league.shoot_bullet(name, def, bullet_definition, itemstack, user, pointed_thing)
+      end
+  elseif def.type == 3 then
+      if pointed_thing.type == "object" and pointed_thing.ref:is_player() then
+          local dir = user:get_look_dir()
+          block_league.shoot(user, pointed_thing.ref, def.weap_damage, def.knockback, false, dir)
+      end
+  end
 end
 
 

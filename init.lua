@@ -65,10 +65,10 @@ dofile(minetest.get_modpath("block_league") .. "/_arena_lib/arena_properties.lua
 -- HUD
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_achievements.lua")
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_broadcast.lua")
+dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_bullets.lua")
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_energy.lua")
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_scoreboard.lua")
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_teams_score.lua")
-dofile(minetest.get_modpath("block_league") .. "/_HUD/bullets_hud.lua")
 -- abstract weapons
 dofile(minetest.get_modpath("block_league") .. "/_weapons/bullets.lua")
 dofile(minetest.get_modpath("block_league") .. "/_weapons/weapons.lua")
@@ -87,7 +87,6 @@ dofile(minetest.get_modpath("block_league") .. "/_weapons/smg_bullet.lua")
 -- misc
 dofile(minetest.get_modpath("block_league") .. "/_misc/ball.lua")
 dofile(minetest.get_modpath("block_league") .. "/_misc/energy.lua")
--- immunity
-dofile(minetest.get_modpath("block_league") .. "/_immunity/immunity.lua")
+dofile(minetest.get_modpath("block_league") .. "/_misc/immunity.lua")
 
 block_league.init_storage()

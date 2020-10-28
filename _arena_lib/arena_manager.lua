@@ -15,7 +15,6 @@ arena_lib.on_load("block_league", function(arena)
     block_league.HUD_teams_score_create(pl_name)
     block_league.energy_create(arena, pl_name)
 
-
     panel_lib.get_panel(pl_name, "blockleague_teams_score"):show()
     panel_lib.get_panel(pl_name, "blockleague_energy"):show()
 
@@ -30,26 +29,12 @@ arena_lib.on_load("block_league", function(arena)
 
   end
 
-
   minetest.after(0.01, function()
     block_league.scoreboard_update(arena)
   end)
 
 end)
 
-function block_league.add_default_weapons(inv, arena)
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
-  for i, weapon_name in pairs(default_weapons) do
-    inv:add_item("main", ItemStack(weapon_name))
-  end
-end
-
-function block_league.remove_default_weapons(inv, arena)
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
-  for i, weapon_name in pairs(default_weapons) do
-    inv:remove_item("main", ItemStack(weapon_name .. "99"))
-  end
-end
 
 
 arena_lib.on_start("block_league", function(arena)
@@ -57,6 +42,7 @@ arena_lib.on_start("block_league", function(arena)
   for pl_name, stats in pairs(arena.players) do
 
     local player = minetest.get_player_by_name(pl_name)
+
     block_league.add_default_weapons(player:get_inventory(), arena)
     block_league.weapons_hud_create(pl_name)
     panel_lib.get_panel(pl_name, "bullets_hud"):show()
@@ -74,18 +60,15 @@ arena_lib.on_start("block_league", function(arena)
     })
 
     player:set_armor_groups({immortal = nil})
-
   end
 
-  if arena.prototipo_spawn ~= nil then
+  -- se è TD, forza chunk entità e la aggiunge nel mondo
+  if arena.mod == 1 then
     local pos1 = {x = arena.prototipo_spawn.x - 1, y = arena.prototipo_spawn.y - 1, z = arena.prototipo_spawn.z - 1}
     local pos2 = {x = arena.prototipo_spawn.x + 1, y = arena.prototipo_spawn.y + 1, z = arena.prototipo_spawn.z + 1}
-    --minetest.load_area(pos1, pos2)
-    --minetest.emerge_area(pos1, pos2)
     minetest.forceload_block(pos1, pos2)
-    minetest.after(3, function()
-      local ent = minetest.add_entity(arena.prototipo_spawn,"block_league:prototipo",arena.name)
-    end)
+
+    local ent = minetest.add_entity(arena.prototipo_spawn,"block_league:prototipo",arena.name)
   end
 
   block_league.energy_refill(arena)
