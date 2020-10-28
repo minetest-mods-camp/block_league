@@ -20,15 +20,6 @@ minetest.register_on_joinplayer(function(player)
   -- genero l'HUD per gli achievement
   block_league.HUD_achievements_create(p_name)
 
-  -- resetto la velocità se non c'è hub_manager
-  if not minetest.get_modpath("hub_manager") then
-    player:set_physics_override({
-              speed = 1,
-              jump = 1,
-              gravity = 1,
-            })
-  end
-
   -- non è possibile modificare l'inventario da offline. Se sono crashati o hanno chiuso il gioco in partita,
   -- questo è l'unico modo per togliere loro l'arma
   remove_weapons(player:get_inventory())
@@ -69,7 +60,7 @@ minetest.register_on_respawnplayer(function(player)
   death_delay(player, pos)
   local arena = arena_lib.get_arena_by_player(player:get_player_name())
   player:set_physics_override({
-            speed = arena.high_speed,
+            speed = block_league.SPEED,
             jump = 1.5
   })
 

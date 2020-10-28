@@ -80,7 +80,7 @@ function block_league.register_weapon(name, def)
       end
       if def.slow_down_when_firing then
           user:set_physics_override({
-              speed = arena_lib.get_arena_by_player(p_name).low_speed,
+              speed = block_league.SPEED_LOW,
               jump = 1.5,
               gravity = 1.15,
               sneak_glitch = true,
@@ -115,7 +115,7 @@ function block_league.register_weapon(name, def)
          elseif def.slow_down_when_firing and player:get_meta():get_int("blockleague_has_ball") == 0 and arena_lib.is_player_in_arena(p_name) then
            if player then
               player:set_physics_override({
-                        speed = arena_lib.get_arena_by_player(p_name).high_speed,
+                        speed = block_league.SPEED,
                         jump = 1.5,
                         gravity = 1.15,
                         sneak_glitch = true,
@@ -137,7 +137,7 @@ function block_league.register_weapon(name, def)
               minetest.after(0.1, function()
                 if player then
                 player:set_physics_override({
-                          speed = arena_lib.get_arena_by_player(player:get_player_name()).high_speed,
+                          speed = block_league.SPEED,
                           jump = 1.5,
                           gravity = 1.15,
                           sneak_glitch = true,
@@ -149,7 +149,7 @@ function block_league.register_weapon(name, def)
           elseif def.slow_down_when_firing and player:get_meta():get_int("blockleague_has_ball") == 0 and arena_lib.is_player_in_arena(player:get_player_name()) then
             if player then
                player:set_physics_override({
-                         speed = arena_lib.get_arena_by_player(player:get_player_name()).high_speed,
+                         speed = block_league.SPEED,
                          jump = 1.5,
                          gravity = 1.15,
                          sneak_glitch = true,

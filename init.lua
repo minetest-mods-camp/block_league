@@ -1,23 +1,29 @@
 block_league = {}
 local S = minetest.get_translator("block_league")
 
+dofile(minetest.get_modpath("block_league") .. "/GLOBALS.lua")
+
+
+
 arena_lib.register_minigame("block_league", {
-  prefix = "[block_league] ",
-  teams = {
-    S("red"),
-    S("blue")
-  },
-  teams_color_overlay = {
-    "red",
-    "blue"
-  },
+  prefix = "[Block League] ",
   hub_spawn_point = { x = 8, y = 6, z = 4 },
+
+  teams = { S("red"), S("blue") },
+  teams_color_overlay = { "red", "blue"},
+
   join_while_in_progress = true,
   celebration_time = 5,
 
-  disabled_damage_types = {
-    "fall"
+  in_game_physics = {
+    speed = block_league.SPEED,
+    jump = 1.5,
+    gravity = 1.15,
+    sneak_glitch = true,
+    new_move = true
   },
+  disabled_damage_types = {"fall"},
+
   properties = {
     -- 1 = Touchdown
     -- 2 = Deathmatch
@@ -29,8 +35,6 @@ arena_lib.register_minigame("block_league", {
     destinazione_blue = {"lol"},
     prototipo_spawn = {"lol"},
     min_y = 0,
-    high_speed = 2.5,
-    low_speed = 1.5,
   },
   temp_properties = {
     weapons_disabled = false,
@@ -45,6 +49,8 @@ arena_lib.register_minigame("block_league", {
     weapons_reload = {},
   }
 })
+
+
 
 -- load other scripts
 

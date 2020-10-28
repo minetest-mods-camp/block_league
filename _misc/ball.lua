@@ -243,7 +243,7 @@ function ball:reset()
 
   if ball.wielder then
     ball.wielder:set_physics_override({
-              speed = arena.high_speed,
+              speed = block_league.SPEED,
               jump = 1.5
     })
   end
@@ -290,7 +290,7 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
     add_point(wielder:get_player_name(), arena)
 
     wielder:set_physics_override({
-              speed = arena.high_speed,
+              speed = block_league.SPEED,
               jump = 1.5
     })
     wielder:get_meta():set_int("blockleague_has_ball", 0)

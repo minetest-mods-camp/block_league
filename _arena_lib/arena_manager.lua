@@ -47,14 +47,6 @@ arena_lib.on_start("block_league", function(arena)
     block_league.weapons_hud_create(pl_name)
     panel_lib.get_panel(pl_name, "bullets_hud"):show()
 
-    player:set_physics_override({
-              speed = arena.high_speed,
-              jump = 1.5,
-              gravity = 1.15,
-              sneak_glitch = true,
-              new_move = true
-              })
-
     minetest.sound_play("block_league_voice_fight", {
       to_player = pl_name,
     })
@@ -94,14 +86,6 @@ arena_lib.on_join("block_league", function(p_name, arena)
   block_league.add_default_weapons(player:get_inventory(), arena)
   block_league.weapons_hud_create(p_name)
   panel_lib.get_panel(p_name, "bullets_hud"):show()
-
-  player:set_physics_override({
-            speed = arena.high_speed,
-            jump = 1.5,
-            gravity = 1.15,
-            sneak_glitch = true,
-            new_move = true
-            })
 
   minetest.sound_play("block_league_voice_fight", {
     to_player = p_name,
@@ -146,11 +130,9 @@ arena_lib.on_end("block_league", function(arena, players)
 
   for pl_name, stats in pairs(players) do
 
-    --local stats = panel_lib.get_panel(pl_name, "blockleague_stats")
     local scoreboard = panel_lib.get_panel(pl_name, "blockleague_scoreboard")
     local team_score = panel_lib.get_panel(pl_name, "blockleague_teams_score")
 
-    --stats:remove()
     scoreboard:remove()
     team_score:remove()
     panel_lib.get_panel(pl_name, "bullets_hud"):remove()
@@ -160,17 +142,8 @@ arena_lib.on_end("block_league", function(arena, players)
     block_league.update_storage(pl_name)
 
     local player = minetest.get_player_by_name(pl_name)
-    player:set_armor_groups({immortal = nil})
 
-    -- se non c'è hub_manager, resetto la fisica
-    if not minetest.get_modpath("hub_manager") then
-      minetest.get_player_by_name(pl_name):set_physics_override({
-                speed = 1,
-                jump = 1,
-                gravity = 1,
-                sneak_glitch = false
-                })
-    end
+    player:set_armor_groups({immortal = nil})
   end
 end)
 
@@ -212,15 +185,6 @@ arena_lib.on_quit("block_league", function(arena, p_name)
   player:set_armor_groups({immortal = nil})
   player:get_meta():set_int("blockleague_has_ball", 0)
 
-  -- se non c'è hub_manager, resetto la fisica
-  if not minetest.get_modpath("hub_manager") then
-    minetest.get_player_by_name(p_name):set_physics_override({
-              speed = 1,
-              jump = 1,
-              gravity = 1,
-              sneak_glitch = false
-              })
-  end
 end)
 
 
@@ -241,6 +205,5 @@ function reset_meta(p_name)
   player:get_meta():set_int("blockleague_bouncer_delay", 0)
   player:get_meta():set_int("blockleague_death_delay", 0)
   player:get_meta():set_int("reloading", 0)
-
 
 end

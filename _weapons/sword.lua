@@ -33,7 +33,7 @@ block_league.register_weapon("block_league:sword", {
 
     minetest.after(2.5, function()
       if user then
-        local vel = user:get_meta():get_int("blockleague_has_ball") == 0 and arena.high_speed or arena.low_speed
+        local vel = user:get_meta():get_int("blockleague_has_ball") == 0 and block_league.SPEED or block_league.SPEED_LOW
           user:set_physics_override({
             speed = vel,
             jump = 1.5

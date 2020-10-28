@@ -41,7 +41,7 @@ function block_league.energy_drain(arena, w_name)
     arena.players[w_name].energy = arena.players[w_name].energy -1
     block_league.energy_update(arena, w_name)
   else
-    wielder:set_physics_override({speed = arena.low_speed})
+    wielder:set_physics_override({speed = block_league.SPEED_LOW})
     return
   end
 
