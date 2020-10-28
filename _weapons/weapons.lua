@@ -440,7 +440,7 @@ end
 
 
 
---block_league.shoot(user, pointed_players, bullet_definition.bullet_damage, bullet_definition.knockback, bullet_definition.decrease_damage_with_distance)
+-- block_league.shoot(user, pointed_players, bullet_definition.bullet_damage, bullet_definition.knockback, bullet_definition.decrease_damage_with_distance)
 -- può avere uno o più target: formato ObjectRef
 function block_league.shoot(user, targets, damage, knockback, decrease_damage_with_distance, knockback_dir)
   local p_name = user:get_player_name()

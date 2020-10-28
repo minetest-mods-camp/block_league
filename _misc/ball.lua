@@ -180,7 +180,7 @@ function ball:on_step(d_time, moveresult)
     -- se il giocatore è vivo
     if w_pos == nil then return end
 
-    local goal = self.team_name == S("red") and arena.destinazione_red or arena.destinazione_blue
+    local goal = self.team_name == S("red") and arena.goal_red or arena.goal_blue
 
     check_for_touchdown(id, arena, self, wielder, w_pos, goal)
   end
@@ -249,7 +249,7 @@ function ball:reset()
   end
 
   self:_destroy()
-  minetest.add_entity(arena.prototipo_spawn,"block_league:prototipo",arena.name)
+  minetest.add_entity(arena.ball_spawn,"block_league:prototipo",arena.name)
   return
 end
 
@@ -299,12 +299,12 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
     arena.weapons_disabled = true
     minetest.after(5, function()
       teleport_players(arena)
-      local pos1 = {x = arena.prototipo_spawn.x - 1, y = arena.prototipo_spawn.y - 1, z = arena.prototipo_spawn.z - 1}
-      local pos2 = {x = arena.prototipo_spawn.x + 1, y = arena.prototipo_spawn.y + 1, z = arena.prototipo_spawn.z + 1}
+      local pos1 = {x = arena.ball_spawn.x - 1, y = arena.ball_spawn.y - 1, z = arena.ball_spawn.z - 1}
+      local pos2 = {x = arena.ball_spawn.x + 1, y = arena.ball_spawn.y + 1, z = arena.ball_spawn.z + 1}
       --minetest.load_area(pos1, pos2)
       minetest.forceload_block(pos1, pos2)
       --minetest.emerge_area(pos1, pos2)
-      minetest.add_entity(arena.prototipo_spawn,"block_league:prototipo",arena.name)
+      minetest.add_entity(arena.ball_spawn,"block_league:prototipo",arena.name)
       arena.weapons_disabled = false
     end)
 

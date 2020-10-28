@@ -105,58 +105,65 @@ ChatCmdBuilder.new("bleagueadmin", function(cmd)
         arena_lib.disable_arena(sender, mod, arena)
     end)
 
-    cmd:sub("adddestination :arena :team", function(sender, arena_name, team)
+    -- aggiunta/rimozione TD. option può essere "add" o "remove"
+    cmd:sub("goal :option :arena :team", function(sender, option, arena_name, team)
+      -- TODO: muovere in una funzione a parte
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        local pos = vector.round(minetest.get_player_by_name(sender):get_pos())
-        if team == "red" then
-          arena_lib.change_arena_property(sender, "block_league", arena_name, "destinazione_red" , pos)
-          print("Aggiunta destinazione red")
+
+        if not arena then
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return end
+
+        if arena.mod == 2 then
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return end
+
+        if team ~= "red" and team ~= "blue" then
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return end
+
+        local team_goal = team == "red" and "goal_red" or "goal_blue"
+
+        if option == "set" then
+          local pos = vector.round(minetest.get_player_by_name(sender):get_pos())
+          arena_lib.change_arena_property(sender, "block_league", arena_name, team_goal, pos)
+        elseif option == "remove" then
+          arena_lib.change_arena_property(sender, "block_league", arena_name, team_goal , {})
         else
-          arena_lib.change_arena_property(sender, "block_league", arena_name, "destinazione_blue" , pos)
-          print("Aggiunta destinazione blue")
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return
         end
-
     end)
 
-    --Rimuove la destinazione.
-    cmd:sub("removedestination :arena :team", function(sender, arena_name, team)
+    cmd:sub("ball :option :arena", function(sender, option, arena_name)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        if team == "red" then
-          arena_lib.change_arena_property(sender, "block_league", arena_name, "destinazione_red" , {})
-          print("Rimossa destinazione red")
-        else
-          arena_lib.change_arena_property(sender, "block_league", arena_name, "destinazione_blue" , {})
-          print("Rimossa destinazione blue")
-        end
 
-    end)
+        if not arena then
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return end
 
-    cmd:sub("addspawn :arena", function(sender, arena_name)
-        local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        local pos = vector.round(minetest.get_player_by_name(sender):get_pos())
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "prototipo_spawn" , pos)
-        print("Aggiunto spawn")
+        if arena.mod == 2 then
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return end
 
-    end)
+        if option ~= "set" and option ~= "remove" then
+          minetest.chat_send_player(sender, "Invalid parameter")
+          return end
 
-    cmd:sub("removespawn :arena", function(sender, arena_name)
-        local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "prototipo_spawn" , {})
-        print("Rimosso spawn")
+        local new_param = option == "set" and vector.round(minetest.get_player_by_name(sender):get_pos()) or {}
+
+        arena_lib.change_arena_property(sender, "block_league", arena_name, "ball_spawn" , new_param)
     end)
 
     cmd:sub("addminy :arena", function(sender, arena_name)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
         local pos = vector.round(minetest.get_player_by_name(sender):get_pos())
         arena_lib.change_arena_property(sender, "block_league", arena_name, "min_y" , pos.y)
-        print("Aggiunta y minima")
-
     end)
 
     cmd:sub("removeminy :arena", function(sender, arena_name)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
         arena_lib.change_arena_property(sender, "block_league", arena_name, "min_y" , 0)
-        print("Rimossa y minima")
     end)
 
 

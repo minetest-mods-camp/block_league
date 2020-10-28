@@ -31,9 +31,9 @@ arena_lib.register_minigame("block_league", {
     score_cap = 10,
     max_energy = 100,
     immunity_time = 6,
-    destinazione_red = {"lol"},
-    destinazione_blue = {"lol"},
-    prototipo_spawn = {"lol"},
+    goal_red = {},
+    goal_blue = {},
+    ball_spawn = {},
     min_y = 0,
   },
   temp_properties = {
