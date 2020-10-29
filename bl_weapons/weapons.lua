@@ -497,24 +497,6 @@ end
 
 
 
-function block_league.add_default_weapons(inv, arena)
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
-  for i, weapon_name in pairs(default_weapons) do
-    inv:add_item("main", ItemStack(weapon_name))
-  end
-end
-
-
-
-function block_league.remove_default_weapons(inv, arena)
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
-  for i, weapon_name in pairs(default_weapons) do
-    inv:remove_item("main", ItemStack(weapon_name .. "99"))
-  end
-end
-
-
-
 
 
 ----------------------------------------------

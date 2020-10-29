@@ -2,6 +2,8 @@ local S = minetest.get_translator("block_league")
 
 local function reset_meta() end
 local function create_and_show_HUD() end
+local function remove_HUD() end
+local function equip_weapons() end
 
 
 
@@ -30,7 +32,7 @@ arena_lib.on_start("block_league", function(arena)
 
     local player = minetest.get_player_by_name(pl_name)
 
-    block_league.add_default_weapons(player:get_inventory(), arena)
+    equip_weapons(player:get_inventory(), arena)
     block_league.weapons_hud_create(pl_name)
     panel_lib.get_panel(pl_name, "bullets_hud"):show()
 
@@ -55,7 +57,7 @@ arena_lib.on_join("block_league", function(p_name, arena)
 
   local player = minetest.get_player_by_name(p_name)
 
-  block_league.add_default_weapons(player:get_inventory(), arena)
+  equip_weapons(player:get_inventory(), arena)
   block_league.weapons_hud_create(p_name)
   panel_lib.get_panel(p_name, "bullets_hud"):show()
 
@@ -66,12 +68,9 @@ arena_lib.on_join("block_league", function(p_name, arena)
   player:set_armor_groups({immortal = nil})
 
   minetest.after(0.01, function()
-    block_league.energy_update(arena, p_name)
     block_league.scoreboard_update(arena)
     block_league.HUD_teams_score_update(arena, p_name, arena.players[p_name].teamID)
-
   end)
-
 end)
 
 
@@ -79,18 +78,12 @@ end)
 arena_lib.on_celebration("block_league", function(arena, winner_name)
 
   --block_league.add_xp(winner_name, 50)
+  arena.weapons_disabled = true
 
-  minetest.after(0.01, function()
-    for pl_name, stats in pairs(arena.players) do
-
-      local player = minetest.get_player_by_name(pl_name)
-
-      block_league.remove_default_weapons(player:get_inventory(), arena)
-      player:set_armor_groups({immortal=1})
-
-      panel_lib.get_panel(pl_name, "bl_scoreboard"):show()
-    end
-  end)
+  for pl_name, stats in pairs(arena.players) do
+    minetest.get_player_by_name(pl_name):set_armor_groups({immortal=1})
+    panel_lib.get_panel(pl_name, "bl_scoreboard"):show()
+  end
 end)
 
 
@@ -99,20 +92,12 @@ arena_lib.on_end("block_league", function(arena, players)
 
   for pl_name, stats in pairs(players) do
 
-    local scoreboard = panel_lib.get_panel(pl_name, "bl_scoreboard")
-    local team_score = panel_lib.get_panel(pl_name, "bl_teams_score")
-
-    scoreboard:remove()
-    team_score:remove()
-    panel_lib.get_panel(pl_name, "bullets_hud"):remove()
+    remove_HUD(pl_name)
     block_league.HUD_broadcast_remove(pl_name)
-    panel_lib.get_panel(pl_name, "bl_energy"):remove()
 
     block_league.update_storage(pl_name)
 
-    local player = minetest.get_player_by_name(pl_name)
-
-    player:set_armor_groups({immortal = nil})
+    minetest.get_player_by_name(pl_name):set_armor_groups({immortal = nil})
   end
 end)
 
@@ -137,15 +122,7 @@ end)
 
 arena_lib.on_quit("block_league", function(arena, p_name)
 
-  --local stats = panel_lib.get_panel(p_name, "bl_stats")
-  local scoreboard = panel_lib.get_panel(p_name, "bl_scoreboard")
-  local team_score = panel_lib.get_panel(p_name, "bl_teams_score")
-
-  --stats:remove()
-  scoreboard:remove()
-  team_score:remove()
-  panel_lib.get_panel(p_name, "bullets_hud"):remove()
-  panel_lib.get_panel(p_name, "bl_energy"):remove()
+  remove_HUD(p_name)
   block_league.HUD_broadcast_remove(p_name)
 
   local player = minetest.get_player_by_name(p_name)
@@ -186,4 +163,22 @@ function create_and_show_HUD(arena, p_name)
 
   panel_lib.get_panel(p_name, "bl_teams_score"):show()
   panel_lib.get_panel(p_name, "bl_energy"):show()
+end
+
+
+
+function remove_HUD(p_name)
+  panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
+  panel_lib.get_panel(p_name, "bl_teams_score"):remove()
+  panel_lib.get_panel(p_name, "bullets_hud"):remove()
+  panel_lib.get_panel(p_name, "bl_energy"):remove()
+end
+
+
+
+function equip_weapons(inv, arena)
+  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
+  for i, weapon_name in pairs(default_weapons) do
+    inv:add_item("main", ItemStack(weapon_name))
+  end
 end

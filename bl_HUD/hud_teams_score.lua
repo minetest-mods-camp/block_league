@@ -1,6 +1,6 @@
 function block_league.HUD_teams_score_create(p_name)
 
-  local panel = Panel:new({
+  Panel:new({
     name = "bl_teams_score",
     player = p_name,
     position = { x = 0.5, y  = 0},

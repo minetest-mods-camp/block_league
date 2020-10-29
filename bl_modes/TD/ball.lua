@@ -273,7 +273,7 @@ function cast_entity_ray(ent)
     minsize = 20,
     maxsize = 20,
     vertical = true,
-    texture = "block_league_raggio_palla.png"
+    texture = "block_league_ball_ray.png"
   })
 end
 
