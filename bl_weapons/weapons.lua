@@ -318,8 +318,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
                 size = 2,
                 collisiondetection = false,
                 vertical = false,
-                texture = particle.image,
-                --texture = "bl_pixelgun_trail.png"
+                texture = particle.image
               })
             else
               local dist3 = block_league.get_dist(head_pos, hit.intersection_point)
@@ -335,8 +334,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
               	size = 2,
               	collisiondetection = false,
               	vertical = false,
-                texture = particle.image,
-                --texture = "bl_pixelgun_trail.png"
+                texture = particle.image
             	})
             end
           end
@@ -356,8 +354,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
             	size = 2,
             	collisiondetection = false,
             	vertical = false,
-              texture = particle.image,
-              --texture = "bl_pixelgun_trail.png"
+              texture = particle.image
           	})
           end
 					return nil
@@ -382,8 +379,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
         	size = 2,
         	collisiondetection = false,
         	vertical = false,
-          texture = particle.image,
-          --texture = "bl_pixelgun_trail.png"
+          texture = particle.image
       	})
       end
   		return players
@@ -403,8 +399,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
           size = 2,
           collisiondetection = false,
           vertical = false,
-          texture = particle.image,
-          --texture = "bl_pixelgun_trail.png"
+          texture = particle.image
         })
 
       end
@@ -424,8 +419,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
         size = 2,
         collisiondetection = false,
         vertical = false,
-        texture = particle.image,
-        --texture = "bl_pixelgun_trail.png"
+        texture = particle.image
       })
     end
     return nil
@@ -564,7 +558,7 @@ function gestione_sparo(p_name, user, def, name)
     user:set_armor_groups({immortal = nil})
   end
 
-  if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
+  if user:get_hp() <= 0 or arena.weapons_disabled then return end
 
   if def.consume_bullets then
     if inv:contains_item("main", def.bullet) then
@@ -599,18 +593,20 @@ end
 
 
 function shoot_generic(def, name, itemstack, user, pointed_thing)
-  if def.type == 1 or def.type == 2 then
-      local bullet_definition = def.bullet and minetest.registered_nodes[def.bullet] or nil
+
+  if def.type ~= 3 then
+      local bullet_def = def.bullet and minetest.registered_nodes[def.bullet] or nil
+
       if def.type == 1 then
-          block_league.shoot_hitscan(name, def, bullet_definition, itemstack, user, pointed_thing)
+        block_league.shoot_hitscan(name, def, bullet_def, itemstack, user, pointed_thing)
       elseif def.type == 2 then
-          block_league.shoot_bullet(name, def, bullet_definition, itemstack, user, pointed_thing)
+        block_league.shoot_bullet(name, def, bullet_def, itemstack, user, pointed_thing)
       end
-  elseif def.type == 3 then
-      if pointed_thing.type == "object" and pointed_thing.ref:is_player() then
-          local dir = user:get_look_dir()
-          block_league.apply_damage(user, pointed_thing.ref, def.weap_damage, def.knockback, false, dir)
-      end
+
+  else
+      if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
+
+      block_league.apply_damage(user, pointed_thing.ref, def.weap_damage, def.knockback, false, user:get_look_dir())
   end
 end
 
