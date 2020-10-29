@@ -14,12 +14,6 @@ arena_lib.on_load("block_league", function(arena)
     minetest.sound_play("block_league_voice_countdown", {
       to_player = pl_name,
     })
-
-    -- non crea E aggiorna l'HUD al tempo stesso, dacché l'after...
-    minetest.after(0.1, function()
-      block_league.energy_update(arena, pl_name)
-    end)
-
   end
 
   minetest.after(0.01, function()
@@ -57,16 +51,9 @@ end)
 arena_lib.on_join("block_league", function(p_name, arena)
 
   reset_meta(p_name)
+  create_and_show_HUD(arena, p_name)
 
   local player = minetest.get_player_by_name(p_name)
-
-  block_league.HUD_broadcast_create(p_name)
-  block_league.scoreboard_create(arena, p_name)
-  block_league.HUD_teams_score_create(p_name)
-  block_league.energy_create(arena, p_name)
-
-  panel_lib.get_panel(p_name, "bl_teams_score"):show()
-  panel_lib.get_panel(p_name, "bl_energy"):show()
 
   block_league.add_default_weapons(player:get_inventory(), arena)
   block_league.weapons_hud_create(p_name)

@@ -11,7 +11,7 @@ function block_league.energy_create(arena, p_name)
     alignment = { x = 0, y = 0 },
     sub_img_elems = {
       energy_indicator = {
-        scale = {x = 1/5, y = 1.7},
+        scale = {x = p_energy/5, y = 1.7},
         offset = {x = 0, y = -110},
         alignment = { x = 0, y = 0 },
         text = "block_league_hud_panel_playerindicator.png"
