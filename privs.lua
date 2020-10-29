@@ -1,4 +1,4 @@
-minetest.register_privilege("block_league_admin", {
+minetest.register_privilege("bl_admin", {
 
     description = S("It allows to use the /block_leagueadmin command")
 

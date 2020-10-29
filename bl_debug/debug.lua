@@ -15,7 +15,7 @@ function block_league.mostra_posizione(pos, tempo)
     maxsize = 2,
     collisiondetection = false,
     vertical = false,
-    texture = "block_league_rocket_particle.png",
+    texture = "bl_rocket_particle.png",
   })
 
 end

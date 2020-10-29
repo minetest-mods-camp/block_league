@@ -65,10 +65,10 @@ minetest.register_on_respawnplayer(function(player)
   })
 
   local pl_name = player:get_player_name()
-  panel_lib.get_panel(pl_name, "bullets_hud"):remove()
+  panel_lib.get_panel(pl_name, "bl_bullets"):remove()
 
   block_league.weapons_hud_create(pl_name)
-  panel_lib.get_panel(pl_name, "bullets_hud"):show()
+  panel_lib.get_panel(pl_name, "bl_bullets"):show()
 
   block_league.immunity(player)
 

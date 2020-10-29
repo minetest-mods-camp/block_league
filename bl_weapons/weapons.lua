@@ -319,7 +319,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
                 collisiondetection = false,
                 vertical = false,
                 texture = particle.image,
-                --texture = "block_league_pixelgun_trail.png"
+                --texture = "bl_pixelgun_trail.png"
               })
             else
               local dist3 = block_league.get_dist(head_pos, hit.intersection_point)
@@ -336,7 +336,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
               	collisiondetection = false,
               	vertical = false,
                 texture = particle.image,
-                --texture = "block_league_pixelgun_trail.png"
+                --texture = "bl_pixelgun_trail.png"
             	})
             end
           end
@@ -357,7 +357,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
             	collisiondetection = false,
             	vertical = false,
               texture = particle.image,
-              --texture = "block_league_pixelgun_trail.png"
+              --texture = "bl_pixelgun_trail.png"
           	})
           end
 					return nil
@@ -383,7 +383,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
         	collisiondetection = false,
         	vertical = false,
           texture = particle.image,
-          --texture = "block_league_pixelgun_trail.png"
+          --texture = "bl_pixelgun_trail.png"
       	})
       end
   		return players
@@ -404,7 +404,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
           collisiondetection = false,
           vertical = false,
           texture = particle.image,
-          --texture = "block_league_pixelgun_trail.png"
+          --texture = "bl_pixelgun_trail.png"
         })
 
       end
@@ -425,7 +425,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
         collisiondetection = false,
         vertical = false,
         texture = particle.image,
-        --texture = "block_league_pixelgun_trail.png"
+        --texture = "bl_pixelgun_trail.png"
       })
     end
     return nil
@@ -477,7 +477,7 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
 
     -- se è ancora vivo, riproduco suono danno
     if target:get_hp() > 0 then
-      minetest.sound_play("block_league_hit", {
+      minetest.sound_play("bl_hit", {
         to_player = p_name,
         max_hear_distance = 1,
       })
@@ -637,7 +637,7 @@ end
 function kill(arena, p_name, target)
 
   -- riproduco suono morte
-  minetest.sound_play("block_league_kill", {
+  minetest.sound_play("bl_kill", {
     to_player = p_name,
     max_hear_distance = 1,
   })
@@ -660,7 +660,7 @@ function kill(arena, p_name, target)
     -- aggiorno HUD
     block_league.scoreboard_update(arena)
     for pl_name, stats in pairs(arena.players) do
-      block_league.HUD_teams_score_update(arena, pl_name, p_stats.teamID)
+      block_league.teams_score_update(arena, pl_name, p_stats.teamID)
     end
 
     -- se è DM e il cap è raggiunto, finisce match

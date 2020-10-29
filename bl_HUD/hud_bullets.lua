@@ -29,7 +29,7 @@ function block_league.weapons_hud_create(p_name)
         scale     = { x = 2, y = 2 },
         offset    = { x = 10, y = offset },
         alignment = { x = 1, y = 0 },
-        text      = "background_weapons.png",
+        text      = "bl_hud_bullets_bg.png",
         z_index   = 0
       }
 
@@ -59,7 +59,7 @@ function block_league.weapons_hud_create(p_name)
 
   -- creo pannello
   Panel:new({
-    name = "bullets_hud",
+    name = "bl_bullets",
     player = p_name,
     bg = "",
     position = { x = 0, y = 1 },
@@ -96,7 +96,7 @@ end
 
 function block_league.weapons_hud_update(arena, p_name, item_name, bullet_count, reload_count)
   local definition = minetest.registered_nodes[item_name]
-  local panel = panel_lib.get_panel(p_name, "bullets_hud")
+  local panel = panel_lib.get_panel(p_name, "bl_bullets")
   panel:update(nil,
     {
     [definition.name .. "_reload_txt"] = {

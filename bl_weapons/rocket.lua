@@ -1,8 +1,8 @@
 block_league.register_bullet("block_league:rocket",{
   description = "rocket",
-  mesh = "block_league_rocket.obj",
+  mesh = "bl_rocket.obj",
   wield_scale = {x=1, y=1, z=1},
-  tiles = {"block_league_bullet_rocket.png"},
+  tiles = {"bl_bullet_rocket.png"},
   stack_max = 99,
    -- {xmin, ymin, zmin, xmax, ymax, zmax}
   bullet_damage = 10,
@@ -11,7 +11,7 @@ block_league.register_bullet("block_league:rocket",{
   impaling = false,
   decrease_damage_with_distance = false,
   bullet_trail = {
-    image = "block_league_bullet_rocket.png",
+    image = "bl_bullet_rocket.png",
     life = 1,
     size = 2,
     glow = 0,
@@ -23,11 +23,11 @@ block_league.register_bullet("block_league:rocket",{
 
   bullet = {
 
-    mesh = "block_league_rocket.obj",
+    mesh = "bl_rocket.obj",
     visual_size = {x=1, y=1, z=1},
-    textures = {"block_league_bullet_rocket.png"},
+    textures = {"bl_bullet_rocket.png"},
 
-    bullet_explosion_texture = "block_league_rocket_particle.png",
+    bullet_explosion_texture = "bl_rocket_particle.png",
     bullet_speed = 30,
     collisionbox = {-0.1, -0.1, -0.1, 0.1, 0.1, 0.1},
     bullet_explosion_range = 4,

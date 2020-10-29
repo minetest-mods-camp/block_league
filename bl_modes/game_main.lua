@@ -11,11 +11,11 @@ function block_league.round_start(arena)
       arena.players[p_name].energy = 100
 
       player:get_meta():set_int("bl_reloading", 0)
-      panel_lib.get_panel(p_name, "bullets_hud"):remove()
+      panel_lib.get_panel(p_name, "bl_bullets"):remove()
 
       arena.players[p_name].weapons_reload = {}
       block_league.weapons_hud_create(p_name)
-      panel_lib.get_panel(p_name, "bullets_hud"):show()
+      panel_lib.get_panel(p_name, "bl_bullets"):show()
 
       block_league.energy_update(arena, p_name)
       player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))

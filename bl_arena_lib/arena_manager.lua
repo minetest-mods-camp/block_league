@@ -13,7 +13,7 @@ arena_lib.on_load("block_league", function(arena)
     reset_meta(pl_name)
     create_and_show_HUD(arena, pl_name)
 
-    minetest.sound_play("block_league_voice_countdown", {
+    minetest.sound_play("bl_voice_countdown", {
       to_player = pl_name,
     })
   end
@@ -34,9 +34,9 @@ arena_lib.on_start("block_league", function(arena)
 
     equip_weapons(player:get_inventory(), arena)
     block_league.weapons_hud_create(pl_name)
-    panel_lib.get_panel(pl_name, "bullets_hud"):show()
+    panel_lib.get_panel(pl_name, "bl_bullets"):show()
 
-    minetest.sound_play("block_league_voice_fight", {
+    minetest.sound_play("bl_voice_fight", {
       to_player = pl_name,
     })
 
@@ -59,9 +59,9 @@ arena_lib.on_join("block_league", function(p_name, arena)
 
   equip_weapons(player:get_inventory(), arena)
   block_league.weapons_hud_create(p_name)
-  panel_lib.get_panel(p_name, "bullets_hud"):show()
+  panel_lib.get_panel(p_name, "bl_bullets"):show()
 
-  minetest.sound_play("block_league_voice_fight", {
+  minetest.sound_play("bl_voice_fight", {
     to_player = p_name,
   })
 
@@ -69,7 +69,7 @@ arena_lib.on_join("block_league", function(p_name, arena)
 
   minetest.after(0.01, function()
     block_league.scoreboard_update(arena)
-    block_league.HUD_teams_score_update(arena, p_name, arena.players[p_name].teamID)
+    block_league.teams_score_update(arena, p_name, arena.players[p_name].teamID)
   end)
 end)
 
@@ -156,9 +156,9 @@ end
 
 
 function create_and_show_HUD(arena, p_name)
-  block_league.HUD_broadcast_create(p_name)
+  block_league.broadcast_create(p_name)
   block_league.scoreboard_create(arena, p_name)
-  block_league.HUD_teams_score_create(p_name)
+  block_league.teams_score_create(p_name)
   block_league.energy_create(arena, p_name)
 
   panel_lib.get_panel(p_name, "bl_teams_score"):show()
@@ -170,13 +170,14 @@ end
 function remove_HUD(p_name)
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_teams_score"):remove()
-  panel_lib.get_panel(p_name, "bullets_hud"):remove()
+  panel_lib.get_panel(p_name, "bl_bullets"):remove()
   panel_lib.get_panel(p_name, "bl_energy"):remove()
 end
 
 
 
 function equip_weapons(inv, arena)
+  -- TODO: ottenere armi in database giocatori, dato che potranno cambiarle
   local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun", "block_league:bouncer"}
   for i, weapon_name in pairs(default_weapons) do
     inv:add_item("main", ItemStack(weapon_name))

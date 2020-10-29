@@ -15,19 +15,19 @@ function block_league.scoreboard_create(arena, p_name)
             scale = {x = 44, y = 1.7},
             offset = {x = 0, y = -121},
             alignment = { x = 0, y = 0 },
-            text = "block_league_hud_panel_playerindicator_teams.png"
+            text = "bl_hud_panel_playerindicator_teams.png"
           },
           team_indicator_red = {
             scale = {x = 44, y = 1.7},
             offset = {x = 0, y = -121},
             alignment = { x = 0, y = 0 },
-            text = "block_league_hud_panel_teamindicator_red.png"
+            text = "bl_hud_panel_teamindicator_red.png"
           },
           team_indicator_blue = {
             scale = {x = 44, y = 1.7},
             offset = {x = 0, y = -121},
             alignment = { x = 0, y = 0 },
-            text = "block_league_hud_panel_teamindicator_blue.png"
+            text = "bl_hud_panel_teamindicator_blue.png"
           },
         },
 

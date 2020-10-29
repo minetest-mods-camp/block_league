@@ -16,12 +16,12 @@ local ball = {
     collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
 
     textures = {
-      "block_league_bullet_rocket.png",
-      "block_league_bullet_rocket.png",
-      "block_league_bullet_rocket.png",
-      "block_league_bullet_rocket.png",
-      "block_league_bullet_rocket.png",
-      "block_league_bullet_rocket.png",
+      "bl_bullet_rocket.png",
+      "bl_bullet_rocket.png",
+      "bl_bullet_rocket.png",
+      "bl_bullet_rocket.png",
+      "bl_bullet_rocket.png",
+      "bl_bullet_rocket.png",
     },
     timer_limit = 10,
   },
@@ -273,7 +273,7 @@ function cast_entity_ray(ent)
     minsize = 20,
     maxsize = 20,
     vertical = true,
-    texture = "block_league_ball_ray.png"
+    texture = "bl_ball_ray.png"
   })
 end
 
@@ -311,19 +311,19 @@ function add_point(w_name, arena)
   local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
 
   for _, pl_name in pairs(team) do
-    minetest.sound_play("block_league_crowd_cheer", {to_player = pl_name})
+    minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
     block_league.HUD_broadcast_player(pl_name, "NICE POINT!", 3, "0x43e6FF")
   end
 
   for _, pl_name in pairs(enemy_team) do
-    minetest.sound_play("block_league_crowd_ohno", {to_player = pl_name})
+    minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
     block_league.HUD_broadcast_player(pl_name, "ENEMY TEAM SCORED...", 3, "0xFF5D43")
   end
 
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
 
   for pl_name, stats in pairs(arena.players) do
-    block_league.HUD_teams_score_update(arena, pl_name, teamID)
+    block_league.teams_score_update(arena, pl_name, teamID)
   end
 
   -- se i TD della squadra raggiungono il cap, vince
@@ -344,23 +344,23 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
 
   if is_ball_lost then
     for _, pl_name in pairs(team) do
-      minetest.sound_play("block_league_crowd_ohno", {to_player = pl_name})
+      minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
       block_league.HUD_broadcast_player(pl_name, "Your team lost the ball!", 3, "0xFF5D43")
     end
 
     for _, pl_name in pairs(enemy_team) do
-      minetest.sound_play("block_league_crowd_cheer", {to_player = pl_name})
+      minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
       block_league.HUD_broadcast_player(pl_name, "Enemy team lost the ball!", 3, "0x43e6FF")
     end
   else
     for _, pl_name in pairs(team) do
-      minetest.sound_play("block_league_crowd_cheer", {to_player = pl_name})
+      minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
       block_league.HUD_broadcast_player(pl_name, "Your team got the ball!", 3, "0x43e6FF")
     end
     block_league.HUD_broadcast_player(w_name, "You got the ball!", 3, "0x43e6FF")
 
     for _, pl_name in pairs(enemy_team) do
-      minetest.sound_play("block_league_crowd_ohno", {to_player = pl_name})
+      minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
       block_league.HUD_broadcast_player(pl_name, "Enemy team got the ball!", 3, "0xFF5D43")
     end
   end

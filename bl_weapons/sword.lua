@@ -1,9 +1,9 @@
 block_league.register_weapon("block_league:sword", {
 
   description = "Spada",
-  inventory_image = "block_league_sword.png",
+  inventory_image = "bl_sword.png",
   wield_scale = {x=1.3, y=1.3, z=1.3},
-  wield_image = "block_league_sword.png",
+  wield_image = "bl_sword.png",
 
   weap_delay = 2,
   weap_secondary_delay = 3,

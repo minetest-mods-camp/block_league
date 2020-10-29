@@ -1,10 +1,10 @@
 minetest.register_tool("block_league:bouncer", {
   description = "Bouncer",
   drawtype = "mesh",
-  mesh = "block_league_pixelgun.obj",
-  tiles = {"block_league_pixelgun.png"},
+  mesh = "bl_pixelgun.obj",
+  tiles = {"bl_pixelgun.png"},
   wield_scale = {x=1.3, y=1.3, z=1.3},
-  inventory_image = "block_league_bouncer.png",
+  inventory_image = "bl_bouncer.png",
   jump_height = 5,
   groups = {oddly_breakable_by_hand = "2"},
   on_drop = function() end,
@@ -33,7 +33,7 @@ minetest.register_tool("block_league:bouncer", {
     local knockback = user:get_velocity().y < 1 and -15 or -10
 
     user:add_velocity(vector.multiply(dir, knockback))
-    minetest.sound_play("block_league_bouncer", {to_player = p_name, max_hear_distance = 5})
+    minetest.sound_play("bl_bouncer", {to_player = p_name, max_hear_distance = 5})
 
     arena.players[p_name].energy = arena.players[p_name].energy - 20
   end,

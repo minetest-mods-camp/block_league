@@ -14,7 +14,7 @@ function block_league.energy_create(arena, p_name)
         scale = {x = p_energy/5, y = 1.7},
         offset = {x = 0, y = -110},
         alignment = { x = 0, y = 0 },
-        text = "block_league_hud_panel_playerindicator.png"
+        text = "bl_hud_panel_playerindicator.png"
       },
     },
     sub_txt_elems = {

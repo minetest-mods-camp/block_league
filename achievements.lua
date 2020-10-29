@@ -6,8 +6,8 @@
 local S = minetest.get_translator("block_league")
 
 local achievements = {
-  [1] = { name = S("two in one"),     img = "block_league_achievement_doublekill.png" },
-  [2] = { name = S("three in one"),   img = "block_league_achievement_triplekill.png" }
+  [1] = { name = S("two in one"),     img = "bl_achievement_doublekill.png" },
+  [2] = { name = S("three in one"),   img = "bl_achievement_triplekill.png" }
 }
 local access_key = achievements_lib.register_achievements("block_league", achievements)
 

@@ -1,4 +1,4 @@
-function block_league.HUD_teams_score_create(p_name)
+function block_league.teams_score_create(p_name)
 
   Panel:new({
     name = "bl_teams_score",
@@ -26,7 +26,7 @@ function block_league.HUD_teams_score_create(p_name)
   })
 end
 
-function block_league.HUD_teams_score_update(arena, p_name, teamID)
+function block_league.teams_score_update(arena, p_name, teamID)
 
   local panel = panel_lib.get_panel(p_name, "bl_teams_score")
   local score = 0

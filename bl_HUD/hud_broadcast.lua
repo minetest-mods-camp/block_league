@@ -2,7 +2,7 @@ local saved_huds = {} -- p_name = {indexes}
 
 
 
-function block_league.HUD_broadcast_create(p_name)
+function block_league.broadcast_create(p_name)
 
   local HUD = {
     hud_elem_type = "text",
