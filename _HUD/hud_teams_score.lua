@@ -1,7 +1,7 @@
 function block_league.HUD_teams_score_create(p_name)
 
   local panel = Panel:new({
-    name = "blockleague_teams_score",
+    name = "bl_teams_score",
     player = p_name,
     position = { x = 0.5, y  = 0},
     alignment = { x = 0, y = 0},
@@ -28,7 +28,7 @@ end
 
 function block_league.HUD_teams_score_update(arena, p_name, teamID)
 
-  local panel = panel_lib.get_panel(p_name, "blockleague_teams_score")
+  local panel = panel_lib.get_panel(p_name, "bl_teams_score")
   local score = 0
 
   if arena.mod == 1 then

@@ -11,7 +11,7 @@ block_league.register_weapon("block_league:sword", {
   type = 3,
   weap_damage = 7,
   knockback = 40,
-  
+
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing)
 
     local dir = user:get_look_dir()
@@ -34,7 +34,7 @@ block_league.register_weapon("block_league:sword", {
 
     minetest.after(2.5, function()
       if user then
-        local vel = user:get_meta():get_int("blockleague_has_ball") == 0 and block_league.SPEED or block_league.SPEED_LOW
+        local vel = user:get_meta():get_int("bl_has_ball") == 0 and block_league.SPEED or block_league.SPEED_LOW
           user:set_physics_override({
             speed = vel,
             jump = 1.5
@@ -43,7 +43,7 @@ block_league.register_weapon("block_league:sword", {
 
     end)
     if not pointed_players then return end
-    block_league.shoot(user, pointed_players, def.weap_damage, def.knockback, false)
+    block_league.apply_damage(user, pointed_players, def.weap_damage, def.knockback, false)
 
   end,
 })

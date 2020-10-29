@@ -200,7 +200,7 @@ function bullet_set_entity(name, def)
             if collision.object:is_player() then
 
               if collision.object:get_player_name() ~= self.p_name then
-                block_league.shoot(minetest.get_player_by_name(self.p_name), collision.object, self.initial_properties.bullet_damage, 0, false)
+                block_league.apply_damage(minetest.get_player_by_name(self.p_name), collision.object, self.initial_properties.bullet_damage, 0, false)
                 buffer_boolean = true
               elseif collision.object:get_player_name() == self.p_name then
 

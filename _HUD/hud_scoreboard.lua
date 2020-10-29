@@ -1,7 +1,7 @@
 
 function block_league.scoreboard_create(arena, p_name)
     local panel = Panel:new({
-        name = "blockleague_scoreboard",
+        name = "bl_scoreboard",
         player = p_name,
         bg_scale = { x = 45, y = 28 },
         position = { x = 0.5, y = 0.5 },
@@ -117,7 +117,7 @@ function block_league.scoreboard_update(arena)
 
   -- aggiorno il pannello
   for pl_name, stats in pairs(arena.players) do
-    local panel = panel_lib.get_panel(pl_name, "blockleague_scoreboard")
+    local panel = panel_lib.get_panel(pl_name, "bl_scoreboard")
     local bar_height = players_idx[pl_name]    -- l'altezza della barra che segnala al client dove si trova nel panello
 
     panel:update(nil,

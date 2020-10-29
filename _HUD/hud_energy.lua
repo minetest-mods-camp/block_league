@@ -1,6 +1,6 @@
 function block_league.energy_create(arena, p_name)
   local panel = Panel:new({
-    name = "blockleague_energy",
+    name = "bl_energy",
     player = p_name,
     bg = "",
     title = "",
@@ -28,7 +28,7 @@ end
 
 function block_league.energy_update(arena, p_name)
 
-  local panel = panel_lib.get_panel(p_name, "blockleague_energy")
+  local panel = panel_lib.get_panel(p_name, "bl_energy")
 
   panel:update(nil,
     {energy_clmn = {

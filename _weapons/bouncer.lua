@@ -12,12 +12,12 @@ minetest.register_tool("block_league:bouncer", {
 
   on_use = function(itemstack, user, pointed_thing)
     ----- gestione delay dell'arma -----
-    if user:get_meta():get_int("blockleague_bouncer_delay") == 1 or user:get_meta():get_int("blockleague_death_delay") == 1 then return end
+    if user:get_meta():get_int("bl_bouncer_delay") == 1 or user:get_meta():get_int("bl_death_delay") == 1 then return end
 
-    user:get_meta():set_int("blockleague_bouncer_delay", 1)
+    user:get_meta():set_int("bl_bouncer_delay", 1)
 
     minetest.after(0.3, function()
-      user:get_meta():set_int("blockleague_bouncer_delay", 0)
+      user:get_meta():set_int("bl_bouncer_delay", 0)
       end)
     ----- fine gestione delay -----
 

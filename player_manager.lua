@@ -38,13 +38,13 @@ minetest.register_on_dieplayer(function(player)
 
   arena.players[p_name].energy = 100
   block_league.energy_update(arena, p_name)
-  player:get_meta():set_int("blockleague_death_delay", 1)
+  player:get_meta():set_int("bl_death_delay", 1)
   arena.players[p_name].weapons_reload = {}
 
   minetest.after(6, function()
     if not player or not player:get_meta() then return end
-    player:get_meta():set_int("blockleague_death_delay", 0)
-    player:get_meta():set_int("reloading", 0)
+    player:get_meta():set_int("bl_death_delay", 0)
+    player:get_meta():set_int("bl_reloading", 0)
   end)
 
 end)
@@ -84,7 +84,7 @@ end)
 
 function death_delay(player, pos)
   if player and player:get_meta() then
-    local delay = player:get_meta():get_int("blockleague_death_delay")
+    local delay = player:get_meta():get_int("bl_death_delay")
     if delay == 1 and arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then
       player:set_pos(pos)
     else
@@ -102,6 +102,6 @@ function remove_weapons(inv)
   inv:remove_item("main", ItemStack("block_league:sword"))
   inv:remove_item("main", ItemStack("block_league:pixelgun"))
   inv:remove_item("main", ItemStack("block_league:rocket_launcher"))
-  inv:remove_item("main", ItemStack("block_league:match_over"))
+  inv:remove_item("main", ItemStack("block_league:bouncer"))
 
 end

@@ -15,8 +15,8 @@ arena_lib.on_load("block_league", function(arena)
     block_league.HUD_teams_score_create(pl_name)
     block_league.energy_create(arena, pl_name)
 
-    panel_lib.get_panel(pl_name, "blockleague_teams_score"):show()
-    panel_lib.get_panel(pl_name, "blockleague_energy"):show()
+    panel_lib.get_panel(pl_name, "bl_teams_score"):show()
+    panel_lib.get_panel(pl_name, "bl_energy"):show()
 
     minetest.sound_play("block_league_voice_countdown", {
       to_player = pl_name,
@@ -55,7 +55,7 @@ arena_lib.on_start("block_league", function(arena)
   end
 
   block_league.round_start(arena)
-  block_league.energy_refill(arena)
+  block_league.energy_refill_loop(arena)
 
 end)
 
@@ -72,8 +72,8 @@ arena_lib.on_join("block_league", function(p_name, arena)
   block_league.HUD_teams_score_create(p_name)
   block_league.energy_create(arena, p_name)
 
-  panel_lib.get_panel(p_name, "blockleague_teams_score"):show()
-  panel_lib.get_panel(p_name, "blockleague_energy"):show()
+  panel_lib.get_panel(p_name, "bl_teams_score"):show()
+  panel_lib.get_panel(p_name, "bl_energy"):show()
 
   block_league.add_default_weapons(player:get_inventory(), arena)
   block_league.weapons_hud_create(p_name)
@@ -103,15 +103,12 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
   minetest.after(0.01, function()
     for pl_name, stats in pairs(arena.players) do
 
-      local inv = minetest.get_player_by_name(pl_name):get_inventory()
-
-      block_league.remove_default_weapons(inv, arena)
-      inv:add_item("main", ItemStack("block_league:match_over"))
-
       local player = minetest.get_player_by_name(pl_name)
+
+      block_league.remove_default_weapons(player:get_inventory(), arena)
       player:set_armor_groups({immortal=1})
 
-      panel_lib.get_panel(pl_name, "blockleague_scoreboard"):show()
+      panel_lib.get_panel(pl_name, "bl_scoreboard"):show()
     end
   end)
 end)
@@ -122,14 +119,14 @@ arena_lib.on_end("block_league", function(arena, players)
 
   for pl_name, stats in pairs(players) do
 
-    local scoreboard = panel_lib.get_panel(pl_name, "blockleague_scoreboard")
-    local team_score = panel_lib.get_panel(pl_name, "blockleague_teams_score")
+    local scoreboard = panel_lib.get_panel(pl_name, "bl_scoreboard")
+    local team_score = panel_lib.get_panel(pl_name, "bl_teams_score")
 
     scoreboard:remove()
     team_score:remove()
     panel_lib.get_panel(pl_name, "bullets_hud"):remove()
     block_league.HUD_broadcast_remove(pl_name)
-    panel_lib.get_panel(pl_name, "blockleague_energy"):remove()
+    panel_lib.get_panel(pl_name, "bl_energy"):remove()
 
     block_league.update_storage(pl_name)
 
@@ -161,21 +158,21 @@ end)
 
 arena_lib.on_quit("block_league", function(arena, p_name)
 
-  --local stats = panel_lib.get_panel(p_name, "blockleague_stats")
-  local scoreboard = panel_lib.get_panel(p_name, "blockleague_scoreboard")
-  local team_score = panel_lib.get_panel(p_name, "blockleague_teams_score")
+  --local stats = panel_lib.get_panel(p_name, "bl_stats")
+  local scoreboard = panel_lib.get_panel(p_name, "bl_scoreboard")
+  local team_score = panel_lib.get_panel(p_name, "bl_teams_score")
 
   --stats:remove()
   scoreboard:remove()
   team_score:remove()
   panel_lib.get_panel(p_name, "bullets_hud"):remove()
-  panel_lib.get_panel(p_name, "blockleague_energy"):remove()
+  panel_lib.get_panel(p_name, "bl_energy"):remove()
   block_league.HUD_broadcast_remove(p_name)
 
   local player = minetest.get_player_by_name(p_name)
 
   player:set_armor_groups({immortal = nil})
-  player:get_meta():set_int("blockleague_has_ball", 0)
+  player:get_meta():set_int("bl_has_ball", 0)
 
 end)
 
@@ -191,11 +188,11 @@ function reset_meta(p_name)
 
   local player = minetest.get_player_by_name(p_name)
 
-  player:get_meta():set_int("blockleague_has_ball", 0)
-  player:get_meta():set_int("blockleague_weap_delay", 0)
-  player:get_meta():set_int("blockleague_weap_secondary_delay", 0)
-  player:get_meta():set_int("blockleague_bouncer_delay", 0)
-  player:get_meta():set_int("blockleague_death_delay", 0)
-  player:get_meta():set_int("reloading", 0)
+  player:get_meta():set_int("bl_has_ball", 0)
+  player:get_meta():set_int("bl_weap_delay", 0)
+  player:get_meta():set_int("bl_weap_secondary_delay", 0)
+  player:get_meta():set_int("bl_bouncer_delay", 0)
+  player:get_meta():set_int("bl_death_delay", 0)
+  player:get_meta():set_int("bl_reloading", 0)
 
 end

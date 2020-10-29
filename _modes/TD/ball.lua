@@ -195,7 +195,7 @@ function ball:attach(player)
 
   announce_ball_possession_change(arena, p_name)
 
-  player:get_meta():set_int("blockleague_has_ball", 1)
+  player:get_meta():set_int("bl_has_ball", 1)
   block_league.energy_drain(arena, p_name)
 
   self.object:set_attach(player, "Head", {x=0, y=5.5, z=0}, {x=0, y=0, z=0})
@@ -216,7 +216,7 @@ function ball:detach()
 
   announce_ball_possession_change(self.arena, player:get_player_name(), true)
 
-  player:get_meta():set_int("blockleague_has_ball", 0)
+  player:get_meta():set_int("bl_has_ball", 0)
   player:set_physics_override({
             speed = 0,
             jump = 0
@@ -237,7 +237,7 @@ function ball:reset()
 
   -- annuncio
   for pl_name, _ in pairs(arena.players) do
-    minetest.sound_play("blockleague_ball_reset", {to_player = pl_name})
+    minetest.sound_play("bl_ball_reset", {to_player = pl_name})
     block_league.HUD_broadcast_player(pl_name, "Ball reset", 3)
   end
 
@@ -288,7 +288,7 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
   w_pos.y <= goal.y + 3 then
 
     add_point(wielder:get_player_name(), arena)
-    wielder:get_meta():set_int("blockleague_has_ball", 0)
+    wielder:get_meta():set_int("bl_has_ball", 0)
 
     arena.weapons_disabled = true
 

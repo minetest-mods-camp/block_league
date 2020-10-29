@@ -10,7 +10,7 @@ function block_league.round_start(arena)
       player:set_hp(20)
       arena.players[p_name].energy = 100
 
-      player:get_meta():set_int("reloading", 0)
+      player:get_meta():set_int("bl_reloading", 0)
       panel_lib.get_panel(p_name, "bullets_hud"):remove()
 
       arena.players[p_name].weapons_reload = {}
