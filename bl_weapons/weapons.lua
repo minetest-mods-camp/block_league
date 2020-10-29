@@ -1,4 +1,6 @@
+local function get_dist() end
 local function weapon_reload() end
+local function weapon_right_click() end
 local function gestione_sparo() end
 local function shoot_generic() end
 local function after_damage() end
@@ -22,46 +24,6 @@ function block_league.register_weapon(name, def)
     consume_bullets = def.consume_bullets or nil,
     bullet = def.bullet or nil,
     magazine = def.magazine or nil,
-
-    -- Q = reload
-    on_drop = function(itemstack, user, pointed_thing)
-      weapon_reload(user, def, name)
-    end,
-
-    -- RMB = secondary use
-    on_place = function(itemstack, user, pointed_thing)
-
-      if not def.on_right_click then return end
-
-      local p_meta = user:get_meta()
-
-      ----- gestione delay dell'arma -----
-      if p_meta:get_int("bl_weap_secondary_delay") == 1 or p_meta:get_int("bl_death_delay") == 1 then
-        return end
-
-      p_meta:set_int("bl_weap_secondary_delay", 1)
-
-      minetest.after(def.weap_secondary_delay, function()
-        if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-        p_meta:set_int("bl_weap_secondary_delay", 0)
-      end)
-      ----- fine gestione delay -----
-
-      -- se sono immune e sparo, perdo l'immunità
-      if user:get_armor_groups().immortal and user:get_armor_groups().immortal == 1 then
-        user:set_armor_groups({immortal = nil})
-      end
-
-      local p_name = user:get_player_name()
-      local arena = arena_lib.get_arena_by_player(p_name)
-
-      if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
-
-      if def.on_right_click then
-        def.on_right_click(arena, name, def, itemstack, user, pointed_thing)
-      end
-    end,
-
 
     -- LMB = first fire
     on_use = function(itemstack, user, pointed_thing)
@@ -156,41 +118,18 @@ function block_league.register_weapon(name, def)
       end)
     end,
 
-
+    -- RMB = secondary use
     on_secondary_use = function(itemstack, user, pointed_thing)
-      if not def.on_right_click then return end
+      weapon_right_click(itemstack, user, pointed_thing)
+    end,
 
-      ----- gestione delay dell'arma -----
-      if user:get_meta():get_int("bl_weap_secondary_delay") == 1 or
-        user:get_meta():get_int("bl_death_delay") == 1 then
-      return end
+    on_place = function(itemstack, user, pointed_thing)
+      weapon_right_click(itemstack, user, pointed_thing)
+    end
 
-      user:get_meta():set_int("bl_weap_secondary_delay", 1)
-
-      minetest.after(def.weap_secondary_delay, function()
-        if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-        user:get_meta():set_int("bl_weap_secondary_delay", 0)
-      end)
-      ----- fine gestione delay -----
-
-      -- se sono immune e sparo, perdo l'immunità
-      if user:get_armor_groups().immortal and user:get_armor_groups().immortal == 1 then
-        user:set_armor_groups({immortal = nil})
-      end
-
-
-      local p_name = user:get_player_name()
-
-      -- Check if the player is in the arena and is fighting, if not it exits
-      if not arena_lib.is_player_in_arena(p_name) then return end
-
-      local arena = arena_lib.get_arena_by_player(p_name)
-
-      if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
-
-      if def.on_right_click then
-        def.on_right_click(arena, name, def, itemstack, user, pointed_thing)
-      end
+    -- Q = reload
+    on_drop = function(itemstack, user, pointed_thing)
+      weapon_reload(user, def, name)
     end,
 
   })
@@ -237,28 +176,8 @@ function block_league.shoot_bullet(name, def, def2, itemstack, user, pointed_thi
     z=(dir.z * speed),
   })
 
-  --local rotation = vector.new(0, yaw + math.pi/2, pitch + math.pi/6)
   local rotation = ({x = -pitch, y = yaw, z = 0})
   bullet:set_rotation(rotation)
-
-
-end
-
-
-
-function block_league.get_dist(pos1, pos2)
-  local lenx = math.abs(pos1.x - pos2.x)
-  local leny = math.abs(pos1.y - pos2.y)
-  local lenz = math.abs(pos1.z - pos2.z)
-  local hypot = math.sqrt((lenx * lenx) + (lenz * lenz))
-  local dist = math.sqrt((hypot * hypot) + (leny * leny))
-  return dist
-end
-
---Ritorna la direzione da un punto ad un altro.
-function block_league.get_dir_from_pos(pos1, pos2)
-  local dir = vector.subtract(pos1,pos2)
-  return dir
 end
 
 
@@ -266,12 +185,10 @@ end
 -- ritorna un array di player con il numero di player trovati a index 1. Se non
 -- trova player diversi da se stessi ritorna nil
 function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, particle, trafigge)
-	local p1 = vector.add(head_pos, vector.multiply(dir, dist1))
-  --block_league.mostra_posizione(p1, 100)
-	local p2 = vector.add(head_pos, vector.multiply(dir, dist2))
-  --block_league.mostra_posizione(p2, 100)
-	local ray = minetest.raycast(p1, p2, true, false)
 
+	local p1 = vector.add(head_pos, vector.multiply(dir, dist1))
+	local p2 = vector.add(head_pos, vector.multiply(dir, dist2))
+	local ray = minetest.raycast(p1, p2, true, false)
 	local players = {}
 
   -- check su ogni cosa attraversata dal raycast (p1 a p2)
@@ -305,7 +222,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
 				if #players > 0 then
           if particle ~= nil and particle ~= false then
             if not trafigge then
-              local dist3 = block_league.get_dist(head_pos, players[1]:get_pos())
+              local dist3 = get_dist(head_pos, players[1]:get_pos())
               minetest.add_particlespawner({
                 amount = particle.amount,
                 time = 0.3,
@@ -321,7 +238,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
                 texture = particle.image
               })
             else
-              local dist3 = block_league.get_dist(head_pos, hit.intersection_point)
+              local dist3 = get_dist(head_pos, hit.intersection_point)
             	minetest.add_particlespawner({
               	amount = particle.amount,
               	time = 0.3,
@@ -341,7 +258,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
 					return players
 				else
           if particle ~= nil and particle ~= false then
-            local dist3 = block_league.get_dist(head_pos, hit.intersection_point)
+            local dist3 = get_dist(head_pos, hit.intersection_point)
           	minetest.add_particlespawner({
             	amount = particle.amount,
             	time = 0.3,
@@ -386,7 +303,7 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
     else
       if particle ~= nil and particle ~= false then
 
-        local dist3 = block_league.get_dist(head_pos, players[1]:get_pos())
+        local dist3 = get_dist(head_pos, players[1]:get_pos())
         minetest.add_particlespawner({
           amount = particle.amount,
           time = 0.3,
@@ -497,30 +414,73 @@ end
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
+function get_dist(pos1, pos2)
+  local lenx = math.abs(pos1.x - pos2.x)
+  local leny = math.abs(pos1.y - pos2.y)
+  local lenz = math.abs(pos1.z - pos2.z)
+  local hypot = math.sqrt((lenx * lenx) + (lenz * lenz))
+  local dist = math.sqrt((hypot * hypot) + (leny * leny))
+  return dist
+end
+
+
+
 function weapon_reload(user, def, name)
 
   local p_name = user:get_player_name()
+  local p_meta = user:get_meta()
   local arena = arena_lib.get_arena_by_player(p_name)
 
-  if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
-  if def.type == 3 then return end
+  if not arena or not arena.in_game or user:get_hp() <= 0
+     or arena.weapons_disabled or def.type == 3 or not def.magazine
+     or def.magazine == 0 or p_meta:get_int("bl_reloading") == 1
+    then return end
 
-  if def.magazine and def.magazine > 0 and user:get_meta():get_int("bl_reloading") == 0 then
+  p_meta:set_int("bl_reloading", 1)
 
-    local p_meta = user:get_meta()
-    p_meta:set_int("bl_reloading", 1)
+  minetest.after(def.reload_delay, function()
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+    p_meta:set_int("bl_weap_delay", 0)
+    p_meta:set_int("bl_reloading", 0)
 
-    minetest.after(def.reload_delay, function()
-      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-      p_meta:set_int("bl_weap_delay", 0)
-      p_meta:set_int("bl_reloading", 0)
+    arena.players[p_name].weapons_magazine[name] = def.magazine
+    block_league.weapons_hud_update(arena, p_name, name, arena.players[p_name].weapons_magazine[name])
+  end)
 
-      arena.players[p_name].weapons_magazine[name] = def.magazine
-      block_league.weapons_hud_update(arena, p_name, name, arena.players[p_name].weapons_magazine[name])
-    end)
-
-  end
 end
+
+
+
+local function weapon_right_click(itemstack, player, pointed_thing)
+  if not def.on_right_click then return end
+
+  local p_name = player:get_player_name()
+  local arena = arena_lib.get_arena_by_player(p_name)
+
+  if not arena or not arena.in_game or player:get_hp() <= 0 or arena.weapons_disabled then return end
+
+  local p_meta = player:get_meta()
+
+  ----- gestione delay dell'arma -----
+  if p_meta:get_int("bl_weap_secondary_delay") == 1 or p_meta:get_int("bl_death_delay") == 1 then
+    return end
+
+  p_meta:set_int("bl_weap_secondary_delay", 1)
+
+  minetest.after(def.weap_secondary_delay, function()
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+    p_meta:set_int("bl_weap_secondary_delay", 0)
+  end)
+  ----- fine gestione delay -----
+
+  -- se sono immune e sparo, perdo l'immunità
+  if player:get_armor_groups().immortal and player:get_armor_groups().immortal == 1 then
+    player:set_armor_groups({immortal = nil})
+  end
+
+  if def.on_right_click then
+    def.on_right_click(arena, name, def, itemstack, player, pointed_thing)
+  end
 
 
 
@@ -637,10 +597,7 @@ end
 function kill(arena, p_name, target)
 
   -- riproduco suono morte
-  minetest.sound_play("bl_kill", {
-    to_player = p_name,
-    max_hear_distance = 1,
-  })
+  minetest.sound_play("bl_kill", {to_player = p_name})
 
   local t_name = target:get_player_name()
 

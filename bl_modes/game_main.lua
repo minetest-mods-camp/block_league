@@ -10,7 +10,13 @@ function block_league.round_start(arena)
       player:set_hp(20)
       arena.players[p_name].energy = 100
 
+      player:set_physics_override({
+        speed = vel,
+        jump = 1.5
+      })
+
       player:get_meta():set_int("bl_reloading", 0)
+      player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
 
       -- TEMP: da rimuovere quando giocatori avranno tabella armi
       local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
@@ -23,9 +29,7 @@ function block_league.round_start(arena)
           block_league.weapons_hud_update(arena, p_name, weapon_name, magazine)
         end
       end
-
-      block_league.energy_update(arena, p_name)
-      player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
+      
     end
 
   if arena.mod == 1 then
