@@ -125,12 +125,12 @@ function block_league.register_weapon(name, def)
 
     on_place = function(itemstack, user, pointed_thing)
       weapon_right_click(itemstack, user, pointed_thing)
-    end
+    end,
 
     -- Q = reload
     on_drop = function(itemstack, user, pointed_thing)
       weapon_reload(user, def, name)
-    end,
+    end
 
   })
 
@@ -481,6 +481,7 @@ local function weapon_right_click(itemstack, player, pointed_thing)
   if def.on_right_click then
     def.on_right_click(arena, name, def, itemstack, player, pointed_thing)
   end
+end
 
 
 
