@@ -511,7 +511,7 @@ function weapon_reload(user, def, name)
     p_meta:set_int("bl_reloading", 1)
 
     minetest.after(def.reload_delay, function()
-      if not user then return end
+      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
       p_meta:set_int("bl_weap_delay", 0)
       p_meta:set_int("bl_reloading", 0)
 
