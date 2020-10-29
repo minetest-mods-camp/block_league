@@ -11,11 +11,18 @@ function block_league.round_start(arena)
       arena.players[p_name].energy = 100
 
       player:get_meta():set_int("bl_reloading", 0)
-      panel_lib.get_panel(p_name, "bl_bullets"):remove()
 
-      arena.players[p_name].weapons_reload = {}
-      block_league.weapons_hud_create(p_name)
-      panel_lib.get_panel(p_name, "bl_bullets"):show()
+      -- TEMP: da rimuovere quando giocatori avranno tabella armi
+      local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
+
+      for i, weapon_name in pairs(default_weapons) do
+        local magazine = minetest.registered_nodes[weapon_name].magazine
+
+        if magazine then
+          arena.players[p_name].weapons_magazine[weapon_name] = magazine
+          block_league.weapons_hud_update(arena, p_name, weapon_name, magazine)
+        end
+      end
 
       block_league.energy_update(arena, p_name)
       player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))

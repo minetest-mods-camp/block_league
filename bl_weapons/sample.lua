@@ -21,7 +21,7 @@ block_league.register_weapon("block_league:nomearma", {
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
   slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
-  reload = 0, --Dopo quanti colpi ricaricare
+  magazine = 0, --Dopo quanti colpi ricaricare
   reload_delay = 5,
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara aka quello che viene consumato all'uso
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
@@ -30,7 +30,7 @@ block_league.register_weapon("block_league:nomearma", {
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
   slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
-  reload = 0, --Dopo quanti colpi ricaricare
+  magazine = 0, --Dopo quanti colpi ricaricare
   reload_delay = 5,
   launching_force = 10,
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara

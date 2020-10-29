@@ -21,7 +21,7 @@ function block_league.register_weapon(name, def)
     weap_damage = def.weap_damage or nil,
     consume_bullets = def.consume_bullets or nil,
     bullet = def.bullet or nil,
-    reload = def.reload or nil,
+    magazine = def.magazine or nil,
 
     -- Q = reload
     on_drop = function(itemstack, user, pointed_thing)
@@ -505,7 +505,7 @@ function weapon_reload(user, def, name)
   if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
   if def.type == 3 then return end
 
-  if def.reload and def.reload > 0 and user:get_meta():get_int("bl_reloading") == 0 then
+  if def.magazine and def.magazine > 0 and user:get_meta():get_int("bl_reloading") == 0 then
 
     local p_meta = user:get_meta()
     p_meta:set_int("bl_reloading", 1)
@@ -514,8 +514,9 @@ function weapon_reload(user, def, name)
       if not user then return end
       p_meta:set_int("bl_weap_delay", 0)
       p_meta:set_int("bl_reloading", 0)
-      block_league.weapons_hud_update(arena, p_name, name, nil, def.reload)
-      arena.players[p_name].weapons_reload[name] = 0
+
+      arena.players[p_name].weapons_magazine[name] = def.magazine
+      block_league.weapons_hud_update(arena, p_name, name, arena.players[p_name].weapons_magazine[name])
     end)
 
   end
@@ -537,17 +538,17 @@ function gestione_sparo(p_name, user, def, name)
     return false end
 
   p_meta:set_int("bl_weap_delay", 1)
-  if def.reload then
-    if not arena.players[p_name].weapons_reload[name] then
-      arena.players[p_name].weapons_reload[name] = 0
+  if def.magazine then
+    if not arena.players[p_name].weapons_magazine[name] then
+      arena.players[p_name].weapons_magazine[name] = 0
     end
   end
 
   minetest.after(def.weap_delay, function()
     if not user then return end
-    if def.reload and user:get_meta():get_int("bl_reloading") == 0 then
+    if def.magazine and user:get_meta():get_int("bl_reloading") == 0 then
       user:get_meta():set_int("bl_weap_delay", 0)
-    elseif not def.reload then
+    elseif not def.magazine then
       user:get_meta():set_int("bl_weap_delay", 0)
     end
   end)
@@ -560,6 +561,7 @@ function gestione_sparo(p_name, user, def, name)
 
   if user:get_hp() <= 0 or arena.weapons_disabled then return end
 
+  --[[  Per quando si avranno caricatori limitati
   if def.consume_bullets then
     if inv:contains_item("main", def.bullet) then
       inv:remove_item("main", def.bullet)
@@ -567,25 +569,27 @@ function gestione_sparo(p_name, user, def, name)
     else
       return false
     end
-  end
+  end]]
 
-  if def.reload and def.reload > 0 then
-    arena.players[p_name].weapons_reload[name] = arena.players[p_name].weapons_reload[name] + 1
-    if arena.players[p_name].weapons_reload[name] == def.reload and user:get_meta():get_int("bl_reloading") == 0  then
-      user:get_meta():set_int("bl_reloading", 1)
+  -- controllo caricamento
+  if def.magazine and def.magazine > 0 then
+    arena.players[p_name].weapons_magazine[name] = arena.players[p_name].weapons_magazine[name] - 1
+    if arena.players[p_name].weapons_magazine[name] == 0 and user:get_meta():get_int("bl_reloading") == 0 then
+      p_meta:set_int("bl_reloading", 1)
+
       minetest.after(def.reload_delay, function()
         if user and user:get_meta() then
-          user:get_meta():set_int("bl_weap_delay", 0)
-          user:get_meta():set_int("bl_reloading", 0)
-          block_league.weapons_hud_update(arena, p_name, name, nil, def.reload)
-          arena.players[p_name].weapons_reload[name] = 0
+          p_meta:set_int("bl_weap_delay", 0)
+          p_meta:set_int("bl_reloading", 0)
+          arena.players[p_name].weapons_magazine[name] = def.magazine
+          block_league.weapons_hud_update(arena, p_name, name, arena.players[p_name].weapons_magazine[name])
         end
       end)
     end
   end
 
   if def.type and def.type ~= 3 then
-    block_league.weapons_hud_update(arena, p_name, name, nil, nil)
+    block_league.weapons_hud_update(arena, p_name, name, arena.players[p_name].weapons_magazine[name])
   end
   return true
 end

@@ -9,7 +9,7 @@ block_league.register_weapon("block_league:pixelgun", {
   inventory_image = "bl_pixelgun_icon.png",
   weap_sound_shooting = "bl_pixelgun_shoot",
   consume_bullets = false,
-  reload = 4,
+  magazine = 4,
   reload_delay = 4,
   type = 1,
   weap_delay = 0.9,

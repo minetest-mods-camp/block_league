@@ -14,7 +14,7 @@ block_league.register_weapon("block_league:smg", {
   bullet = "block_league:smg_bullet",
 
   consume_bullets = false,
-  reload = 30,
+  magazine = 30,
   reload_delay = 2,
 
   range = 30, --Se non hitscan calcolarsi il tempo necessario per percorrere quello
