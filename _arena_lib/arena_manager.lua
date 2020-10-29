@@ -54,15 +54,7 @@ arena_lib.on_start("block_league", function(arena)
     player:set_armor_groups({immortal = nil})
   end
 
-  -- se è TD, forza chunk entità e la aggiunge nel mondo
-  if arena.mod == 1 then
-    local pos1 = {x = arena.ball_spawn.x - 1, y = arena.ball_spawn.y - 1, z = arena.ball_spawn.z - 1}
-    local pos2 = {x = arena.ball_spawn.x + 1, y = arena.ball_spawn.y + 1, z = arena.ball_spawn.z + 1}
-    minetest.forceload_block(pos1, pos2)
-
-    local ent = minetest.add_entity(arena.ball_spawn,"block_league:prototipo",arena.name)
-  end
-
+  block_league.round_start(arena)
   block_league.energy_refill(arena)
 
 end)

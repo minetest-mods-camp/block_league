@@ -1,9 +1,9 @@
 local S = minetest.get_translator("block_league")
 
 local function cast_entity_ray() end
+local function announce_ball_possession_change() end
 local function check_for_touchdown() end
 local function add_point() end
-local function announce_ball_possession_change() end
 
 
 -- entità
@@ -249,7 +249,7 @@ function ball:reset()
   end
 
   self:_destroy()
-  minetest.add_entity(arena.ball_spawn,"block_league:prototipo",arena.name)
+  minetest.add_entity(arena.ball_spawn,"block_league:ball",arena.name)
   return
 end
 
@@ -288,24 +288,12 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
   w_pos.y <= goal.y + 3 then
 
     add_point(wielder:get_player_name(), arena)
-
-    wielder:set_physics_override({
-              speed = block_league.SPEED,
-              jump = 1.5
-    })
     wielder:get_meta():set_int("blockleague_has_ball", 0)
 
-    local arena = arena
     arena.weapons_disabled = true
+
     minetest.after(5, function()
-      teleport_players(arena)
-      local pos1 = {x = arena.ball_spawn.x - 1, y = arena.ball_spawn.y - 1, z = arena.ball_spawn.z - 1}
-      local pos2 = {x = arena.ball_spawn.x + 1, y = arena.ball_spawn.y + 1, z = arena.ball_spawn.z + 1}
-      --minetest.load_area(pos1, pos2)
-      minetest.forceload_block(pos1, pos2)
-      --minetest.emerge_area(pos1, pos2)
-      minetest.add_entity(arena.ball_spawn,"block_league:prototipo",arena.name)
-      arena.weapons_disabled = false
+      block_league.round_start(arena)
     end)
 
     ball:_destroy()
@@ -313,23 +301,6 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
 
 end
 
-function teleport_players(arena)
-  for id, team in pairs(arena.teams) do
-    local players = arena_lib.get_players_in_team(arena, id, true)
-    for index, player in pairs(players) do
-      player:set_hp(20)
-      local p_name = player:get_player_name()
-      arena.players[p_name].energy = 100
-      player:get_meta():set_int("reloading", 0)
-      panel_lib.get_panel(p_name, "bullets_hud"):remove()
-      arena.players[p_name].weapons_reload = {}
-      block_league.weapons_hud_create(p_name)
-      panel_lib.get_panel(p_name, "bullets_hud"):show()
-      block_league.energy_update(arena, p_name)
-      player:set_pos(arena_lib.get_random_spawner(arena, id))
-    end
-  end
-end
 
 
 function add_point(w_name, arena)
@@ -399,4 +370,4 @@ end
 
 
 
-minetest.register_entity("block_league:prototipo", ball)
+minetest.register_entity("block_league:ball", ball)

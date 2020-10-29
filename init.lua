@@ -67,7 +67,6 @@ dofile(minetest.get_modpath("block_league") .. "/utils.lua")
 
 -- arena_lib
 dofile(minetest.get_modpath("block_league") .. "/_arena_lib/arena_manager.lua")
-dofile(minetest.get_modpath("block_league") .. "/_arena_lib/arena_properties.lua")
 -- HUD
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_achievements.lua")
 dofile(minetest.get_modpath("block_league") .. "/_HUD/hud_broadcast.lua")
@@ -90,8 +89,10 @@ dofile(minetest.get_modpath("block_league") .. "/_weapons/rocket_launcher.lua")
 dofile(minetest.get_modpath("block_league") .. "/_weapons/sword.lua")
 dofile(minetest.get_modpath("block_league") .. "/_weapons/smg.lua")
 dofile(minetest.get_modpath("block_league") .. "/_weapons/smg_bullet.lua")
+-- modes
+dofile(minetest.get_modpath("block_league") .. "/_modes/game_main.lua")
+dofile(minetest.get_modpath("block_league") .. "/_modes/TD/ball.lua")
 -- misc
-dofile(minetest.get_modpath("block_league") .. "/_misc/ball.lua")
 dofile(minetest.get_modpath("block_league") .. "/_misc/energy.lua")
 dofile(minetest.get_modpath("block_league") .. "/_misc/immunity.lua")
 

@@ -11,6 +11,7 @@ block_league.register_weapon("block_league:sword", {
   type = 3,
   weap_damage = 7,
   knockback = 40,
+  
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing)
 
     local dir = user:get_look_dir()
