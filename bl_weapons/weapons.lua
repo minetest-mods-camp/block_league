@@ -42,7 +42,7 @@ function block_league.register_weapon(name, def)
       p_meta:set_int("bl_weap_secondary_delay", 1)
 
       minetest.after(def.weap_secondary_delay, function()
-        if not user then return end
+        if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
         p_meta:set_int("bl_weap_secondary_delay", 0)
       end)
       ----- fine gestione delay -----
@@ -168,7 +168,7 @@ function block_league.register_weapon(name, def)
       user:get_meta():set_int("bl_weap_secondary_delay", 1)
 
       minetest.after(def.weap_secondary_delay, function()
-        if not user then return end
+        if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
         user:get_meta():set_int("bl_weap_secondary_delay", 0)
       end)
       ----- fine gestione delay -----
@@ -460,7 +460,7 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
     -- eventuale knockback
     if knockback > 0 and knockback_dir then
       local knk= vector.multiply(knockback_dir,knockback)
-      target:add_velocity(knk)
+      target:add_player_velocity(knk)
     end
 
     local remaining_HP = target:get_hp() - damage
@@ -545,7 +545,7 @@ function gestione_sparo(p_name, user, def, name)
   end
 
   minetest.after(def.weap_delay, function()
-    if not user then return end
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
     if def.magazine and user:get_meta():get_int("bl_reloading") == 0 then
       user:get_meta():set_int("bl_weap_delay", 0)
     elseif not def.magazine then
