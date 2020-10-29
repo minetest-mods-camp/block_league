@@ -1,5 +1,8 @@
 function block_league.energy_create(arena, p_name)
-  local panel = Panel:new({
+
+  local p_energy = arena.players[p_name].energy
+
+  Panel:new({
     name = "bl_energy",
     player = p_name,
     bg = "",
@@ -18,7 +21,7 @@ function block_league.energy_create(arena, p_name)
       energy_clmn = {
         alignment = { x = 0, y = 1 },
         offset = {x = 0, y = -118},
-        text = ""
+        text = p_energy
       },
     }
 

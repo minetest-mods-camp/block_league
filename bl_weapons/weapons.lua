@@ -466,7 +466,7 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
     -- eventuale knockback
     if knockback > 0 and knockback_dir then
       local knk= vector.multiply(knockback_dir,knockback)
-      target:add_player_velocity(knk)
+      target:add_velocity(knk)
     end
 
     local remaining_HP = target:get_hp() - damage

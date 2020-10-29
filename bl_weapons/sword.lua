@@ -21,27 +21,26 @@ block_league.register_weapon("block_league:sword", {
 
     dir.y = 0
 
-    local player_vel = user:get_player_velocity()
+    local player_vel = user:get_velocity()
     local sprint = vector.multiply(dir,18)
 
-    user:add_player_velocity(sprint)
+    user:add_velocity(sprint)
     player_vel = vector.multiply(player_vel, -0.7)
-    user:add_player_velocity(player_vel)
+    user:add_velocity(player_vel)
     user:set_physics_override({
       speed = 0.5,
       jump = 0
     })
 
     minetest.after(2.5, function()
-      if user then
-        local vel = user:get_meta():get_int("bl_has_ball") == 0 and block_league.SPEED or block_league.SPEED_LOW
-          user:set_physics_override({
-            speed = vel,
-            jump = 1.5
-          })
-      end
-
+      if not user then return end
+      local vel = user:get_meta():get_int("bl_has_ball") == 0 and block_league.SPEED or block_league.SPEED_LOW
+        user:set_physics_override({
+          speed = vel,
+          jump = 1.5
+        })
     end)
+
     if not pointed_players then return end
     block_league.apply_damage(user, pointed_players, def.weap_damage, def.knockback, false)
 

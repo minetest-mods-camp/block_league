@@ -1,22 +1,15 @@
 local S = minetest.get_translator("block_league")
 
 local function reset_meta() end
+local function create_and_show_HUD() end
 
 
 
 arena_lib.on_load("block_league", function(arena)
 
   for pl_name, stats in pairs(arena.players) do
-
     reset_meta(pl_name)
-
-    block_league.HUD_broadcast_create(pl_name)
-    block_league.scoreboard_create(arena, pl_name)
-    block_league.HUD_teams_score_create(pl_name)
-    block_league.energy_create(arena, pl_name)
-
-    panel_lib.get_panel(pl_name, "bl_teams_score"):show()
-    panel_lib.get_panel(pl_name, "bl_energy"):show()
+    create_and_show_HUD(arena, pl_name)
 
     minetest.sound_play("block_league_voice_countdown", {
       to_player = pl_name,
@@ -149,7 +142,6 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
     local team = arena.teams[p_stats.teamID]
     team.deaths = team.deaths + 1
     block_league.scoreboard_update(arena)
-    block_league.subtract_exp(p_name, 10)
   end
 
 end)
@@ -195,4 +187,16 @@ function reset_meta(p_name)
   player:get_meta():set_int("bl_death_delay", 0)
   player:get_meta():set_int("bl_reloading", 0)
 
+end
+
+
+
+function create_and_show_HUD(arena, p_name)
+  block_league.HUD_broadcast_create(p_name)
+  block_league.scoreboard_create(arena, p_name)
+  block_league.HUD_teams_score_create(p_name)
+  block_league.energy_create(arena, p_name)
+
+  panel_lib.get_panel(p_name, "bl_teams_score"):show()
+  panel_lib.get_panel(p_name, "bl_energy"):show()
 end
