@@ -21,12 +21,12 @@ block_league.register_weapon("block_league:sword", {
 
     dir.y = 0
 
-    local player_vel = user:get_velocity()
+    local player_vel = user:get_player_velocity()
     local sprint = vector.multiply(dir,18)
 
-    user:add_velocity(sprint)
+    user:add_player_velocity(sprint)
     player_vel = vector.multiply(player_vel, -0.7)
-    user:add_velocity(player_vel)
+    user:add_player_velocity(player_vel)
     user:set_physics_override({
       speed = 0.5,
       jump = 0

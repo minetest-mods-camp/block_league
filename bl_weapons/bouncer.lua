@@ -30,9 +30,9 @@ minetest.register_tool("block_league:bouncer", {
     if not (arena.players[p_name].energy >= 20) or pointed_thing.type ~= "node" then return end
 
     local dir = user:get_look_dir()
-    local knockback = user:get_velocity().y < 1 and -15 or -10
+    local knockback = user:get_player_velocity().y < 1 and -15 or -10
 
-    user:add_velocity(vector.multiply(dir, knockback))
+    user:add_player_velocity(vector.multiply(dir, knockback))
     minetest.sound_play("bl_bouncer", {to_player = p_name, max_hear_distance = 5})
 
     arena.players[p_name].energy = arena.players[p_name].energy - 20
