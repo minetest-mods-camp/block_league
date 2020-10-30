@@ -13,6 +13,7 @@ arena_lib.on_load("block_league", function(arena)
     reset_meta(pl_name)
     equip_weapons(pl_name, arena)
     create_and_show_HUD(arena, pl_name)
+    block_league.refill_weapons(arena, pl_name)
 
     minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
   end
@@ -44,6 +45,7 @@ arena_lib.on_join("block_league", function(p_name, arena)
   reset_meta(p_name)
   equip_weapons(p_name, arena)
   create_and_show_HUD(arena, p_name)
+  block_league.refill_weapons(arena, p_name)
 
   minetest.get_player_by_name(p_name):set_armor_groups({immortal = nil})
 
@@ -158,19 +160,12 @@ end
 
 function equip_weapons(p_name, arena)
 
+  --TODO avere una tabella  per giocatore che tenga traccia delle armi equipaggiate
+  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
   local inv = minetest.get_player_by_name(p_name):get_inventory()
 
-  -- TODO: ottenere armi in database giocatori, dato che potranno cambiarle
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
-
   for i, weapon_name in pairs(default_weapons) do
-    local magazine = minetest.registered_nodes[weapon_name].magazine
-
-    if magazine then
-      arena.players[p_name].weapons_magazine[weapon_name] = magazine
-    end
     inv:add_item("main", ItemStack(weapon_name))
   end
-
   inv:add_item("main", ItemStack("block_league:bouncer"))
 end

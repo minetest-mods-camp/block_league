@@ -6,7 +6,7 @@ block_league.register_bullet("block_league:smg_bullet", {
 
   stack_max = 99,
   throwable_by_hand = false,
-  impaling = false,
+  pierce = false,
   knockback = 0,
   decrease_damage_with_distance = true,
   bullet_damage = 3,

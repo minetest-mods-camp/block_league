@@ -55,28 +55,13 @@ minetest.register_on_respawnplayer(function(player)
 
   if not arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then return end
 
-  local pos = player:get_pos()
-
-  death_delay(player, pos)
+  death_delay(player, player:get_pos())
   player:set_physics_override({
             speed = block_league.SPEED,
             jump = 1.5
   })
 
-  -- TEMP: da rimuovere quando giocatori avranno tabella armi
-  local p_name = player:get_player_name()
-  local arena = arena_lib.get_arena_by_player(p_name)
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
-
-  for i, weapon_name in pairs(default_weapons) do
-    local magazine = minetest.registered_nodes[weapon_name].magazine
-
-    if magazine then
-      arena.players[p_name].weapons_magazine[weapon_name] = magazine
-      block_league.weapons_hud_update(arena, p_name, weapon_name, magazine)
-    end
-  end
-
+  block_league.refill_weapons(arena, p_name)
   block_league.immunity(player)
 end)
 
@@ -89,7 +74,7 @@ end)
 ----------------------------------------------
 
 function death_delay(player, pos)
-  if player and player:get_meta() then
+  if player then
     local delay = player:get_meta():get_int("bl_death_delay")
     if delay == 1 and arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then
       player:set_pos(pos)
@@ -97,7 +82,7 @@ function death_delay(player, pos)
       return
     end
   end
-  minetest.after(0.1, function() death_delay(player, pos) end)
+  minetest.after(0.2, function() death_delay(player, pos) end)
 end
 
 

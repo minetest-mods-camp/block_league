@@ -10,26 +10,15 @@ function block_league.round_start(arena)
       player:set_hp(20)
       arena.players[p_name].energy = 100
 
+      block_league.refill_weapons(arena, p_name)
+      player:get_meta():set_int("bl_reloading", 0)
+
       player:set_physics_override({
         speed = vel,
         jump = 1.5
       })
 
-      player:get_meta():set_int("bl_reloading", 0)
       player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
-
-      -- TEMP: da rimuovere quando giocatori avranno tabella armi
-      local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
-
-      for i, weapon_name in pairs(default_weapons) do
-        local magazine = minetest.registered_nodes[weapon_name].magazine
-
-        if magazine then
-          arena.players[p_name].weapons_magazine[weapon_name] = magazine
-          block_league.weapons_hud_update(arena, p_name, weapon_name, magazine)
-        end
-      end
-      
     end
 
   if arena.mod == 1 then
@@ -37,6 +26,22 @@ function block_league.round_start(arena)
   end
 
   arena.weapons_disabled = false
+end
+
+
+
+function block_league.refill_weapons(arena, p_name)
+  --TODO avere una tabella  per giocatore che tenga traccia delle armi equipaggiate
+  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
+
+  for i, weapon_name in pairs(default_weapons) do
+    local magazine = minetest.registered_nodes[weapon_name].magazine
+
+    if magazine then
+      arena.players[p_name].weapons_magazine[weapon_name] = magazine
+      block_league.weapons_hud_update(arena, p_name, weapon_name, magazine)
+    end
+  end
 end
 
 

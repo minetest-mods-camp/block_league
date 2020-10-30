@@ -8,7 +8,7 @@ block_league.register_bullet("block_league:rocket",{
   bullet_damage = 10,
   throwable_by_hand = false,
   duration = 5,
-  impaling = false,
+  pierce = false,
   decrease_damage_with_distance = false,
   bullet_trail = {
     image = "bl_bullet_rocket.png",

@@ -10,7 +10,7 @@
      tiles = def.tiles or nil,
      wield_image = def.wield_image or nil,
 
-     impaling = def.impaling,
+     pierce = def.pierce,
      knockback = def.knockback,
      decrease_damage_with_distance = def.decrease_damage_with_distance,
      bullet_damage = def.bullet_damage,

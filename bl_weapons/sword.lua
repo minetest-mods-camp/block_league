@@ -17,7 +17,7 @@ block_league.register_weapon("block_league:sword", {
     local dir = user:get_look_dir()
     local pos = user:get_pos()
     local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-    local pointed_players = block_league.get_pointed_players(pos_head, dir, 0, 5, user, nil, true)
+    local pointed_players = block_league.get_pointed_players(pos_head, dir, 5, user, nil, true)
 
     dir.y = 0
 

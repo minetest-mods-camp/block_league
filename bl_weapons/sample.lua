@@ -22,7 +22,7 @@ block_league.register_weapon("block_league:nomearma", {
   slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
   magazine = 0, --Dopo quanti colpi ricaricare
-  reload_delay = 5,
+  reload_time = 5,
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara aka quello che viene consumato all'uso
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
 
@@ -31,7 +31,7 @@ block_league.register_weapon("block_league:nomearma", {
   slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
   magazine = 0, --Dopo quanti colpi ricaricare
-  reload_delay = 5,
+  reload_time = 5,
   launching_force = 10,
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
@@ -61,7 +61,7 @@ block_league.register_bullet("block_league:nomeproiettile", {
   throwable_by_hand = true, --Se si può lanciare a mano
   consume_on_throw = true,
 
-  impaling = true, --Se può attraversare il bersaglio NB: Utilizzabile solo con proiettili hitscan
+  pierce = true, --Se può attraversare il bersaglio NB: Utilizzabile solo con proiettili hitscan
   knockback = 0, --Il contraccolpo da applicare al bersaglio
   decrease_damage_with_distance = true, --Se il danno diminuisce con la distanza
   bullet_damage = 10, --Danno inflitto

@@ -6,7 +6,7 @@ block_league.register_bullet("block_league:pixelgun_bullet", {
   inventory_image = "bl_grenade_icon.png",
   stack_max = 99,
   throwable_by_hand = false,
-  impaling = true,
+  pierce = true,
   knockback = 0,
   decrease_damage_with_distance = false,
   bullet_damage = 777,

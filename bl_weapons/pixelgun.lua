@@ -10,7 +10,7 @@ block_league.register_weapon("block_league:pixelgun", {
   weap_sound_shooting = "bl_pixelgun_shoot",
   consume_bullets = false,
   magazine = 4,
-  reload_delay = 4,
+  reload_time = 4,
   type = 1,
   weap_delay = 0.9,
   slow_down_when_firing = true,

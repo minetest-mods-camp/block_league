@@ -1,4 +1,5 @@
 local function get_dist() end
+local function draw_particles() end
 local function weapon_reload() end
 local function weapon_right_click() end
 local function gestione_sparo() end
@@ -142,7 +143,7 @@ function block_league.shoot_hitscan(name, def, bullet_definition, itemstack, use
   local dir = user:get_look_dir()
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-  local pointed_players = block_league.get_pointed_players(pos_head, dir, 0, def.range, user, bullet_definition.bullet_trail, bullet_definition.impaling)
+  local pointed_players = block_league.get_pointed_players(pos_head, dir, def.range, user, bullet_definition.bullet_trail, bullet_definition.pierce)
   if pointed_players then
     block_league.apply_damage(user, pointed_players, bullet_definition.bullet_damage, bullet_definition.knockback, bullet_definition.decrease_damage_with_distance)
   end
@@ -182,12 +183,13 @@ end
 
 
 
--- ritorna un array di player con il numero di player trovati a index 1. Se non
--- trova player diversi da se stessi ritorna nil
-function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, particle, trafigge)
+-- ritorna un array di giocatori con il numero di giocatori trovati a indice 1.
+-- Se non trova giocatori diversi da se stesso ritorna nil
+function block_league.get_pointed_players(head_pos, dir, range, user, particle, has_piercing)
 
-	local p1 = vector.add(head_pos, vector.multiply(dir, dist1))
-	local p2 = vector.add(head_pos, vector.multiply(dir, dist2))
+	local p1 = vector.add(head_pos, vector.multiply(dir, 0))
+	local p2 = vector.add(head_pos, vector.multiply(dir, range))
+
 	local ray = minetest.raycast(p1, p2, true, false)
 	local players = {}
 
@@ -195,24 +197,22 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
 	for hit in ray do
     -- se è un oggetto
 		if hit.type == "object" then
-      if hit.ref then
       -- se è un giocatore
-  			if hit.ref:is_player() then
-          -- e non è colui che spara
-  				if hit.ref ~= user then
-  					table.insert(players, hit.ref)
-  				end
-  			elseif hit.ref:get_luaentity() then
-          local entity = hit.ref:get_luaentity()
-          if entity.initial_properties ~= nil then
+			if hit.ref and hit.ref:is_player() then
+        -- e non è colui che spara
+				if hit.ref ~= user then
+					table.insert(players, hit.ref)
+				end
+			elseif hit.ref:get_luaentity() then
+        local entity = hit.ref:get_luaentity()
+        if entity.initial_properties ~= nil then
 
-            if entity.initial_properties.is_bullet or entity.initial_properties.is_grenade then
-              --distrugge sia il proiettile con cui collide che se stesso
-              entity.old_p_name = entity.p_name
-              entity.p_name = user:get_player_name()
+          if entity.initial_properties.is_bullet or entity.initial_properties.is_grenade then
+            --distrugge sia il proiettile con cui collide che se stesso
+            entity.old_p_name = entity.p_name
+            entity.p_name = user:get_player_name()
 
-              entity:_destroy()
-            end
+            entity:_destroy()
           end
         end
       end
@@ -221,58 +221,19 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
 			if hit.type == "node" then
 				if #players > 0 then
           if particle ~= nil and particle ~= false then
-            if not trafigge then
+            if not has_piercing then
               local dist3 = get_dist(head_pos, players[1]:get_pos())
-              minetest.add_particlespawner({
-                amount = particle.amount,
-                time = 0.3,
-                minpos = p1,
-                maxpos = p1,
-                minvel = vector.multiply(dir, dist2),
-                maxvel = vector.multiply(dir, dist2),
-                minexptime = dist3/(dist2 * 1.5),
-                maxexptime = dist3/(dist2 * 1.5),
-                size = 2,
-                collisiondetection = false,
-                vertical = false,
-                texture = particle.image
-              })
+              draw_particles(particle, dir, p1, range, dist3)
             else
               local dist3 = get_dist(head_pos, hit.intersection_point)
-            	minetest.add_particlespawner({
-              	amount = particle.amount,
-              	time = 0.3,
-              	minpos = p1,
-              	maxpos = p1,
-              	minvel = vector.multiply(dir, dist2),
-              	maxvel = vector.multiply(dir, dist2),
-              	minexptime = dist3/(dist2 * 1.5),
-              	maxexptime = dist3/(dist2 * 1.5),
-              	size = 2,
-              	collisiondetection = false,
-              	vertical = false,
-                texture = particle.image
-            	})
+              draw_particles(particle, dir, p1, range, dist3)
             end
           end
 					return players
 				else
           if particle ~= nil and particle ~= false then
             local dist3 = get_dist(head_pos, hit.intersection_point)
-          	minetest.add_particlespawner({
-            	amount = particle.amount,
-            	time = 0.3,
-            	minpos = p1,
-            	maxpos = p1,
-            	minvel = vector.multiply(dir, dist2),
-            	maxvel = vector.multiply(dir, dist2),
-            	minexptime = dist3/(dist2 * 1.5),
-            	maxexptime = dist3/(dist2 * 1.5),
-            	size = 2,
-            	collisiondetection = false,
-            	vertical = false,
-              texture = particle.image
-          	})
+          	draw_particles(particle, dir, p1, range, dist3)
           end
 					return nil
 				end
@@ -280,64 +241,21 @@ function block_league.get_pointed_players(head_pos, dir, dist1, dist2, user, par
 		end
 	end
 
-  -- se ho sparato a qualcuno puntando in aria (quindi senza incrociare blocchi)
-	if #players > 0 then
-    if trafigge then
-      if particle ~= nil and particle ~= false then
-      	minetest.add_particlespawner({
-        	amount = particle.amount,
-        	time = 0.3,
-        	minpos = p1,
-        	maxpos = p1,
-        	minvel = vector.multiply(dir, 120),
-        	maxvel = vector.multiply(dir, 120),
-        	minexptime = dist2/120,
-        	maxexptime = dist2/120,
-        	size = 2,
-        	collisiondetection = false,
-        	vertical = false,
-          texture = particle.image
-      	})
-      end
-  		return players
-    else
-      if particle ~= nil and particle ~= false then
-
-        local dist3 = get_dist(head_pos, players[1]:get_pos())
-        minetest.add_particlespawner({
-          amount = particle.amount,
-          time = 0.3,
-          minpos = p1,
-          maxpos = p1,
-          minvel = vector.multiply(dir, dist2),
-          maxvel = vector.multiply(dir, dist2),
-          minexptime = dist3/(dist2 * 1.5),
-          maxexptime = dist3/(dist2 * 1.5),
-          size = 2,
-          collisiondetection = false,
-          vertical = false,
-          texture = particle.image
-        })
-
-      end
-      return {players[1]}
-    end
-	else
+  -- se ho sparato a qualcuno senza incrociare blocchi
+  if #players > 0 then
     if particle ~= nil and particle ~= false then
-      minetest.add_particlespawner({
-        amount = particle.amount,
-        time = 0.3,
-        minpos = p1,
-        maxpos = p1,
-        minvel = vector.multiply(dir, 120),
-        maxvel = vector.multiply(dir, 120),
-        minexptime = dist2/120,
-        maxexptime = dist2/120,
-        size = 2,
-        collisiondetection = false,
-        vertical = false,
-        texture = particle.image
-      })
+      if has_piercing then
+        draw_particles(particle, dir, p1, range, 120)
+        return players
+      else
+        local dist3 = get_dist(head_pos, players[1]:get_pos())
+        draw_particles(particle, dir, p1, range, dist3)
+        return {players[1]}
+      end
+    end
+  else
+    if particle ~= nil and particle ~= false then
+      draw_particles(particle, dir, p1, range, 120)
     end
     return nil
   end
@@ -425,6 +343,25 @@ end
 
 
 
+function draw_particles(particle, dir, p1, dist2, dist3)
+  minetest.add_particlespawner({
+    amount = particle.amount,
+    time = 0.3,
+    minpos = p1,
+    maxpos = p1,
+    minvel = vector.multiply(dir, dist2),
+    maxvel = vector.multiply(dir, dist2),
+    minexptime = dist3/(dist2 * 1.5),
+    maxexptime = dist3/(dist2 * 1.5),
+    size = 2,
+    collisiondetection = false,
+    vertical = false,
+    texture = particle.image
+  })
+end
+
+
+
 function weapon_reload(user, def, name)
 
   local p_name = user:get_player_name()
@@ -438,7 +375,7 @@ function weapon_reload(user, def, name)
 
   p_meta:set_int("bl_reloading", 1)
 
-  minetest.after(def.reload_delay, function()
+  minetest.after(def.reload_time, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
     p_meta:set_int("bl_weap_delay", 0)
     p_meta:set_int("bl_reloading", 0)
@@ -538,7 +475,7 @@ function gestione_sparo(p_name, user, def, name)
     if arena.players[p_name].weapons_magazine[name] == 0 and user:get_meta():get_int("bl_reloading") == 0 then
       p_meta:set_int("bl_reloading", 1)
 
-      minetest.after(def.reload_delay, function()
+      minetest.after(def.reload_time, function()
         if user and user:get_meta() then
           p_meta:set_int("bl_weap_delay", 0)
           p_meta:set_int("bl_reloading", 0)

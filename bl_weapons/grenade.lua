@@ -5,7 +5,7 @@ block_league.register_bullet("block_league:grenade", {
   wield_scale = {x=1.5, y=1.5, z=1.5},
   inventory_image = "bl_grenade_icon.png",
   stack_max = 99,
-  impaling = false,
+  pierce = false,
   throwable_by_hand = true,
   bullet_damage = 10,
   decrease_damage_with_distance = false,
