@@ -18,8 +18,5 @@ block_league.register_bullet("block_league:smg_bullet", {
     glow = 0,
     interval = 5,
     amount = 5,
-  },
-
-
-
+  }
 })

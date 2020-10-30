@@ -35,7 +35,7 @@ arena_lib.register_minigame("block_league", {
     goal_red = {},
     goal_blue = {},
     ball_spawn = {},
-    min_y = 0,
+    min_y = 0
   },
   temp_properties = {
     weapons_disabled = true,
@@ -47,7 +47,7 @@ arena_lib.register_minigame("block_league", {
   },
   player_properties = {
     energy = 100,
-    weapons_magazine = {},
+    weapons_magazine = {}
   }
 })
 

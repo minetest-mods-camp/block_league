@@ -19,6 +19,7 @@
 
      stack_max = def.stack_max,
      on_drop = function() end,
+
      on_place = function(itemstack, user, pointed_thing)
        if def.throwable_by_hand then
          local inv = user:get_inventory()
@@ -28,12 +29,7 @@
            user:set_armor_groups({immortal = nil})
          end
 
-
          local p_name = user:get_player_name()
-
-         -- Check if the player is in the arena and is fighting, if not it exits
-         if not arena_lib.is_player_in_arena(p_name) then return end
-
          local arena = arena_lib.get_arena_by_player(p_name)
 
          if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
@@ -57,10 +53,6 @@
          end
 
          local p_name = user:get_player_name()
-
-         -- Check if the player is in the arena and is fighting, if not it exits
-         if not arena_lib.is_player_in_arena(p_name) then return end
-
          local arena = arena_lib.get_arena_by_player(p_name)
 
          if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
@@ -83,6 +75,8 @@
      minetest.register_entity(name .. "_entity", bullet_entity)
    end
 end
+
+
 
 function bullet_set_entity(name, def)
   local bullet_entity = {
@@ -239,8 +233,6 @@ function bullet_set_entity(name, def)
       end
 
 
-
-
     else
 
       if moveresult.collides and moveresult.collisions[1] and not vector.equals(moveresult.collisions[1].old_velocity, velocity) and vector.distance(moveresult.collisions[1].old_velocity, velocity) > 4 then
@@ -306,7 +298,8 @@ function bullet_set_entity(name, def)
 
 end
 
--- Aggiunge le particelle dell'esplosione
+
+
 function spawn_particles_sphere(pos, particle_texture)
   if not pos then return end
   minetest.add_particlespawner({

@@ -222,18 +222,18 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
 				if #players > 0 then
           if particle ~= nil and particle ~= false then
             if not has_piercing then
-              local dist3 = get_dist(head_pos, players[1]:get_pos())
-              draw_particles(particle, dir, p1, range, dist3)
+              local impact_dist = get_dist(head_pos, players[1]:get_pos())
+              draw_particles(particle, dir, p1, range, impact_dist)
             else
-              local dist3 = get_dist(head_pos, hit.intersection_point)
-              draw_particles(particle, dir, p1, range, dist3)
+              local impact_dist = get_dist(head_pos, hit.intersection_point)
+              draw_particles(particle, dir, p1, range, impact_dist)
             end
           end
 					return players
 				else
           if particle ~= nil and particle ~= false then
-            local dist3 = get_dist(head_pos, hit.intersection_point)
-          	draw_particles(particle, dir, p1, range, dist3)
+            local impact_dist = get_dist(head_pos, hit.intersection_point)
+          	draw_particles(particle, dir, p1, range, impact_dist)
           end
 					return nil
 				end
@@ -248,8 +248,8 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
         draw_particles(particle, dir, p1, range, 120)
         return players
       else
-        local dist3 = get_dist(head_pos, players[1]:get_pos())
-        draw_particles(particle, dir, p1, range, dist3)
+        local impact_dist = get_dist(head_pos, players[1]:get_pos())
+        draw_particles(particle, dir, p1, range, impact_dist)
         return {players[1]}
       end
     end
@@ -343,16 +343,16 @@ end
 
 
 
-function draw_particles(particle, dir, p1, dist2, dist3)
+function draw_particles(particle, dir, origin, range, impact_dist)
   minetest.add_particlespawner({
     amount = particle.amount,
     time = 0.3,
-    minpos = p1,
-    maxpos = p1,
-    minvel = vector.multiply(dir, dist2),
-    maxvel = vector.multiply(dir, dist2),
-    minexptime = dist3/(dist2 * 1.5),
-    maxexptime = dist3/(dist2 * 1.5),
+    minpos = origin,
+    maxpos = origin,
+    minvel = vector.multiply(dir, range),
+    maxvel = vector.multiply(dir, range),
+    minexptime = impact_dist/(range * 1.5),
+    maxexptime = impact_dist/(range * 1.5),
     size = 2,
     collisiondetection = false,
     vertical = false,
