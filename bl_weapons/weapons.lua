@@ -416,7 +416,7 @@ function weapon_reload(weapon, player, name)
     p_meta:set_int("bl_reloading", 0)
 
     arena.players[p_name].weapons_magazine[name] = weapon.magazine
-    block_league.weapons_hud_update(arena, p_name, name, arena.players[p_name].weapons_magazine[name])
+    block_league.weapons_hud_update(arena, p_name, name)
   end)
 
 end
@@ -497,12 +497,12 @@ function update_magazine(player, weapon)
         p_meta:set_int("bl_weap_delay", 0)
         p_meta:set_int("bl_reloading", 0)
         arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
-        block_league.weapons_hud_update(arena, p_name, w_name, arena.players[p_name].weapons_magazine[w_name])
+        block_league.weapons_hud_update(arena, p_name, w_name)
       end
     end)
   end
 
-  block_league.weapons_hud_update(arena, p_name, w_name, arena.players[p_name].weapons_magazine[w_name])
+  block_league.weapons_hud_update(arena, p_name, w_name)
 end
 
 

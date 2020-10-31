@@ -78,16 +78,33 @@ end
 
 
 
-function block_league.weapons_hud_update(arena, p_name, item_name, magazine)
-  local weapon_def = minetest.registered_nodes[item_name]
+function block_league.weapons_hud_update(arena, p_name, weapon_name)
+
+  local weapon = minetest.registered_nodes[weapon_name]
   local panel = panel_lib.get_panel(p_name, "bl_bullets")
+
+  local w_name = weapon.name
+  local magazine = weapon.magazine
+  local current_magazine = arena.players[p_name].weapons_magazine[w_name]
+
+  local bg_pic = ""
+
+  if current_magazine == 0 then
+    bg_pic = "bl_hud_bullets_bg_empty.png"
+  elseif current_magazine <= magazine/3 then
+    bg_pic = "bl_hud_bullets_bg_low.png"
+  else
+    bg_pic = "bl_hud_bullets_bg.png"
+  end
 
   panel:update(nil,
     {
-    [weapon_def.name .. "_magazine_txt"] = {
-      text = magazine
+    [w_name .. "_magazine_txt"] = {
+      text = current_magazine
+    }
+  }, {
+    [w_name .. "_bg"] = {
+      text = bg_pic
     }
   })
-
-  --TODO: cambiare colore a seconda del numero proiettili (le immagini già ci sono)
 end
