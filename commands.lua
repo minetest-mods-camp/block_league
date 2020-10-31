@@ -169,7 +169,7 @@ ChatCmdBuilder.new("bleagueadmin", function(cmd)
 
 end, {
   description = S("mod management"),
-  privs = { block_league_admin = true }
+  privs = { blockleague_admin = true }
 })
 
 

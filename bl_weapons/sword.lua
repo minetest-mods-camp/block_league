@@ -1,18 +1,18 @@
 block_league.register_weapon("block_league:sword", {
 
   description = "Spada",
-  inventory_image = "bl_sword.png",
-  wield_scale = {x=1.3, y=1.3, z=1.3},
   wield_image = "bl_sword.png",
+  wield_scale = {x=1.3, y=1.3, z=1.3},
+  inventory_image = "bl_sword.png",
 
+  type = 3,
+
+  damage = 7,
+  knockback = 40,
   weap_delay = 2,
   weap_secondary_delay = 3,
 
-  type = 3,
-  weap_damage = 7,
-  knockback = 40,
-
-  on_right_click = function(arena, name, def, itemstack, user, pointed_thing)
+  on_right_click = function(arena, name, weapon, user, pointed_thing)
 
     local dir = user:get_look_dir()
     local pos = user:get_pos()
@@ -42,7 +42,7 @@ block_league.register_weapon("block_league:sword", {
     end)
 
     if not pointed_players then return end
-    block_league.apply_damage(user, pointed_players, def.weap_damage, def.knockback, false)
+    block_league.apply_damage(user, pointed_players, weapon.damage, weapon.knockback, false)
 
   end,
 })

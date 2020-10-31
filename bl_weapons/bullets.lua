@@ -1,139 +1,70 @@
- function block_league.register_bullet(name, def)
-   minetest.register_node(name,{
-     name = name,
-     description = def.description,
-     inventory_image = def.inventory_image,
-     wield_scale = def.wield_scale,
+ function block_league.register_bullet(bullet, damage, bullet_trail)
 
-     drawtype = def.mesh and "mesh" or "item",
-     mesh = def.mesh or nil,
-     tiles = def.tiles or nil,
-     wield_image = def.wield_image or nil,
+   local bullet_entity = bullet_set_entity(bullet.name, bullet, damage, bullet_trail)
 
-     pierce = def.pierce,
-     knockback = def.knockback,
-     decrease_damage_with_distance = def.decrease_damage_with_distance,
-     bullet_damage = def.bullet_damage,
-     bullet_trail = def.bullet_trail,
-     bullet = def.bullet,
-
-     stack_max = def.stack_max,
-     on_drop = function() end,
-
-     on_place = function(itemstack, user, pointed_thing)
-       if def.throwable_by_hand then
-         local inv = user:get_inventory()
-
-         -- se sono immune e sparo, perdo l'immunità
-         if user:get_armor_groups().immortal and user:get_armor_groups().immortal == 1 then
-           user:set_armor_groups({immortal = nil})
-         end
-
-         local p_name = user:get_player_name()
-         local arena = arena_lib.get_arena_by_player(p_name)
-
-         if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
-
-         if def.consume_on_throw then
-           itemstack:take_item()
-         end
-
-         block_league.shoot_bullet(name, def, nil, itemstack, user, pointed_thing)
-       end
-       return itemstack
-     end,
-
-     on_secondary_use = function(itemstack, user, pointed_thing)
-       if def.throwable_by_hand then
-         local inv = user:get_inventory()
-
-         -- se sono immune e sparo, perdo l'immunità
-         if user:get_armor_groups().immortal and user:get_armor_groups().immortal == 1 then
-           user:set_armor_groups({immortal = nil})
-         end
-
-         local p_name = user:get_player_name()
-         local arena = arena_lib.get_arena_by_player(p_name)
-
-         if not arena or not arena.in_game or user:get_hp() <= 0 or arena.weapons_disabled then return end
-
-         if def.consume_on_throw then
-           itemstack:take_item()
-         end
-
-         block_league.shoot_bullet(name, def, nil, itemstack, user, pointed_thing)
-       end
-       return itemstack
-     end,
-
-   })
-
-   if def.shootable then
-     -- Ottiene la definizione dell'entità
-     local bullet_entity = bullet_set_entity(name, def)
-     -- Registra l'entità
-     minetest.register_entity(name .. "_entity", bullet_entity)
-   end
+   minetest.register_entity("block_league:" .. bullet.name .. "_entity", bullet_entity)
+   
+   return bullet_entity
 end
 
 
 
-function bullet_set_entity(name, def)
-  local bullet_entity = {
+function bullet_set_entity(name, def, dmg, trail)
+  local bullet = {
     initial_properties = {
-      name = name,
-      bullet_speed = def.bullet.bullet_speed,
-      bullet_explosion_damage = def.bullet.bullet_explosion_damage,
+
+      name = def.name,
+      visual = def.mesh and "mesh" or "item",
+      mesh = def.mesh,
+      visual_size = def.visual_size,
+      textures = def.textures,
+      collisionbox = def.collisionbox,
+
+      damage = dmg,
+      speed = def.speed,
+      lifetime = def.lifetime,
+
+      explosion_range = def.explosion_range,
+      explosion_damage = def.explosion_damage,
+      explosion_texture = def.explosion_texture,
+      bullet_trail = trail,
+
+      explode_on_contact = def.explode_on_contact,
+      gravity = def.gravity,
+
+      on_destroy = def.on_destroy,
+      on_right_click = def.on_right_click,
+
       physical = true,
       collide_with_objects = true,
-      visual_size = def.bullet.visual_size,
-      collisionbox = def.bullet.collisionbox,
 
-      visual = def.bullet.mesh and "mesh" or "item",
-      mesh = def.bullet.mesh,
-      textures = def.bullet.textures,
-      wield_item = name,
-      bullet_explosion_texture = def.bullet.bullet_explosion_texture,
-      bullet_speed = def.bullet.bullet_speed,
-      explode_on_contact = def.bullet.explode_on_contact,
-      bullet_explosion_range = def.bullet.bullet_explosion_range,
-      gravity = def.bullet.gravity,
-      on_right_click = def.bullet.on_right_click,
-      on_destroy = def.bullet.on_destroy,
-      duration = def.duration,
-      bullet_trail = def.bullet_trail,
-      bullet_damage = def.bullet_damage,
       is_bullet = true
     }
   }
 
-  function bullet_entity:_destroy()
+  function bullet:_destroy()
     -- Crea le particelle dell'esplosione
-    spawn_particles_sphere(self.object:get_pos(), self.initial_properties.bullet_explosion_texture)
-    -- Se ha una funzione apposita da usare quando esplode la esegue
-    if self.initial_properties.on_destroy then
-       self.initial_properties.on_destroy(self)
-    end
+    spawn_particles_sphere(self.object:get_pos(), self.initial_properties.explosion_texture)
 
-   -- Distrugge l'entità
-   self.object:remove()
+    self.initial_properties.on_destroy(self)
+    self.object:remove()
   end
 
   -- Ottiene gli staticdata ogni 18 secondi circa
-  function bullet_entity:get_staticdata(self)
+  function bullet:get_staticdata(self)
     if self == nil or self.p_name == nil then return end
     return self.p_name
   end
 
   -- L'entità esplode quando colpita
-  function bullet_entity:on_punch()
+  function bullet:on_punch()
     if self.initial_properties.on_right_click then
        self.initial_properties.on_right_click(self)
     end
   end
 
   -- quando si istanzia un'entità
-  function bullet_entity:on_activate(staticdata)
+  function bullet:on_activate(staticdata)
 
     if staticdata ~= "" and staticdata ~= nil then
       self.p_name = staticdata -- nome utente come staticdata
@@ -147,10 +78,10 @@ function bullet_set_entity(name, def)
     end
   end
 
-  function bullet_entity:on_step(dtime, moveresult)
+  function bullet:on_step(dtime, moveresult)
     self.lifetime = self.lifetime  + dtime
 
-    if self.lifetime >= self.initial_properties.duration then
+    if self.lifetime >= self.initial_properties.lifetime then
       -- ESPLODE
       self:_destroy()
       return
@@ -198,7 +129,7 @@ function bullet_set_entity(name, def)
                 buffer_boolean = true
               elseif collision.object:get_player_name() == self.p_name then
 
-                if self.lifetime < (15 / self.initial_properties.bullet_speed) then
+                if self.lifetime < (15 / self.initial_properties.speed) then
                   obj:set_velocity({
                     x=(collision.old_velocity.x),
                     y=(collision.old_velocity.y),
@@ -294,7 +225,7 @@ function bullet_set_entity(name, def)
   end
 
   -- Restituisce la definizione dell'entità
-  return bullet_entity
+  return bullet
 
 end
 

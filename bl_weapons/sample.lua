@@ -32,12 +32,11 @@ block_league.register_weapon("block_league:nomearma", {
   consume_bullets = true, --Se usa proiettili
   magazine = 0, --Dopo quanti colpi ricaricare
   reload_time = 5,
-  launching_force = 10,
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
 
   type = 3, --1) Hitscan 2) Entity based 3) Sword
-  weap_damage = 10, --Danno inflitto
+  damage = 10, --Danno inflitto
   knockback = 0, --Il contraccolpo da applicare al bersaglio
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
 
@@ -56,17 +55,12 @@ block_league.register_bullet("block_league:nomeproiettile", {
   --Se si vuole il proiettile 2D
   wield_image = "wield_image.png", --Immagine da mostrare in mano
 
-  stack_max = 99, --Numero massimo di proiettili possedibili
-
-  throwable_by_hand = true, --Se si può lanciare a mano
-  consume_on_throw = true,
-
   pierce = true, --Se può attraversare il bersaglio NB: Utilizzabile solo con proiettili hitscan
   knockback = 0, --Il contraccolpo da applicare al bersaglio
   decrease_damage_with_distance = true, --Se il danno diminuisce con la distanza
   bullet_damage = 10, --Danno inflitto
   bullet_trail = {
-    image = "weap_trail.png",
+    image = "bullet_trail.png",
     life = 1,
     size = 2,
     glow = 0,
@@ -74,7 +68,7 @@ block_league.register_bullet("block_league:nomeproiettile", {
     amount = 20,
   },
 
-  duration = 10, --Tempo di vita dell'entità (da spostare dentro bullet)
+  lifetime = 10, --Tempo di vita dell'entità (da spostare dentro bullet)
 
   bullet = {
 
@@ -90,11 +84,11 @@ block_league.register_bullet("block_league:nomeproiettile", {
 
     explode_on_contact = true, --Se rimbalza quando si scontra con qualcosa
 
-    bullet_explosion_damage = 10, --Danno inflitto con l'esplosione
-    bullet_explosion_range = 4, --Raggio dell'esplosione
-    bullet_explosion_texture = "explosion_texture.png",
+    explosion_damage = 10, --Danno inflitto con l'esplosione
+    explosion_range = 4, --Raggio dell'esplosione
+    explosion_texture = "explosion_texture.png",
 
-    bullet_speed = 30, --Velocità a cui lanciare/sparare il proiettile
+    speed = 30, --Velocità a cui lanciare/sparare il proiettile
 
     gravity = true, --Se la gravità ha effetto sul proiettile
 

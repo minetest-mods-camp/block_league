@@ -1,6 +1,6 @@
 block_league.explode = function(self)
-  local explosion_range = self.initial_properties.bullet_explosion_range
-  local explosion_damage = self.initial_properties.bullet_explosion_damage
+  local explosion_range = self.initial_properties.explosion_range
+  local explosion_damage = self.initial_properties.explosion_damage
   local origin = self.object:get_pos()
   local p_name = self.p_name
   if origin == nil then return end
@@ -59,8 +59,8 @@ end
 
 
 block_league.grenade_explode = function(self)
-  local explosion_range = self.initial_properties.bullet_explosion_range
-  local explosion_damage = self.initial_properties.bullet_explosion_damage
+  local explosion_range = self.initial_properties.explosion_range
+  local explosion_damage = self.initial_properties.explosion_damage
   local origin = self.object:get_pos()
   local p_name = self.p_name
   if origin == nil then return end

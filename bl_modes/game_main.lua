@@ -9,12 +9,13 @@ function block_league.round_start(arena)
 
       player:set_hp(20)
       arena.players[p_name].energy = 100
+      block_league.energy_update(arena, p_name)
 
       block_league.refill_weapons(arena, p_name)
       player:get_meta():set_int("bl_reloading", 0)
 
       player:set_physics_override({
-        speed = vel,
+        speed = block_league.SPEED,
         jump = 1.5
       })
 

@@ -11,7 +11,7 @@ arena_lib.on_load("block_league", function(arena)
 
   for pl_name, stats in pairs(arena.players) do
     reset_meta(pl_name)
-    equip_weapons(pl_name, arena)
+    equip_weapons(arena, pl_name)
     create_and_show_HUD(arena, pl_name)
     block_league.refill_weapons(arena, pl_name)
 
@@ -43,7 +43,7 @@ end)
 arena_lib.on_join("block_league", function(p_name, arena)
 
   reset_meta(p_name)
-  equip_weapons(p_name, arena)
+  equip_weapons(arena, p_name)
   create_and_show_HUD(arena, p_name)
   block_league.refill_weapons(arena, p_name)
 
@@ -158,7 +158,7 @@ end
 
 
 
-function equip_weapons(p_name, arena)
+function equip_weapons(arena, p_name)
 
   --TODO avere una tabella  per giocatore che tenga traccia delle armi equipaggiate
   local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
