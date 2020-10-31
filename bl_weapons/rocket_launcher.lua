@@ -18,7 +18,7 @@ block_league.register_weapon("block_league:rocket_launcher", {
   slow_down_when_firing = false,
   continuos_fire = true,
 
-  weap_sound_shooting = "bl_rocketlauncher_shoot",
+  sound_shoot = "bl_rocketlauncher_shoot",
   bullet_trail = {
     image = "bl_bullet_rocket.png",
     life = 1,

@@ -11,7 +11,7 @@ block_league.register_weapon("block_league:nomearma", {
   --Se si vuole l'arma 2D
   wield_image = "wield_image.png", --Immagine da mostrare in mano
 
-  weap_sound_shooting = "weap_sound_shooting", --Suono quando si usa l'arma
+  sound_shoot = "sound_shoot", --Suono quando si usa l'arma
   weap_delay = 10, --Delay tra gli spari
   weap_secondary_delay = 2, --Delay tra l'uso del destro
 

@@ -3,7 +3,9 @@ local function draw_particles() end
 local function weapon_left_click() end
 local function weapon_right_click() end
 local function weapon_reload() end
-local function gestione_sparo() end
+local function can_shoot() end
+local function check_immunity() end
+local function update_magazine() end
 local function shoot_generic() end
 local function after_damage() end
 local function kill() end
@@ -36,7 +38,7 @@ function block_league.register_weapon(name, def)
     slow_down_when_firing = def.slow_down_when_firing,
     continuos_fire = def.continuos_fire,
 
-    weap_sound_shooting = def.weap_sound_shooting,
+    sound_shoot = def.sound_shoot,
     bullet_trail = def.bullet_trail,
 
     consume_bullets = def.consume_bullets,
@@ -207,12 +209,6 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
 
     if target:get_hp() <= 0 then return end
 
-    -- controllo le immunità
-    if target:get_inventory():contains_item("main", "arena_lib:immunity") then
-      --TODO: sostituire con un suono
-      minetest.chat_send_player(p_name, minetest.colorize("#d7ded7", S("You can't hit @1 due to immunity", target:get_player_name())))
-    return end
-
     local t_name = target:get_player_name()
 
     -- se player e target sono nella stessa squadra, annullo
@@ -227,7 +223,6 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
     local remaining_HP = target:get_hp() - damage
 
     -- applico il danno
-
     target:set_hp(remaining_HP, {type = "set_hp", player_name = p_name})
 
     -- se è ancora vivo, riproduco suono danno
@@ -290,12 +285,15 @@ end
 
 function weapon_left_click(weapon, player, pointed_thing)
 
-  if not gestione_sparo(player, weapon) then return end
+  if not can_shoot(player, weapon) then return end
+
+  check_immunity(player)
+  update_magazine(player, weapon)
 
   local p_name = player:get_player_name()
 
-  if weapon.weap_sound_shooting then
-    minetest.sound_play(weapon.weap_sound_shooting, {to_player = p_name})
+  if weapon.sound_shoot then
+    minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
   end
 
   if weapon.slow_down_when_firing then
@@ -305,7 +303,7 @@ function weapon_left_click(weapon, player, pointed_thing)
       })
   end
 
-  shoot_generic(weapon, p_name, itemstack, player, pointed_thing)
+  shoot_generic(player, weapon, itemstack, pointed_thing)
 
   if weapon.continuos_fire then
     controls.register_on_hold(function(player, key, time)
@@ -313,15 +311,18 @@ function weapon_left_click(weapon, player, pointed_thing)
 
       if player:get_wielded_item():get_name() == weapon.name then
 
+        if not can_shoot(player, weapon) then return end
+
+        check_immunity(player)
+        update_magazine(player, weapon)
+
         local p_name = player:get_player_name()
 
-        if not gestione_sparo(player, weapon) then return end
-
-        if weapon.weap_sound_shooting then
-           minetest.sound_play(weapon.weap_sound_shooting, {to_player = p_name})
+        if weapon.sound_shoot then
+           minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
          end
 
-       shoot_generic(weapon, p_name, itemstack, player, pointed_thing)
+       shoot_generic(player, weapon, itemstack, pointed_thing)
 
       elseif weapon.slow_down_when_firing and player:get_meta():get_int("bl_has_ball") == 0 and arena_lib.is_player_in_arena(p_name) then
        if player then
@@ -338,18 +339,19 @@ function weapon_left_click(weapon, player, pointed_thing)
   controls.register_on_release(function(player, key, time)
     if key~="LMB" then return end
       local wielditem = player:get_wielded_item()
+
       if wielditem:get_name() == weapon.name then
 
-        if weapon.slow_down_when_firing and player:get_meta():get_int("bl_has_ball") == 0 then
-          minetest.after(0.1, function()
-            if player then
-            player:set_physics_override({
-              speed = block_league.SPEED,
-              jump = 1.5
-            })
-            end
-          end)
-        end
+        if not weapon.slow_down_when_firing or player:get_meta():get_int("bl_has_ball") ~= 0 then return end
+
+        minetest.after(0.1, function()
+          if not player then return end
+          player:set_physics_override({
+            speed = block_league.SPEED,
+            jump = 1.5
+          })
+        end)
+
       elseif weapon.slow_down_when_firing and player:get_meta():get_int("bl_has_ball") == 0 and arena_lib.is_player_in_arena(player:get_player_name()) then
         if player then
            player:set_physics_override({
@@ -386,10 +388,7 @@ function weapon_right_click(weapon, player, pointed_thing)
   end)
   ----- fine gestione delay -----
 
-  -- se sono immune e sparo, perdo l'immunità
-  if player:get_armor_groups().immortal and player:get_armor_groups().immortal == 1 then
-    player:set_armor_groups({immortal = nil})
-  end
+  check_immunity(player)
 
   if weapon.on_right_click then
     weapon.on_right_click(arena, name, weapon, player, pointed_thing)
@@ -424,7 +423,7 @@ end
 
 
 
-function gestione_sparo(player, weapon)
+function can_shoot(player, weapon)
 
   local p_name = player:get_player_name()
 
@@ -434,6 +433,9 @@ function gestione_sparo(player, weapon)
   local arena = arena_lib.get_arena_by_player(p_name)
   local w_name = weapon.name
 
+  if player:get_hp() <= 0 or arena.weapons_disabled then return end
+  if weapon.magazine and weapon.magazine <= 0 then return end
+
   ----- gestione delay dell'arma -----
   if p_meta:get_int("bl_weap_delay") == 1 or
      p_meta:get_int("bl_death_delay") == 1 or
@@ -441,12 +443,6 @@ function gestione_sparo(player, weapon)
     return false end
 
   p_meta:set_int("bl_weap_delay", 1)
-
-  if weapon.magazine then
-    if not arena.players[p_name].weapons_magazine[w_name] then
-      arena.players[p_name].weapons_magazine[w_name] = 0
-    end
-  end
 
   minetest.after(weapon.weap_delay, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
@@ -458,13 +454,6 @@ function gestione_sparo(player, weapon)
   end)
   ----- fine gestione delay -----
 
-  -- se sono immune e sparo, perdo l'immunità
-  if player:get_armor_groups().immortal and player:get_armor_groups().immortal == 1 then
-    player:set_armor_groups({immortal = nil})
-  end
-
-  if player:get_hp() <= 0 or arena.weapons_disabled then return end
-
   --[[  Per quando si avranno caricatori limitati
   if weapon.consume_bullets then
     if inv:contains_item("main", weapon.bullet) then
@@ -475,46 +464,64 @@ function gestione_sparo(player, weapon)
     end
   end]]
 
-  -- controllo caricamento
-  if weapon.magazine and weapon.magazine > 0 then
-    arena.players[p_name].weapons_magazine[w_name] = arena.players[p_name].weapons_magazine[w_name] - 1
-    if arena.players[p_name].weapons_magazine[w_name] == 0 and p_meta:get_int("bl_reloading") == 0 then
-      p_meta:set_int("bl_reloading", 1)
-
-      minetest.after(weapon.reload_time, function()
-        if player then
-          p_meta:set_int("bl_weap_delay", 0)
-          p_meta:set_int("bl_reloading", 0)
-          arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
-          block_league.weapons_hud_update(arena, p_name, w_name, arena.players[p_name].weapons_magazine[w_name])
-        end
-      end)
-    end
-  end
-
-  if weapon.type and weapon.type ~= 3 then
-    block_league.weapons_hud_update(arena, p_name, w_name, arena.players[p_name].weapons_magazine[w_name])
-  end
   return true
 end
 
 
 
-function shoot_generic(weapon, p_name, itemstack, user, pointed_thing)
+function check_immunity(player)
+  if player:get_armor_groups().immortal and player:get_armor_groups().immortal == 1 then
+    player:set_armor_groups({immortal = nil})
+  end
+end
+
+
+
+function update_magazine(player, weapon)
+
+  if not weapon.magazine or weapon.magazine <= 0 then return end
+
+  local w_name = weapon.name
+  local p_name = player:get_player_name()
+  local p_meta = player:get_meta()
+  local arena = arena_lib.get_arena_by_player(p_name)
+
+  arena.players[p_name].weapons_magazine[w_name] = arena.players[p_name].weapons_magazine[w_name] - 1
+
+  -- automatically reload if the magazine is now empty
+  if arena.players[p_name].weapons_magazine[w_name] == 0 and p_meta:get_int("bl_reloading") == 0 then
+    p_meta:set_int("bl_reloading", 1)
+
+    minetest.after(weapon.reload_time, function()
+      if player then
+        p_meta:set_int("bl_weap_delay", 0)
+        p_meta:set_int("bl_reloading", 0)
+        arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
+        block_league.weapons_hud_update(arena, p_name, w_name, arena.players[p_name].weapons_magazine[w_name])
+      end
+    end)
+  end
+
+  block_league.weapons_hud_update(arena, p_name, w_name, arena.players[p_name].weapons_magazine[w_name])
+end
+
+
+
+function shoot_generic(player, weapon, itemstack, pointed_thing)
 
   if weapon.type ~= 3 then
       local bullet = weapon.bullet or nil
 
       if weapon.type == 1 then
-        block_league.shoot_hitscan(user, weapon, itemstack, pointed_thing)
+        block_league.shoot_hitscan(player, weapon, itemstack, pointed_thing)
       elseif weapon.type == 2 then
-        block_league.shoot_bullet(user, bullet, itemstack, pointed_thing)
+        block_league.shoot_bullet(player, bullet, itemstack, pointed_thing)
       end
 
   else
       if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
 
-      block_league.apply_damage(user, pointed_thing.ref, weapon.damage, weapon.knockback, false, user:get_look_dir())
+      block_league.apply_damage(player, pointed_thing.ref, weapon.damage, weapon.knockback, false, player:get_look_dir())
   end
 end
 

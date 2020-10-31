@@ -7,17 +7,17 @@ block_league.register_weapon("block_league:smg", {
 
   type = 1,
 
-  damage = 3,                           -- stava in bullet
-  knockback = 0,                        -- stava in bullet
+  damage = 3,
+  knockback = 0,
   weap_delay = 0.1,
 
-  pierce = false,                       -- stava in bullet
-  decrease_damage_with_distance = true, -- stava in bullet
+  pierce = false,
+  decrease_damage_with_distance = true,
   slow_down_when_firing = true,
   continuos_fire = true,
 
-  weap_sound_shooting = "bl_smg_shoot",
-  bullet_trail = {                      -- stava in bullet
+  sound_shoot = "bl_smg_shoot",
+  bullet_trail = {
     image = "bl_smg_trail.png",
     amount = 5
   },
