@@ -292,6 +292,12 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
 
     arena.weapons_disabled = true
 
+    minetest.after(2, function()
+      for pl_name, stats in pairs(arena.players) do
+        minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
+      end
+    end)
+
     minetest.after(5, function()
       block_league.round_start(arena)
     end)

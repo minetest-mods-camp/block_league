@@ -30,7 +30,6 @@ arena_lib.on_start("block_league", function(arena)
 
   for pl_name, stats in pairs(arena.players) do
     minetest.get_player_by_name(pl_name):set_armor_groups({immortal = nil})
-    minetest.sound_play("bl_voice_fight", {to_player = pl_name})
   end
 
   block_league.round_start(arena)

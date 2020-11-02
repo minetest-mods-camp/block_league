@@ -18,8 +18,9 @@ function block_league.round_start(arena)
         speed = block_league.SPEED,
         jump = 1.5
       })
-
       player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
+
+      minetest.sound_play("bl_voice_fight", {to_player = p_name})
     end
 
   if arena.mod == 1 then
