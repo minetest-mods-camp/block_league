@@ -7,9 +7,10 @@ block_league.register_weapon("block_league:pixelgun", {
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_pixelgun_icon.png",
 
-  type = 1,
+  weapon_type = 1,
 
   damage = 999,
+  range = 100,
   knockback = 0,
   weap_delay = 0.9,
 
@@ -28,6 +29,4 @@ block_league.register_weapon("block_league:pixelgun", {
   magazine = 4,
   reload_time = 4,
 
-  range = 100, --Se non hitscan calcolarsi il tempo necessario per percorrere quello
-              --spazio in base alla velocità
 })

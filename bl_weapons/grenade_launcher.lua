@@ -7,7 +7,7 @@ block_league.register_weapon("block_league:grenade_launcher", {
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_grenade_launcher.png",
 
-  type = 2,
+  weapon_type = 2,
 
   damage = 10,
   knockback = 1,

@@ -16,7 +16,7 @@ block_league.register_weapon("block_league:nomearma", {
   weap_secondary_delay = 2, --Delay tra l'uso del destro
 
 
-  type = 1, --1) Hitscan 2) Entity based 3) Sword
+  weapon_type = 1, --1) Hitscan 2) Entity based 3) Sword
   range = 100, --Range nel quale opera il raggio hitscan
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
   slow_down_when_firing = true, --Se rallentare chi spara
@@ -26,7 +26,7 @@ block_league.register_weapon("block_league:nomearma", {
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara aka quello che viene consumato all'uso
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
 
-  type = 2, --1) Hitscan 2) Entity based 3) Sword
+  weapon_type = 2, --1) Hitscan 2) Entity based 3) Sword
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
   slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
@@ -35,7 +35,7 @@ block_league.register_weapon("block_league:nomearma", {
   bullet = "block_league:nomeproiettile", --Che proiettile/granata spara
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro
 
-  type = 3, --1) Hitscan 2) Entity based 3) Sword
+  weapon_type = 3, --1) Hitscan 2) Entity based 3) Sword
   damage = 10, --Danno inflitto
   knockback = 0, --Il contraccolpo da applicare al bersaglio
   on_right_click = function(arena, name, def, itemstack, user, pointed_thing) end, --Cosa fare quando si clicca destro

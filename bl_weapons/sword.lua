@@ -5,7 +5,7 @@ block_league.register_weapon("block_league:sword", {
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_sword.png",
 
-  type = 3,
+  weapon_type = 3,
 
   damage = 7,
   knockback = 40,

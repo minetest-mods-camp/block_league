@@ -6,7 +6,7 @@ local function weapon_reload() end
 local function can_shoot() end
 local function check_immunity() end
 local function update_magazine() end
-local function shoot_generic() end
+local function check_weapon_type_and_attack() end
 local function after_damage() end
 local function kill() end
 
@@ -27,9 +27,10 @@ function block_league.register_weapon(name, def)
     wield_scale = def.wield_scale,
     inventory_image = def.inventory_image,
 
-    type = def.type,
+    weapon_type = def.weapon_type,
 
     damage = def.damage,
+    range = def.range,
     knockback = def.knockback,
     weap_delay = def.weap_delay,
 
@@ -68,6 +69,24 @@ function block_league.register_weapon(name, def)
 
   })
 
+end
+
+
+function block_league.shoot(weapon, player, pointed_thing)
+
+  if not can_shoot(player, weapon) then return end
+
+  check_immunity(player)
+  update_magazine(player, weapon)
+
+  local p_name = player:get_player_name()
+
+  if weapon.sound_shoot then
+    minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
+  end
+
+  check_weapon_type_and_attack(player, weapon, pointed_thing)
+  return true
 end
 
 
@@ -285,16 +304,7 @@ end
 
 function weapon_left_click(weapon, player, pointed_thing)
 
-  if not can_shoot(player, weapon) then return end
-
-  check_immunity(player)
-  update_magazine(player, weapon)
-
-  local p_name = player:get_player_name()
-
-  if weapon.sound_shoot then
-    minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
-  end
+  if not block_league.shoot(weapon, player, pointed_thing) then return end
 
   if weapon.slow_down_when_firing then
       player:set_physics_override({
@@ -302,65 +312,6 @@ function weapon_left_click(weapon, player, pointed_thing)
         jump = 1.5
       })
   end
-
-  shoot_generic(player, weapon, pointed_thing)
-
-  if weapon.continuos_fire then
-    controls.register_on_hold(function(player, key, time)
-      if key~="LMB" then return end
-
-      if player:get_wielded_item():get_name() == weapon.name then
-
-        if not can_shoot(player, weapon) then return end
-
-        check_immunity(player)
-        update_magazine(player, weapon)
-
-        local p_name = player:get_player_name()
-
-        if weapon.sound_shoot then
-           minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
-         end
-
-       shoot_generic(player, weapon, pointed_thing)
-
-      elseif weapon.slow_down_when_firing and player:get_meta():get_int("bl_has_ball") == 0 and arena_lib.is_player_in_arena(p_name) then
-       if player then
-          player:set_physics_override({
-            speed = block_league.SPEED,
-            jump = 1.5
-          })
-        end
-      end
-    end)
-
-  end
-
-  controls.register_on_release(function(player, key, time)
-    if key~="LMB" then return end
-      local wielditem = player:get_wielded_item()
-
-      if wielditem:get_name() == weapon.name then
-
-        if not weapon.slow_down_when_firing or player:get_meta():get_int("bl_has_ball") ~= 0 then return end
-
-        minetest.after(0.1, function()
-          if not player then return end
-          player:set_physics_override({
-            speed = block_league.SPEED,
-            jump = 1.5
-          })
-        end)
-
-      elseif weapon.slow_down_when_firing and player:get_meta():get_int("bl_has_ball") == 0 and arena_lib.is_player_in_arena(player:get_player_name()) then
-        if player then
-           player:set_physics_override({
-             speed = block_league.SPEED,
-             jump = 1.5
-           })
-         end
-       end
-  end)
 end
 
 
@@ -404,7 +355,7 @@ function weapon_reload(weapon, player, name)
   local arena = arena_lib.get_arena_by_player(p_name)
 
   if not arena or not arena.in_game or player:get_hp() <= 0
-     or arena.weapons_disabled or weapon.type == 3 or not weapon.magazine
+     or arena.weapons_disabled or weapon.weapon_type == 3 or not weapon.magazine
      or weapon.magazine == 0 or p_meta:get_int("bl_reloading") == 1
     then return end
 
@@ -506,14 +457,15 @@ end
 
 
 
-function shoot_generic(player, weapon, pointed_thing)
+function check_weapon_type_and_attack(player, weapon, pointed_thing)
 
-  if weapon.type ~= 3 then
+  if weapon.weapon_type ~= 3 then
       local bullet = weapon.bullet or nil
 
-      if weapon.type == 1 then
+      if weapon.weapon_type == 1 then
+        minetest.chat_send_player(player:get_player_name(), "hitscan parte")
         block_league.shoot_hitscan(player, weapon, pointed_thing)
-      elseif weapon.type == 2 then
+      elseif weapon.weapon_type == 2 then
         block_league.shoot_bullet(player, bullet, pointed_thing)
       end
 

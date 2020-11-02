@@ -5,9 +5,10 @@ block_league.register_weapon("block_league:smg", {
   wield_scale = {x=1, y=1, z=1},
   inventory_image = "bl_smg.png",
 
-  type = 1,
+  weapon_type = 1,
 
   damage = 3,
+  range = 30,
   knockback = 0,
   weap_delay = 0.1,
 
@@ -24,8 +25,6 @@ block_league.register_weapon("block_league:smg", {
 
   consume_bullets = false,
   magazine = 30,
-  reload_time = 2,
+  reload_time = 2
 
-  range = 30, -- Se non hitscan calcolarsi il tempo necessario per percorrere
-              -- quello spazio in base alla velocità
 })
