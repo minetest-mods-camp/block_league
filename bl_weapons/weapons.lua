@@ -493,12 +493,11 @@ function update_magazine(player, weapon)
     p_meta:set_int("bl_reloading", 1)
 
     minetest.after(weapon.reload_time, function()
-      if player then
-        p_meta:set_int("bl_weap_delay", 0)
-        p_meta:set_int("bl_reloading", 0)
-        arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
-        block_league.weapons_hud_update(arena, p_name, w_name)
-      end
+      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+      p_meta:set_int("bl_weap_delay", 0)
+      p_meta:set_int("bl_reloading", 0)
+      arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
+      block_league.weapons_hud_update(arena, p_name, w_name)
     end)
   end
 
