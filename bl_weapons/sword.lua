@@ -12,7 +12,7 @@ block_league.register_weapon("block_league:sword", {
   weap_delay = 2,
   weap_secondary_delay = 3,
 
-  on_right_click = function(arena, name, weapon, user, pointed_thing)
+  on_right_click = function(arena, weapon, user, pointed_thing)
 
     local dir = user:get_look_dir()
     local pos = user:get_pos()

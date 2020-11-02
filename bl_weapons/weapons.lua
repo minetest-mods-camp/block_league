@@ -72,7 +72,7 @@ end
 
 
 
-function block_league.shoot_hitscan(user, weapon, itemstack, pointed_thing)
+function block_league.shoot_hitscan(user, weapon, pointed_thing)
   local dir = user:get_look_dir()
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
@@ -85,7 +85,7 @@ end
 
 
 
-function block_league.shoot_bullet(user, bullet, itemstack, pointed_thing)
+function block_league.shoot_bullet(user, bullet, pointed_thing)
 
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y + user:get_properties().eye_height, z = pos.z}
@@ -303,7 +303,7 @@ function weapon_left_click(weapon, player, pointed_thing)
       })
   end
 
-  shoot_generic(player, weapon, itemstack, pointed_thing)
+  shoot_generic(player, weapon, pointed_thing)
 
   if weapon.continuos_fire then
     controls.register_on_hold(function(player, key, time)
@@ -322,7 +322,7 @@ function weapon_left_click(weapon, player, pointed_thing)
            minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
          end
 
-       shoot_generic(player, weapon, itemstack, pointed_thing)
+       shoot_generic(player, weapon, pointed_thing)
 
       elseif weapon.slow_down_when_firing and player:get_meta():get_int("bl_has_ball") == 0 and arena_lib.is_player_in_arena(p_name) then
        if player then
@@ -391,7 +391,7 @@ function weapon_right_click(weapon, player, pointed_thing)
   check_immunity(player)
 
   if weapon.on_right_click then
-    weapon.on_right_click(arena, name, weapon, player, pointed_thing)
+    weapon.on_right_click(arena, weapon, player, pointed_thing)
   end
 end
 
@@ -506,15 +506,15 @@ end
 
 
 
-function shoot_generic(player, weapon, itemstack, pointed_thing)
+function shoot_generic(player, weapon, pointed_thing)
 
   if weapon.type ~= 3 then
       local bullet = weapon.bullet or nil
 
       if weapon.type == 1 then
-        block_league.shoot_hitscan(player, weapon, itemstack, pointed_thing)
+        block_league.shoot_hitscan(player, weapon, pointed_thing)
       elseif weapon.type == 2 then
-        block_league.shoot_bullet(player, bullet, itemstack, pointed_thing)
+        block_league.shoot_bullet(player, bullet, pointed_thing)
       end
 
   else
