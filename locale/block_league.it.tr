@@ -22,10 +22,20 @@ mod management=gestione della mod
 # privs.lua
 It allows to use the /bladmin command=Permette di usare il comando /bladmin
 
-# _weapons/pixelgun.lua
+# bl_modes/TD/ball.lua
+Ball reset=Palla resettata
+NICE POINT!=BEL PUNTO!
+ENEMY TEAM SCORED...=PUNTO PER LA SQUADRA AVVERSARIA...
+Your team lost the ball!=La tua squadra ha perso la palla!
+Enemy team lost the ball!=La squadra avversaria ha perso la palla!
+Your team got the ball!=La tua squadra ha preso la palla!
+You got the ball!=Hai preso la palla!
+Enemy team got the ball!=La squadra avversaria ha preso la palla!
+
+# bl_weapons/pixelgun.lua
 Pixelgun=Pixelgun
 
-# _weapons/rocket_launcher.lua
+# bl_weapons/rocket_launcher.lua
 Rocket Launcher=Lanciarazzi
 
 # bl_weapons/smg.lua
@@ -34,7 +44,7 @@ Submachine Gun=Submachine Gun
 # bl_weapons/sword.lua
 2H Sword=Spada 2H
 
-# _weapons/weapons.lua
+# bl_weapons/weapons.lua
 has killed @1 players in a row!=ha ucciso @1 giocatori in un colpo!
 YOU'VE KILLED @1=HAI UCCISO @1
 You've been killed by @1=Sei stato ucciso da @1

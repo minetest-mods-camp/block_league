@@ -22,6 +22,16 @@ mod management=
 # privs.lua
 It allows to use the /bladmin command=
 
+# bl_modes/TD/ball.lua
+Ball reset=
+NICE POINT!=
+ENEMY TEAM SCORED...=
+Your team lost the ball!=
+Enemy team lost the ball!=
+Your team got the ball!=
+You got the ball!=
+Enemy team got the ball!=
+
 # bl_weapons/pixelgun.lua
 Pixelgun=
 
