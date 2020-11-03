@@ -2,7 +2,7 @@ S = minetest.get_translator("block_league")
 
 local mod = "block_league"
 
-ChatCmdBuilder.new("bleagueadmin", function(cmd)
+ChatCmdBuilder.new("bladmin", function(cmd)
 
     -- creazione arene
     cmd:sub("create :arena :tipologia:int", function(sender, arena_name, tipologia)

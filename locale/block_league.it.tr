@@ -11,11 +11,6 @@ blue=blu
 Team=Squadra
 
 # achievements.lua
-killing spree=serie d'uccisioni
-unstoppable=inarrestabile
-bloodbath=furia omicida
-shutdown!=spento!
-first blood=primo sangue
 two in one=due in uno
 three in one=tre in uno
 [!] This player doesn't exist!=[!] Questo giocatore non esiste!
@@ -24,29 +19,23 @@ three in one=tre in uno
 # commands.lua
 mod management=gestione della mod
 
-# items.lua
-THE END!=FINE DEI GIOCHI!
-
 # privs.lua
-It allows to use the /block_leagueadmin command=Permette di usare il comando /block_leagueadmin
-
-# _arena_lib/arena_manager.lua
-Score to win=Punti per la vittoria
+It allows to use the /bladmin command=Permette di usare il comando /bladmin
 
 # _weapons/pixelgun.lua
-pixelgun=pixelgun
+Pixelgun=Pixelgun
 
 # _weapons/rocket_launcher.lua
 Rocket Launcher=Lanciarazzi
 
+# bl_weapons/smg.lua
+Submachine Gun=Submachine Gun
+
+# bl_weapons/sword.lua
+2H Sword=Spada 2H
+
 # _weapons/weapons.lua
-You can't hit @1 due to immunity=Non puoi colpire @1, è immune
-has been stopped by @1=è stato fermato da @1
 has killed @1 players in a row!=ha ucciso @1 giocatori in un colpo!
 YOU'VE KILLED @1=HAI UCCISO @1
 You've been killed by @1=Sei stato ucciso da @1
-drew first blood=ha versato il primo sangue
-is on a @1=è in una @1
-is @1=è @1
-made a @1=è una @1
 You've killed yourself=Ti sei ucciso da solo

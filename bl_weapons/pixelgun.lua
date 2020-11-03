@@ -1,7 +1,8 @@
+local S = minetest.get_translator("block_league")
 
 block_league.register_weapon("block_league:pixelgun", {
 
-  description = S("pixelgun"),
+  description = S("Pixelgun"),
   mesh = "bl_pixelgun.obj",
   tiles = {"bl_pixelgun.png"},
   wield_scale = {x=1.3, y=1.3, z=1.3},

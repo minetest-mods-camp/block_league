@@ -1,3 +1,4 @@
+local S = minetest.get_translator("block_league")
 
 block_league.register_weapon("block_league:rocket_launcher", {
 

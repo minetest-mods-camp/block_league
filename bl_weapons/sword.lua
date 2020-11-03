@@ -1,6 +1,8 @@
+local S = minetest.get_translator("block_league")
+
 block_league.register_weapon("block_league:sword", {
 
-  description = "Spada",
+  description = S("2H Sword"),
   wield_image = "bl_sword.png",
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_sword.png",
