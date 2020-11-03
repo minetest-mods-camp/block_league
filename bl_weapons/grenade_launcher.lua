@@ -11,7 +11,7 @@ block_league.register_weapon("block_league:grenade_launcher", {
 
   damage = 10,
   knockback = 1,
-  weap_delay = 0.8,
+  fire_delay = 0.8,
 
   pierce = false,
   decrease_damage_with_distance = false,

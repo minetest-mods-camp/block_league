@@ -12,12 +12,12 @@ block_league.register_weapon("block_league:nomearma", {
   wield_image = "wield_image.png", --Immagine da mostrare in mano
 
   sound_shoot = "sound_shoot", --Suono quando si usa l'arma
-  weap_delay = 10, --Delay tra gli spari
+  fire_delay = 10, --Delay tra gli spari
   weap_secondary_delay = 2, --Delay tra l'uso del destro
 
 
   weapon_type = 1, --1) Hitscan 2) Entity based 3) Sword
-  range = 100, --Range nel quale opera il raggio hitscan
+  weapon_range = 100, --Range nel quale opera il raggio hitscan
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
   slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili

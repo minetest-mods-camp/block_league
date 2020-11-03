@@ -11,9 +11,9 @@ block_league.register_weapon("block_league:pixelgun", {
   weapon_type = 1,
 
   damage = 999,
-  range = 100,
+  weapon_range = 100,
   knockback = 0,
-  weap_delay = 0.9,
+  fire_delay = 0.9,
 
   pierce = true,
   decrease_damage_with_distance = false,

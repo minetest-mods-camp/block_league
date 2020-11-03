@@ -30,9 +30,9 @@ function block_league.register_weapon(name, def)
     weapon_type = def.weapon_type,
 
     damage = def.damage,
-    range = def.range,
+    weapon_range = def.weapon_range,
     knockback = def.knockback,
-    weap_delay = def.weap_delay,
+    fire_delay = def.fire_delay,
 
     pierce = def.pierce,
     decrease_damage_with_distance = def.decrease_damage_with_distance,
@@ -95,7 +95,7 @@ function block_league.shoot_hitscan(user, weapon, pointed_thing)
   local dir = user:get_look_dir()
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-  local pointed_players = block_league.get_pointed_players(pos_head, dir, weapon.range, user, weapon.bullet_trail, weapon.pierce)
+  local pointed_players = block_league.get_pointed_players(pos_head, dir, weapon.weapon_range, user, weapon.bullet_trail, weapon.pierce)
 
   if pointed_players then
     block_league.apply_damage(user, pointed_players, weapon.damage, weapon.knockback, weapon.decrease_damage_with_distance)
@@ -397,7 +397,7 @@ function can_shoot(player, weapon)
 
   p_meta:set_int("bl_weap_delay", 1)
 
-  minetest.after(weapon.weap_delay, function()
+  minetest.after(weapon.fire_delay, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
     if weapon.magazine and p_meta:get_int("bl_reloading") == 0 then
       p_meta:set_int("bl_weap_delay", 0)

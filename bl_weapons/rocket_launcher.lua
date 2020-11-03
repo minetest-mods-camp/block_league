@@ -12,7 +12,7 @@ block_league.register_weapon("block_league:rocket_launcher", {
 
   damage = 10,
   knocback = 0,
-  weap_delay = 0.8,
+  fire_delay = 0.8,
 
   pierce = false,
   decrease_damage_with_distance = false,
