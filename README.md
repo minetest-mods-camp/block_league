@@ -1,6 +1,8 @@
-# Minetest Block League
+# Block League
 
 S4 League inspired shooter minigame for Minetest.
+
+Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2PxjP.png" alt="Support Zughy"/></a> | Zaizen <a href="https://liberapay.com/_Zaizen_/"><img src="https://i.imgur.com/4B2PxjP.png" alt="Support Zaizen"/></a>  
 
 ### Dependencies
 * [achievements_lib](https://gitlab.com/zughy-friends-minetest/achievements_lib) by me
