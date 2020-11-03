@@ -167,7 +167,7 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
       -- se è un nodo mi fermo, e ritorno l'array se > 0 (ovvero ha trovato giocatori)
 			if hit.type == "node" then
 				if #players > 0 then
-          if particle ~= nil and particle ~= false then
+          if particle ~= nil then
             if not has_piercing then
               local impact_dist = get_dist(head_pos, players[1]:get_pos())
               draw_particles(particle, dir, p1, range, impact_dist)
@@ -178,7 +178,7 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
           end
 					return players
 				else
-          if particle ~= nil and particle ~= false then
+          if particle ~= nil then
             local impact_dist = get_dist(head_pos, hit.intersection_point)
           	draw_particles(particle, dir, p1, range, impact_dist)
           end
@@ -191,19 +191,19 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
   -- se ho sparato a qualcuno senza incrociare blocchi
   if #players > 0 then
       if has_piercing then
-        if particle ~= nil and particle ~= false then
+        if particle ~= nil then
           draw_particles(particle, dir, p1, range, 120)
         end
         return players
       else
-        if particle ~= nil and particle ~= false then
+        if particle ~= nil then
           local impact_dist = get_dist(head_pos, players[1]:get_pos())
           draw_particles(particle, dir, p1, range, impact_dist)
         end
         return {players[1]}
       end
   else
-    if particle ~= nil and particle ~= false then
+    if particle ~= nil then
       draw_particles(particle, dir, p1, range, 120)
     end
     return nil
