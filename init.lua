@@ -1,6 +1,7 @@
 block_league = {}
 local S = minetest.get_translator("block_league")
 local modpath = minetest.get_modpath("block_league")
+local version = "0.1.0"
 
 dofile(modpath .. "/GLOBALS.lua")
 
@@ -94,3 +95,5 @@ dofile(modpath .. "/bl_misc/energy.lua")
 dofile(modpath .. "/bl_misc/immunity.lua")
 
 block_league.init_storage()
+
+minetest.log("action", "[BLOCK_LEAGUE] Mod initialised, running version " .. version)
