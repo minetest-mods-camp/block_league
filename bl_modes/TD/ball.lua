@@ -10,7 +10,7 @@ local function add_point() end
 local ball = {
   initial_properties = {
     physical = true,
-    collide_with_objects = true,
+    collide_with_objects = false,
     visual = "cube",
     visual_size = {x = 1.0, y = 1.0, z = 1.0},
     collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
@@ -198,7 +198,7 @@ function ball:attach(player)
   player:get_meta():set_int("bl_has_ball", 1)
   block_league.energy_drain(arena, p_name)
 
-  self.object:set_attach(player, "Head", {x=0, y=5.5, z=0}, {x=0, y=0, z=0})
+  self.object:set_attach(player, "Head", {x=0, y=10.5, z=0}, {x=0, y=0, z=0})
   self.wielder = player
 
   local teamID = arena.players[p_name].teamID

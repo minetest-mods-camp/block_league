@@ -463,7 +463,6 @@ function check_weapon_type_and_attack(player, weapon, pointed_thing)
       local bullet = weapon.bullet or nil
 
       if weapon.weapon_type == 1 then
-        minetest.chat_send_player(player:get_player_name(), "hitscan parte")
         block_league.shoot_hitscan(player, weapon, pointed_thing)
       elseif weapon.weapon_type == 2 then
         block_league.shoot_bullet(player, bullet, pointed_thing)
