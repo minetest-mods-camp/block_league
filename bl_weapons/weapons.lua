@@ -190,16 +190,18 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
 
   -- se ho sparato a qualcuno senza incrociare blocchi
   if #players > 0 then
-    if particle ~= nil and particle ~= false then
       if has_piercing then
-        draw_particles(particle, dir, p1, range, 120)
+        if particle ~= nil and particle ~= false then
+          draw_particles(particle, dir, p1, range, 120)
+        end
         return players
       else
-        local impact_dist = get_dist(head_pos, players[1]:get_pos())
-        draw_particles(particle, dir, p1, range, impact_dist)
+        if particle ~= nil and particle ~= false then
+          local impact_dist = get_dist(head_pos, players[1]:get_pos())
+          draw_particles(particle, dir, p1, range, impact_dist)
+        end
         return {players[1]}
       end
-    end
   else
     if particle ~= nil and particle ~= false then
       draw_particles(particle, dir, p1, range, 120)
