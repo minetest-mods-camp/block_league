@@ -237,7 +237,7 @@ function ball:reset()
 
   -- annuncio
   for pl_name, _ in pairs(arena.players) do
-    minetest.sound_play("bl_ball_reset", {to_player = pl_name})
+    minetest.sound_play("bl_voice_ball_reset", {to_player = pl_name})
     block_league.HUD_broadcast_player(pl_name, S("Ball reset"), 3)
   end
 
