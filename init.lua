@@ -9,7 +9,7 @@ dofile(modpath .. "/GLOBALS.lua")
 
 arena_lib.register_minigame("block_league", {
   prefix = "[Block League] ",
-  hub_spawn_point = { x = 8, y = 6, z = 4 },
+  hub_spawn_point = { x = 113, y = 30, z = 175 },
 
   teams = { S("red"), S("blue") },
   teams_color_overlay = { "red", "blue"},
