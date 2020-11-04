@@ -11,9 +11,14 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 * [controls](https://github.com/Arcelmi/minetest-controls) by Arcelmi
 * [panel_lib](https://gitlab.com/zughy-friends-minetest/panel_lib) by me and friends
 
+### Want to help?
+Feel free to:
+* open an [issue](https://gitlab.com/zughy-friends-minetest/block_league/-/issues)
+* submit a merge request. In this case, PLEASE, do follow milestones and my [coding guidelines](https://cryptpad.fr/pad/#/2/pad/view/-l75iHl3x54py20u2Y5OSAX4iruQBdeQXcO7PGTtGew/embed/). I won't merge features for milestones that are different from the upcoming one (if it's declared), nor messy code
+* contact me on the [Minetest Forum](https://forum.minetest.net/memberlist.php?mode=viewprofile&u=26472)
 
 ### Resources
-2D Graphic assets by me  
+2D graphic assets by me  
 3D models by Scarecrow  
 Bouncer sound by [iozonic](https://freesound.org/people/iozonic/sounds/380763/)  
 HMG shooting sound by [tcpp](https://freesound.org/people/tcpp/sounds/105025/)  
@@ -24,7 +29,8 @@ Shotgun reloading sound by [jeseid77](https://freesound.org/people/jeseid77/soun
 SMG shooting sound by [kafokafo](https://freesound.org/people/kafokafo/sounds/128229/)  
 Hit sound by [cabled_mess](https://freesound.org/people/cabled_mess/sounds/350926/)  
 Kill sound by [jmayoff](https://freesound.org/people/jmayoff/sounds/255156/)  
-Voice acting clips by [EFlexMusic](https://freesound.org/people/EFlexMusic/)  
+Countdown announcer by [dbosst](https://freesound.org/people/dbosst/sounds/464145/)  
+"Fight" announcer by [EFlexMusic](https://freesound.org/people/EFlexMusic/)  
 Crowd cheering by [wangzhuokun](https://freesound.org/people/wangzhuokun/sounds/442583/)  
 Crowd "oh no" by [dobroide](https://freesound.org/people/dobroide/sounds/35034/)  
 Ball "resetting" voice by [tim.kahn](https://freesound.org/people/tim.kahn/sounds/107546/)  
