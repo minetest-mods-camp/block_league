@@ -4,6 +4,7 @@ local function cast_entity_ray() end
 local function announce_ball_possession_change() end
 local function check_for_touchdown() end
 local function add_point() end
+local function after_point() end
 
 
 -- entità
@@ -241,16 +242,8 @@ function ball:reset()
     block_league.HUD_broadcast_player(pl_name, S("Ball reset"), 3)
   end
 
-  if ball.wielder then
-    ball.wielder:set_physics_override({
-              speed = block_league.SPEED,
-              jump = 1.5
-    })
-  end
-
   self:_destroy()
   minetest.add_entity(arena.ball_spawn,"block_league:ball",arena.name)
-  return
 end
 
 
@@ -287,20 +280,13 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
   w_pos.y >= goal.y - 1 and
   w_pos.y <= goal.y + 3 then
 
-    add_point(wielder:get_player_name(), arena)
     wielder:get_meta():set_int("bl_has_ball", 0)
 
-    arena.weapons_disabled = true
+    local w_name = wielder:get_player_name()
+    local teamID = arena.players[w_name].teamID
 
-    minetest.after(2, function()
-      for pl_name, _ in pairs(arena.players) do
-        minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
-      end
-    end)
-
-    minetest.after(5, function()
-      block_league.round_start(arena)
-    end)
+    add_point(teamID, arena)
+    after_point(w_name, teamID, arena)
 
     ball:_destroy()
   end
@@ -309,9 +295,8 @@ end
 
 
 
-function add_point(w_name, arena)
+function add_point(teamID, arena)
 
-  local teamID = arena.players[w_name].teamID
   local enemy_teamID = teamID == 1 and 2 or 1
   local team = arena_lib.get_players_in_team(arena, teamID)
   local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
@@ -331,12 +316,30 @@ function add_point(w_name, arena)
   for pl_name, stats in pairs(arena.players) do
     block_league.teams_score_update(arena, pl_name, teamID)
   end
+end
+
+
+
+function after_point(w_name, teamID, arena)
+
+  arena.weapons_disabled = true
 
   -- se i TD della squadra raggiungono il cap, vince
   if arena.teams[teamID].TDs == arena.score_cap then
     arena_lib.load_celebration("block_league", arena, {w_name})
-  end
 
+  -- sennò inizia un nuovo round
+  else
+    minetest.after(2, function()
+      for pl_name, _ in pairs(arena.players) do
+        minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
+      end
+    end)
+
+    minetest.after(5, function()
+      block_league.round_start(arena)
+    end)
+  end
 end
 
 
