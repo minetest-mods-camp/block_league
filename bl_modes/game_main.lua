@@ -55,9 +55,6 @@ end
 ----------------------------------------------
 
 function load_ball(arena)
-  local pos1 = {x = arena.ball_spawn.x - 1, y = arena.ball_spawn.y - 1, z = arena.ball_spawn.z - 1}
-  local pos2 = {x = arena.ball_spawn.x + 1, y = arena.ball_spawn.y + 1, z = arena.ball_spawn.z + 1}
-
-  minetest.forceload_block(pos1, pos2)
+  minetest.forceload_block(arena.ball_spawn, true)
   minetest.add_entity(arena.ball_spawn,"block_league:ball",arena.name)
 end
