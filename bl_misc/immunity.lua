@@ -12,7 +12,7 @@ function block_league.immunity(player)
   player:get_meta():set_int("bl_immunity_ID", immunity_ID)
 
   minetest.after(immunity_time, function()
-    if not player then return end          -- potrebbe essersi disconnesso
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
     if immunity_ID == player:get_meta():get_int("bl_immunity_ID") then
       if player:get_armor_groups().immortal and player:get_armor_groups().immortal == 1 then
         player:set_armor_groups({immortal = nil})

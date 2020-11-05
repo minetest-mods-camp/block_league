@@ -48,10 +48,10 @@ minetest.register_on_respawnplayer(function(player)
 
   if not arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then return end
 
-  death_delay(player, player:get_pos())
-
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
+
+  death_delay(p_name, player:get_pos())
 
   arena.players[p_name].energy = 100
   block_league.energy_update(arena, p_name)
@@ -73,16 +73,16 @@ end)
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
-function death_delay(player, pos)
-  if player then
-    local delay = player:get_meta():get_int("bl_death_delay")
-    if delay == 1 and arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then
-      player:set_pos(pos)
-    else
-      return
-    end
-  end
-  minetest.after(0.2, function() death_delay(player, pos) end)
+function death_delay(p_name, pos)
+
+  if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+
+  local player = minetest.get_player_by_name(p_name)
+
+  if player:get_meta():get_int("bl_death_delay") == 0 then return end
+
+  player:set_pos(pos)
+  minetest.after(0.2, function() death_delay(p_name, pos) end)
 end
 
 
