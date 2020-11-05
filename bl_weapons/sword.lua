@@ -11,7 +11,7 @@ block_league.register_weapon("block_league:sword", {
 
   damage = 7,
   knockback = 40,
-  fire_delay = 2,
+  fire_delay = 1.4,
   weap_secondary_delay = 3,
 
   on_right_click = function(arena, weapon, user, pointed_thing)
