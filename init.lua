@@ -14,6 +14,11 @@ arena_lib.register_minigame("block_league", {
   teams = { S("red"), S("blue") },
   teams_color_overlay = { "red", "blue"},
 
+  hotbar = {
+    slots = 4,
+    background_image = "bl_gui_hotbar.png"
+  },
+
   join_while_in_progress = true,
   celebration_time = 5,
 
