@@ -67,21 +67,9 @@ function ball:on_activate(staticdata, d_time)
     self.timer = 0
     self.arena = arena
 
-    local velocity = self.object:get_velocity()
-
-    velocity.y = velocity.y + 1
     cast_entity_ray(self.object)
 
-    self.object:set_velocity(velocity)
-    minetest.after(1, function()
-      if self.object ~= nil then
-        velocity = self.object:get_velocity()
-        if velocity ~= nil then
-          velocity.y = -velocity.y
-          self.object:set_velocity(velocity)
-        end
-      end
-    end)
+    self:oscillate()
 
   else --se gli staticdata sono nil
     self:_destroy()
@@ -108,8 +96,7 @@ function ball:on_step(d_time, moveresult)
       self.timer = self.timer + d_time
       if self.timer > self.initial_properties.timer_limit then
         self:reset()
-        return
-      end
+      return end
     end
 
     local pos = self.object:get_pos()
@@ -146,6 +133,7 @@ function ball:on_step(d_time, moveresult)
     end
 
 
+
   -- se ce l'ha qualcuno
   else
 
@@ -157,21 +145,9 @@ function ball:on_step(d_time, moveresult)
       if wielder:get_pos().y < arena.min_y then
         self:reset()
       return end
+
       self:detach()
-
-      local velocity = self.object:get_velocity()
-
-      velocity.y = velocity.y + 1
-      self.object:set_velocity(velocity)
-      minetest.after(1, function()
-        if self.object ~= nil then
-          velocity = self.object:get_velocity()
-          if velocity ~= nil then
-            velocity.y = -velocity.y
-            self.object:set_velocity(velocity)
-          end
-        end
-      end)
+      self:oscillate()
 
       return
     end
@@ -241,13 +217,38 @@ function ball:reset()
     minetest.sound_play("bl_voice_ball_reset", {to_player = pl_name})
     block_league.HUD_broadcast_player(pl_name, S("Ball reset"), 3)
   end
+  --if the player dies because of falling in the void wielder is nil
+  if self.wielder then
+    self:detach()
+  end
+  self.wielder = nil
+  self.team_name = nil
+  self.timer_bool = false
+  self.timer = 0
+  self.object:set_pos(arena.ball_spawn)
+  --if the ball is not moving up or down then start the movement
+  if self.object:get_velocity().y == 0 then
+    self:oscillate()
+  end
 
-  self:_destroy()
-  minetest.add_entity(arena.ball_spawn,"block_league:ball",arena.name)
 end
 
 
+function ball:oscillate()
 
+  local velocity = self.object:get_velocity()
+
+  velocity.y = velocity.y + 1
+  self.object:set_velocity(velocity)
+
+  minetest.after(1, function()
+    if not self.object then return end
+    velocity = self.object:get_velocity()
+    if not velocity then return end
+    velocity.y = -velocity.y
+    self.object:set_velocity(velocity)
+  end)
+end
 
 
 ----------------------------------------------
