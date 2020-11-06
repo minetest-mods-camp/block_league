@@ -27,8 +27,10 @@ minetest.register_tool("block_league:bouncer", {
 
     if not arena then return end
 
+    minetest.log("warning", dump(arena.players[p_name].energy))
+
     -- se non ha abbastanza energia o non sta puntando un nodo, annullo
-    if not arena.players[p_name].energy >= 20 or pointed_thing.type ~= "node" then return end
+    if not (arena.players[p_name].energy >= 20) or pointed_thing.type ~= "node" then return end
 
     local dir = user:get_look_dir()
     local knockback = user:get_player_velocity().y < 1 and -15 or -10
