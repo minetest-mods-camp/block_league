@@ -229,6 +229,7 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
   for _, target in pairs(targets) do
 
     if target:get_hp() <= 0 then return end
+    if target:get_meta():get_int("bl_immunity") == 1 then return end
 
     local t_name = target:get_player_name()
 
@@ -423,8 +424,8 @@ end
 
 
 function check_immunity(player)
-  if player:get_armor_groups().immortal and player:get_armor_groups().immortal == 1 then
-    player:set_armor_groups({immortal = nil})
+  if player:get_meta():get_int("bl_immunity") == 1 then
+    player:get_meta():set_int("bl_immunity", 0)
   end
 end
 

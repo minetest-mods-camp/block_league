@@ -27,14 +27,8 @@ end)
 
 
 arena_lib.on_start("block_league", function(arena)
-
-  for pl_name, stats in pairs(arena.players) do
-    minetest.get_player_by_name(pl_name):set_armor_groups({immortal = nil})
-  end
-
   block_league.round_start(arena)
   block_league.energy_refill_loop(arena)
-
 end)
 
 
@@ -45,8 +39,6 @@ arena_lib.on_join("block_league", function(p_name, arena)
   equip_weapons(arena, p_name)
   create_and_show_HUD(arena, p_name)
   block_league.refill_weapons(arena, p_name)
-
-  minetest.get_player_by_name(p_name):set_armor_groups({immortal = nil})
 
   minetest.sound_play("bl_voice_fight", {to_player = p_name})
 
@@ -64,7 +56,7 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
   arena.weapons_disabled = true
 
   for pl_name, stats in pairs(arena.players) do
-    minetest.get_player_by_name(pl_name):set_armor_groups({immortal=1})
+    minetest.get_player_by_name(pl_name):get_meta():set_int("bl_immunity", 1)
     panel_lib.get_panel(pl_name, "bl_scoreboard"):show()
   end
 end)
@@ -76,7 +68,7 @@ arena_lib.on_end("block_league", function(arena, players)
   for pl_name, stats in pairs(players) do
 
     remove_HUD(pl_name)
-    minetest.get_player_by_name(pl_name):set_armor_groups({immortal = nil})
+    reset_meta(pl_name)
 
     block_league.update_storage(pl_name)
   end
@@ -101,13 +93,8 @@ end)
 
 
 arena_lib.on_quit("block_league", function(arena, p_name)
-
   remove_HUD(p_name)
-
-  local player = minetest.get_player_by_name(p_name)
-
-  player:set_armor_groups({immortal = nil})
-  player:get_meta():set_int("bl_has_ball", 0)
+  reset_meta(p_name)
 end)
 
 
@@ -120,14 +107,15 @@ end)
 
 function reset_meta(p_name)
 
-  local player = minetest.get_player_by_name(p_name)
+  local p_meta = minetest.get_player_by_name(p_name):get_meta()
 
-  player:get_meta():set_int("bl_has_ball", 0)
-  player:get_meta():set_int("bl_weap_delay", 0)
-  player:get_meta():set_int("bl_weap_secondary_delay", 0)
-  player:get_meta():set_int("bl_bouncer_delay", 0)
-  player:get_meta():set_int("bl_death_delay", 0)
-  player:get_meta():set_int("bl_reloading", 0)
+  p_meta:set_int("bl_has_ball", 0)
+  p_meta:set_int("bl_weap_delay", 0)
+  p_meta:set_int("bl_weap_secondary_delay", 0)
+  p_meta:set_int("bl_bouncer_delay", 0)
+  p_meta:set_int("bl_death_delay", 0)
+  p_meta:set_int("bl_immunity", 0)
+  p_meta:set_int("bl_reloading", 0)
 
 end
 

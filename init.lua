@@ -29,7 +29,7 @@ arena_lib.register_minigame("block_league", {
     sneak_glitch = true,
     new_move = true
   },
-  disabled_damage_types = {"fall"},
+  disabled_damage_types = {"fall", "punch"},
 
   properties = {
     -- 1 = Touchdown

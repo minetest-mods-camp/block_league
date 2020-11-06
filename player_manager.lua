@@ -33,6 +33,7 @@ minetest.register_on_dieplayer(function(player)
   if not arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then return end
 
   player:get_meta():set_int("bl_death_delay", 1)
+  block_league.immunity(player)
 
   minetest.after(6, function()
     if not player or not player:get_meta() then return end
@@ -57,7 +58,6 @@ minetest.register_on_respawnplayer(function(player)
   block_league.energy_update(arena, p_name)
 
   block_league.refill_weapons(arena, p_name)
-  block_league.immunity(player)
 
   player:set_physics_override({
             speed = block_league.SPEED,
