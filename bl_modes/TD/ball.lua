@@ -79,6 +79,7 @@ function ball:on_activate(staticdata, d_time)
 end
 
 
+
 function ball:on_step(d_time, moveresult)
   local id, arena = arena_lib.get_arena_by_name("block_league", self.arena.name)
 
@@ -183,6 +184,8 @@ function ball:attach(player)
   self.timer = 0
 end
 
+
+
 function ball:on_detach(parent)
 
   self.wielder = parent
@@ -190,6 +193,8 @@ function ball:on_detach(parent)
   self:oscillate()
 
 end
+
+
 
 function ball:detach()
 
