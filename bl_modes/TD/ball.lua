@@ -79,7 +79,6 @@ function ball:on_activate(staticdata, d_time)
 end
 
 
-
 function ball:on_step(d_time, moveresult)
   local id, arena = arena_lib.get_arena_by_name("block_league", self.arena.name)
 
@@ -147,7 +146,6 @@ function ball:on_step(d_time, moveresult)
       return end
 
       self:detach()
-      self:oscillate()
 
       return
     end
@@ -185,7 +183,13 @@ function ball:attach(player)
   self.timer = 0
 end
 
+function ball:on_detach(parent)
 
+  self.wielder = parent
+  self:detach()
+  self:oscillate()
+
+end
 
 function ball:detach()
 
@@ -193,13 +197,16 @@ function ball:detach()
 
   announce_ball_possession_change(self.arena, player:get_player_name(), true)
 
-  player:get_meta():set_int("bl_has_ball", 0)
-  player:set_physics_override({
-            speed = 0,
-            jump = 0
-  })
+  if player then
+    player:get_meta():set_int("bl_has_ball", 0)
+    player:set_physics_override({
+              speed = 0,
+              jump = 0
+    })
 
-  self.object:set_detach()
+
+    self.object:set_detach()
+  end
   self.wielder = nil
   self.timer_bool = true
   self.timer = 0
