@@ -147,6 +147,7 @@ function ball:on_step(d_time, moveresult)
       return end
 
       self:detach()
+      self:oscillate()
 
       return
     end
@@ -186,32 +187,20 @@ end
 
 
 
-function ball:on_detach(parent)
-
-  self.wielder = parent
-  self:detach()
-  self:oscillate()
-
-end
-
-
-
 function ball:detach()
 
   local player = self.wielder
 
   announce_ball_possession_change(self.arena, player:get_player_name(), true)
 
-  if player then
-    player:get_meta():set_int("bl_has_ball", 0)
-    player:set_physics_override({
-              speed = 0,
-              jump = 0
-    })
+  player:get_meta():set_int("bl_has_ball", 0)
+  player:set_physics_override({
+            speed = 0,
+            jump = 0
+  })
 
+  self.object:set_detach()
 
-    self.object:set_detach()
-  end
   self.wielder = nil
   self.timer_bool = true
   self.timer = 0
