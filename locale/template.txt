@@ -7,7 +7,7 @@
 red=
 blue=
 
-# scoreboard.lua
+# info_panel.lua
 Team=
 
 # achievements.lua

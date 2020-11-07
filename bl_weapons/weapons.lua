@@ -519,9 +519,9 @@ function kill(arena, p_name, target)
     p_stats.kills = p_stats.kills +1
 
     -- aggiorno HUD
-    block_league.scoreboard_update(arena)
+    block_league.info_panel_update(arena)
     for pl_name, stats in pairs(arena.players) do
-      block_league.teams_score_update(arena, pl_name, p_stats.teamID)
+      block_league.scoreboard_update(arena, pl_name, p_stats.teamID)
     end
 
     -- se è DM e il cap è raggiunto, finisce match

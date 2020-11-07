@@ -316,7 +316,7 @@ function add_point(teamID, arena)
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
 
   for pl_name, stats in pairs(arena.players) do
-    block_league.teams_score_update(arena, pl_name, teamID)
+    block_league.scoreboard_update(arena, pl_name, teamID)
   end
 end
 

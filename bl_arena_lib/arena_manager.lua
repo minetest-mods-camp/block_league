@@ -19,7 +19,7 @@ arena_lib.on_load("block_league", function(arena)
   end
 
   minetest.after(0.01, function()
-    block_league.scoreboard_update(arena)
+    block_league.info_panel_update(arena)
   end)
 
 end)
@@ -43,8 +43,8 @@ arena_lib.on_join("block_league", function(p_name, arena)
   minetest.sound_play("bl_voice_fight", {to_player = p_name})
 
   minetest.after(0.01, function()
-    block_league.scoreboard_update(arena)
-    block_league.teams_score_update(arena, p_name, arena.players[p_name].teamID)
+    block_league.info_panel_update(arena)
+    block_league.scoreboard_update(arena, p_name, arena.players[p_name].teamID)
   end)
 end)
 
@@ -57,7 +57,7 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
 
   for pl_name, stats in pairs(arena.players) do
     minetest.get_player_by_name(pl_name):get_meta():set_int("bl_immunity", 1)
-    panel_lib.get_panel(pl_name, "bl_scoreboard"):show()
+    panel_lib.get_panel(pl_name, "bl_info_panel"):show()
   end
 end)
 
@@ -86,23 +86,24 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
     p_stats.kills = p_stats.kills - 1
     local team = arena.teams[p_stats.teamID]
     team.deaths = team.deaths + 1
-    block_league.scoreboard_update(arena)
+    block_league.info_panel_update(arena)
   end
 end)
 
 
 
---[[TODO: waiting for 5.4 to fix a few bugs
+
 arena_lib.on_quit("block_league", function(arena, p_name)
+  --[[TODO: waiting for 5.4 to fix a few bugs
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
-  end
+  end]]
   remove_HUD(p_name)
   reset_meta(p_name)
 end)
 
 
-
+--[[TODO: same as before
 arena_lib.on_disconnect("block_league", function(arena, p_name)
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
@@ -135,12 +136,12 @@ end
 
 function create_and_show_HUD(arena, p_name)
   block_league.broadcast_create(p_name)
-  block_league.scoreboard_create(arena, p_name)
-  block_league.teams_score_create(p_name)
+  block_league.info_panel_create(arena, p_name)
+  block_league.scoreboard_create(p_name)
   block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
 
-  panel_lib.get_panel(p_name, "bl_teams_score"):show()
+  panel_lib.get_panel(p_name, "bl_scoreboard"):show()
   panel_lib.get_panel(p_name, "bl_energy"):show()
   panel_lib.get_panel(p_name, "bl_bullets"):show()
 end
@@ -148,8 +149,8 @@ end
 
 
 function remove_HUD(p_name)
+  panel_lib.get_panel(p_name, "bl_info_panel"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
-  panel_lib.get_panel(p_name, "bl_teams_score"):remove()
   panel_lib.get_panel(p_name, "bl_bullets"):remove()
   panel_lib.get_panel(p_name, "bl_energy"):remove()
   block_league.HUD_broadcast_remove(p_name)
