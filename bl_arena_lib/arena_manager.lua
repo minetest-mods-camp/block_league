@@ -98,6 +98,19 @@ arena_lib.on_quit("block_league", function(arena, p_name)
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
   end]]
+  minetest.after(0.1, function()
+    block_league.info_panel_update(arena)
+  end)
+
+  remove_HUD(p_name)
+  reset_meta(p_name)
+end)
+
+arena_lib.on_disconnect("block_league", function(arena, p_name)
+  minetest.after(0.1, function()
+    block_league.info_panel_update(arena)
+  end)
+
   remove_HUD(p_name)
   reset_meta(p_name)
 end)
