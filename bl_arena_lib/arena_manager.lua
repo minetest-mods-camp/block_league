@@ -44,7 +44,7 @@ arena_lib.on_join("block_league", function(p_name, arena)
 
   minetest.after(0.01, function()
     block_league.info_panel_update(arena)
-    block_league.scoreboard_update(arena, p_name, arena.players[p_name].teamID)
+    block_league.scoreboard_update_score(arena, p_name, arena.players[p_name].teamID)
   end)
 end)
 
@@ -92,6 +92,7 @@ end)
 
 
 
+
 arena_lib.on_quit("block_league", function(arena, p_name)
   --[[TODO: waiting for 5.4 to fix a few bugs
   if minetest.get_player_by_name(p_name):get_children()[1] then
@@ -109,22 +110,15 @@ end)
 
 
 arena_lib.on_disconnect("block_league", function(arena, p_name)
+  --[[TODO: same as before
+  if minetest.get_player_by_name(p_name):get_children()[1] then
+    minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
+  end]]
 
   minetest.after(0, function()
     block_league.info_panel_update(arena)
   end)
-
-  remove_HUD(p_name)
-  reset_meta(p_name)
 end)
-
-
---[[TODO: same as before
-arena_lib.on_disconnect("block_league", function(arena, p_name)
-  if minetest.get_player_by_name(p_name):get_children()[1] then
-    minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
-  end
-end)]]
 
 
 
@@ -153,7 +147,7 @@ end
 function create_and_show_HUD(arena, p_name)
   block_league.broadcast_create(p_name)
   block_league.info_panel_create(arena, p_name)
-  block_league.scoreboard_create(p_name)
+  block_league.scoreboard_create(arena, p_name)
   block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
 

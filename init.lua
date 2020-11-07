@@ -19,6 +19,8 @@ arena_lib.register_minigame("block_league", {
     background_image = "bl_gui_hotbar.png"
   },
 
+  time_mode = 2,
+
   join_while_in_progress = true,
   celebration_time = 5,
 
@@ -72,6 +74,7 @@ dofile(modpath .. "/privs.lua")
 
 -- arena_lib
 dofile(modpath .. "/bl_arena_lib/arena_manager.lua")
+dofile(modpath .. "/bl_arena_lib/arena_timer.lua")
 -- debug
 dofile(modpath .. "/bl_debug/debug.lua")
 -- HUD

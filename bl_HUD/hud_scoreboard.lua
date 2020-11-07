@@ -1,4 +1,6 @@
-function block_league.scoreboard_create(p_name)
+function block_league.scoreboard_create(arena, p_name)
+
+  local timer = arena.in_loading and arena.initial_time or arena.current_time
 
   Panel:new({
     name = "bl_scoreboard",
@@ -21,12 +23,20 @@ function block_league.scoreboard_create(p_name)
         size      = { x = 2 },
         number    = "0x28CCDF",
         text      = "0"
-      }
+      },
+      time = {
+        offset    = { x = 0, y = 70 },
+        size      = { x = 2 },
+        number    = "0xDFF6F5",
+        text      = os.date('!%M:%S', timer)
+      },
     }
   })
 end
 
-function block_league.scoreboard_update(arena, p_name, teamID)
+
+
+function block_league.scoreboard_update_score(arena, p_name, teamID)
 
   local panel = panel_lib.get_panel(p_name, "bl_scoreboard")
   local score = 0
@@ -47,5 +57,18 @@ function block_league.scoreboard_update(arena, p_name, teamID)
     {team_blue_score = {
       text = score
     }})
+  end
+end
+
+
+
+function block_league.scoreboard_update_time(arena)
+
+  for pl_name, _ in pairs(arena.players) do
+    local panel = panel_lib.get_panel(pl_name, "bl_scoreboard")
+
+    panel:update(nil, {
+      time = { text = os.date('!%M:%S', arena.current_time)}
+    })
   end
 end
