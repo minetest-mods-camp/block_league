@@ -13,7 +13,7 @@ function block_league.energy_refill_loop(arena)
 
     -- se è vivo
     if health > 0 then
-      if player:get_meta() and player:get_meta():get_int("bl_has_ball") == 0 and arena.players[pl_name].energy < arena.max_energy then
+      if player:get_meta():get_int("bl_has_ball") == 0 and arena.players[pl_name].energy < arena.max_energy then
         arena.players[pl_name].energy = arena.players[pl_name].energy + 1
         block_league.energy_update(arena, pl_name)
       end
