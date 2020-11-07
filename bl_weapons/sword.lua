@@ -36,11 +36,11 @@ block_league.register_weapon("block_league:sword", {
 
     minetest.after(2.5, function()
       if not arena_lib.is_player_in_arena(user:get_player_name(), "block_league") then return end
-      local vel = user:get_meta():get_int("bl_has_ball") == 0 and block_league.SPEED or block_league.SPEED_LOW
-        user:set_physics_override({
-          speed = vel,
-          jump = 1.5
-        })
+      local vel = arena.players[user:get_player_name()].energy > 0 and block_league.SPEED or block_league.SPEED_LOW
+      user:set_physics_override({
+        speed = vel,
+        jump = 1.5
+      })
     end)
 
     if not pointed_players then return end
