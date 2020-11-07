@@ -54,9 +54,7 @@ minetest.register_on_respawnplayer(function(player)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
 
-  if not arena.weapons_disabled then
-    death_delay(p_name, player:get_pos(), arena)
-  end
+  death_delay(p_name, player:get_pos(), arena.weapons_disabled)
 
   arena.players[p_name].energy = 100
   block_league.energy_update(arena, p_name)
@@ -77,16 +75,16 @@ end)
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
-function death_delay(p_name, pos, arena)
+function death_delay(p_name, pos, weapons_disabled)
 
-  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then return end
+  if not arena_lib.is_player_in_arena(p_name, "block_league") or weapons_disabled then return end
 
   local player = minetest.get_player_by_name(p_name)
 
   if player:get_meta():get_int("bl_death_delay") == 0 then return end
 
   player:set_pos(pos)
-  minetest.after(0.2, function() death_delay(p_name, pos, arena) end)
+  minetest.after(0.2, function() death_delay(p_name, pos, weapons_disabled) end)
 end
 
 
