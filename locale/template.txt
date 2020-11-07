@@ -22,6 +22,9 @@ mod management=
 # privs.lua
 It allows to use the /bladmin command=
 
+# bl_arena_lib/arena_timer.lua
+No one=
+
 # bl_modes/TD/ball.lua
 Ball reset=
 NICE POINT!=

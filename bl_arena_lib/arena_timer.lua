@@ -1,3 +1,5 @@
+local S = minetest.get_translator("block_league")
+
 arena_lib.on_time_tick("block_league", function(arena)
   block_league.scoreboard_update_time(arena)
 end)
@@ -22,7 +24,7 @@ arena_lib.on_timeout("block_league", function(arena)
     end
   end
 
-  local winner_team = winner_team_ID ~= 0 and arena_lib.get_players_in_team(arena, winner_team_ID) or "nobody"
+  local winner_team = winner_team_ID ~= 0 and arena_lib.get_players_in_team(arena, winner_team_ID) or S("No one")
 
   arena_lib.load_celebration("block_league", arena, winner_team)
 
