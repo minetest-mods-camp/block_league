@@ -9,13 +9,14 @@ local achievements = {
   [1] = { name = S("two in one"),     img = "bl_achievement_doublekill.png" },
   [2] = { name = S("three in one"),   img = "bl_achievement_triplekill.png" }
 }
-local access_key = achievements_lib.register_achievements("block_league", achievements)
+
+achievements_lib.register_achievements("block_league", achievements)
 
 
 
 function block_league.add_achievement(p_name, achvmt_ID)
-  achievements_lib.add_achievement(p_name, access_key, achvmt_ID)
-  block_league.show_achievement(access_key, p_name, achvmt_ID)
+  achievements_lib.add_achievement(p_name, "block_league", achvmt_ID)
+  block_league.show_achievement("block_league", p_name, achvmt_ID)
 end
 
 
@@ -29,7 +30,7 @@ function block_league.list_achievements(sender, t_name)
     minetest.chat_send_player(sender,  minetest.colorize("#e6482e", S("[!] This player doesn't exist!")))
     return end
 
-  local p_achievements = achievements_lib.get_player_achievements(p_name, access_key)
+  local p_achievements = achievements_lib.get_player_achievements(p_name, "block_league")
   local current_achievements = 0
   local achievements_to_text = "\n"
 
