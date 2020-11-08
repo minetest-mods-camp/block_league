@@ -18,7 +18,7 @@ arena_lib.on_load("block_league", function(arena)
     minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
   end
 
-  minetest.after(0.01, function()
+  minetest.after(0.1, function()
     block_league.info_panel_update(arena)
   end)
 
@@ -42,9 +42,9 @@ arena_lib.on_join("block_league", function(p_name, arena)
 
   minetest.sound_play("bl_voice_fight", {to_player = p_name})
 
-  minetest.after(0.01, function()
+  minetest.after(0.1, function()
     block_league.info_panel_update(arena)
-    block_league.scoreboard_update_score(arena, p_name, arena.players[p_name].teamID)
+    block_league.scoreboard_update_score(arena)
   end)
 end)
 

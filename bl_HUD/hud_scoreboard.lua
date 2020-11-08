@@ -36,27 +36,31 @@ end
 
 
 
-function block_league.scoreboard_update_score(arena, p_name, teamID)
+function block_league.scoreboard_update_score(arena)
 
-  local panel = panel_lib.get_panel(p_name, "bl_scoreboard")
-  local score = 0
+  for pl_name, stats in pairs(arena.players) do
 
-  if arena.mod == 1 then
-    score = arena.teams[teamID].TDs
-  else
-    score = arena.teams[teamID].kills
-  end
+    local panel = panel_lib.get_panel(pl_name, "bl_scoreboard")
+    local score_red = 0
+    local score_blue = 0
 
-  if teamID == 1 then
-    panel:update(nil,
-    {team_red_score = {
-      text = score
-    }})
-  else
-    panel:update(nil,
-    {team_blue_score = {
-      text = score
-    }})
+    if arena.mod == 1 then
+      score_red = arena.teams[1].TDs
+      score_blue =  arena.teams[2].TDs
+    else
+      score_red = arena.teams[1].kills
+      score_blue = arena.teams[2].kills
+    end
+
+    panel:update(nil, {
+      team_red_score = {
+        text = score_red
+      },
+      team_blue_score = {
+        text = score_blue
+      }
+    })
+
   end
 end
 
