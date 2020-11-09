@@ -102,9 +102,7 @@ arena_lib.on_quit("block_league", function(arena, p_name)
   remove_HUD(p_name)
   reset_meta(p_name)
 
-  minetest.after(0, function()
-    block_league.info_panel_update(arena)
-  end)
+  block_league.info_panel_update(arena)
 end)
 
 
@@ -117,10 +115,7 @@ arena_lib.on_disconnect("block_league", function(arena, p_name)
 
   reset_meta(p_name)
 
-  minetest.after(0, function()
-    block_league.info_panel_update(arena)
-  end)
-
+  block_league.info_panel_update(arena)
 end)
 
 
