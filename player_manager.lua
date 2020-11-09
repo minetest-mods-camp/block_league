@@ -31,15 +31,16 @@ end)
 minetest.register_on_dieplayer(function(player)
 
   local p_name = player:get_player_name()
-  local arena = arena_lib.get_arena_by_player(p_name)
 
-  if not arena then return end
+  if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
 
   player:get_meta():set_int("bl_death_delay", 1)
   block_league.immunity(player)
 
   minetest.after(6, function()
+    local arena = arena_lib.get_arena_by_player(p_name)
     if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then return end
+
     player:get_meta():set_int("bl_death_delay", 0)
     player:get_meta():set_int("bl_reloading", 0)
   end)
