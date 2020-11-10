@@ -7,11 +7,6 @@ minetest.register_on_joinplayer(function(player)
 
   local p_name = player:get_player_name()
 
-  -- se non è nello storage degli achievement, lo aggiungo
-  if not achievements_lib.is_player_in_storage(p_name, "block_league") then
-    achievements_lib.add_player_to_storage(p_name, "block_league")
-  end
-
   -- se non è nello storage della mod, lo aggiungo
   if not block_league.is_player_in_storage(p_name) then
     block_league.add_player_to_storage(p_name)

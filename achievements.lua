@@ -15,7 +15,7 @@ achievements_lib.register_achievements("block_league", achievements)
 
 
 function block_league.add_achievement(p_name, achvmt_ID)
-  achievements_lib.add_achievement(p_name, "block_league", achvmt_ID)
+  achievements_lib.unlock_achievement(p_name, "block_league", achvmt_ID)
   block_league.show_achievement("block_league", p_name, achvmt_ID)
 end
 
@@ -24,11 +24,6 @@ end
 function block_league.list_achievements(sender, t_name)
 
   local p_name = t_name or sender
-
-  -- se il giocatore non esiste, annullo
-  if not achievements_lib.is_player_in_storage(p_name, "block_league") then
-    minetest.chat_send_player(sender,  minetest.colorize("#e6482e", S("[!] This player doesn't exist!")))
-    return end
 
   local p_achievements = achievements_lib.get_player_achievements(p_name, "block_league")
   local current_achievements = 0
