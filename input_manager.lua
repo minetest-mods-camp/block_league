@@ -16,7 +16,7 @@ controls.register_on_hold(function(player, key)
   if key~="LMB" or not arena_lib.is_player_in_arena(p_name, "block_league") then return end
 
   local weapon_name = player:get_wielded_item():get_name()
-  local weap_def = minetest.registered_nodes[weapon_name]
+  local weap_def = minetest.registered_items[weapon_name]
 
   if not weap_def or not weap_def.continuos_fire then return end
 
@@ -41,7 +41,7 @@ controls.register_on_release(function(player, key)
   elseif key == "LMB" then
 
     local weapon_name = player:get_wielded_item():get_name()
-    local weap_def = minetest.registered_nodes[weapon_name]
+    local weap_def = minetest.registered_items[weapon_name]
     local arena = arena_lib.get_arena_by_player(p_name)
 
     if not weap_def or not weap_def.slow_down_when_firing then return end

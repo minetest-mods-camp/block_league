@@ -38,7 +38,7 @@ function block_league.refill_weapons(arena, p_name)
   local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
 
   for i, weapon_name in pairs(default_weapons) do
-    local magazine = minetest.registered_nodes[weapon_name].magazine
+    local magazine = minetest.registered_items[weapon_name].magazine
 
     if magazine then
       arena.players[p_name].weapons_magazine[weapon_name] = magazine
