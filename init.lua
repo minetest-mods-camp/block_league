@@ -22,6 +22,7 @@ arena_lib.register_minigame("block_league", {
   time_mode = 2,
 
   join_while_in_progress = true,
+  load_time = 6,
   celebration_time = 5,
 
   in_game_physics = {
@@ -83,6 +84,7 @@ dofile(modpath .. "/bl_HUD/hud_broadcast.lua")
 dofile(modpath .. "/bl_HUD/hud_bullets.lua")
 dofile(modpath .. "/bl_HUD/hud_energy.lua")
 dofile(modpath .. "/bl_HUD/hud_info_panel.lua")
+dofile(modpath .. "/bl_HUD/hud_inputs.lua")
 dofile(modpath .. "/bl_HUD/hud_scoreboard.lua")
 -- abstract weapons
 dofile(modpath .. "/bl_weapons/bullets.lua")

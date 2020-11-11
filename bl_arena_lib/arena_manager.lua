@@ -15,7 +15,13 @@ arena_lib.on_load("block_league", function(arena)
     create_and_show_HUD(arena, pl_name)
     block_league.refill_weapons(arena, pl_name)
 
-    minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
+    minetest.after(0.1, function()
+      block_league.HUD_show_inputs(pl_name)
+    end)
+
+    minetest.after(3, function()
+      minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
+    end)
   end
 
   minetest.after(0.1, function()
@@ -27,6 +33,11 @@ end)
 
 
 arena_lib.on_start("block_league", function(arena)
+
+  for pl_name, _ in pairs(arena.players) do
+    block_league.HUD_hide_inputs(pl_name)
+  end
+
   block_league.round_start(arena)
   block_league.energy_refill_loop(arena)
 end)
@@ -145,6 +156,7 @@ end
 function create_and_show_HUD(arena, p_name)
   block_league.broadcast_create(p_name)
   block_league.info_panel_create(arena, p_name)
+  block_league.HUD_create_inputs(p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
