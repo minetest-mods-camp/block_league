@@ -33,6 +33,7 @@ function block_league.register_weapon(name, def)
     weapon_range = def.weapon_range,
     knockback = def.knockback,
     fire_delay = def.fire_delay,
+    range = def.range and def.range or 0,
 
     pierce = def.pierce,
     decrease_damage_with_distance = def.decrease_damage_with_distance,
