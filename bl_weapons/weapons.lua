@@ -16,7 +16,7 @@ function block_league.register_weapon(name, def)
   -- passare anche il nome in on_use (che lo richiede)
   def.name = name
 
-  minetest.register_tool(name, {
+  minetest.register_node(name, {
     name = def.name,
 
     description = def.description,

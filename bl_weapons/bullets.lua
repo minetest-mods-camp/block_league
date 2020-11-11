@@ -201,7 +201,7 @@ function bullet_set_entity(name, def, dmg, trail)
       local direction = vector.normalize(velocity)
       local node = minetest.get_node(pos)
       local speed = vector.length(velocity)
-      local drag = math.max(minetest.registered_items[node.name].liquid_viscosity, 0.1) * self.sliding -- Ottiene l'attrito generato dal liquido che attraversa
+      local drag = math.max(minetest.registered_nodes[node.name].liquid_viscosity, 0.1) * self.sliding -- Ottiene l'attrito generato dal liquido che attraversa
       local yaw = minetest.dir_to_yaw(direction)
       local pitch = math.acos(velocity.y/speed) - math.pi/3
       -- Controlla che il pitch sia un numero

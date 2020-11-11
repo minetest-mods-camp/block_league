@@ -16,7 +16,7 @@ function block_league.bullets_hud_create(p_name)
 
     local stack = inv:get_stack("main", i)
     local item_name = stack:get_name()
-    local weapon = minetest.registered_items[item_name]
+    local weapon = minetest.registered_nodes[item_name]
 
     if weapon ~= nil and weapon.magazine ~= nil then
       sub_img_elems[item_name .. "_icon"] = {
@@ -80,7 +80,7 @@ end
 
 function block_league.weapons_hud_update(arena, p_name, weapon_name)
 
-  local weapon = minetest.registered_items[weapon_name]
+  local weapon = minetest.registered_nodes[weapon_name]
   local panel = panel_lib.get_panel(p_name, "bl_bullets")
 
   local w_name = weapon.name
