@@ -1,3 +1,6 @@
+local S = minetest.get_translator("block_league")
+
+local function wait_for_respawn() end
 local function death_delay() end
 local function remove_weapons() end
 
@@ -32,14 +35,7 @@ minetest.register_on_dieplayer(function(player)
   player:get_meta():set_int("bl_death_delay", 1)
   block_league.immunity(player)
 
-  minetest.after(6, function()
-    local arena = arena_lib.get_arena_by_player(p_name)
-    if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then return end
-
-    player:get_meta():set_int("bl_death_delay", 0)
-    player:get_meta():set_int("bl_reloading", 0)
-  end)
-
+  wait_for_respawn(arena_lib.get_arena_by_player(p_name), p_name, 6)
 end)
 
 
@@ -51,7 +47,7 @@ minetest.register_on_respawnplayer(function(player)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
 
-  death_delay(p_name, player:get_pos(), arena.weapons_disabled)
+  death_delay(arena, p_name, player:get_pos())
 
   arena.players[p_name].energy = 100
   block_league.energy_update(arena, p_name)
@@ -72,16 +68,41 @@ end)
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
-function death_delay(p_name, pos, weapons_disabled)
+function wait_for_respawn(arena, p_name, time_left)
 
-  if not arena_lib.is_player_in_arena(p_name, "block_league") or weapons_disabled then return end
+  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then
+    arena_lib.HUD_hide("broadcast", p_name)
+  return end
+
+  if time_left > 0 then
+    arena_lib.HUD_send_msg("broadcast", p_name, S("Back in the game in @1", time_left))
+  else
+    local player = minetest.get_player_by_name(p_name)
+    player:get_meta():set_int("bl_death_delay", 0)
+    player:get_meta():set_int("bl_reloading", 0)
+    arena_lib.HUD_hide("broadcast", p_name)
+    return
+  end
+
+  time_left = time_left -1
+
+  minetest.after(1, function()
+    wait_for_respawn(arena, p_name, time_left)
+  end)
+end
+
+
+
+function death_delay(arena, p_name, pos)
+
+  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then return end
 
   local player = minetest.get_player_by_name(p_name)
 
   if player:get_meta():get_int("bl_death_delay") == 0 then return end
 
   player:set_pos(pos)
-  minetest.after(0.2, function() death_delay(p_name, pos, weapons_disabled) end)
+  minetest.after(0.2, function() death_delay(arena, p_name, pos) end)
 end
 
 

@@ -19,6 +19,9 @@ three in one=tre in uno
 # commands.lua
 mod management=gestione della mod
 
+# player_manager.lua
+Back in the game in @1=Di nuovo in partita tra @1
+
 # privs.lua
 It allows to use the /bladmin command=Permette di usare il comando /bladmin
 

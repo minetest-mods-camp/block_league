@@ -19,6 +19,9 @@ three in one=
 # commands.lua
 mod management=
 
+# player_manager.lua
+Back in the game in @1=
+
 # privs.lua
 It allows to use the /bladmin command=
 
