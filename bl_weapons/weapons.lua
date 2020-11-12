@@ -65,7 +65,7 @@ function block_league.register_weapon(name, def)
 
     -- Q = reload
     on_drop = function(itemstack, user, pointed_thing)
-      weapon_reload(def, user, name)
+      weapon_reload(def, user)
     end
 
   })
@@ -352,8 +352,9 @@ end
 
 
 
-function weapon_reload(weapon, player, name)
+function weapon_reload(weapon, player)
 
+  local w_name = weapon.name
   local p_name = player:get_player_name()
   local p_meta = player:get_meta()
   local arena = arena_lib.get_arena_by_player(p_name)
@@ -361,7 +362,7 @@ function weapon_reload(weapon, player, name)
   if not arena or not arena.in_game or player:get_hp() <= 0
      or arena.weapons_disabled or weapon.weapon_type == 3 or not weapon.magazine
      or weapon.magazine == 0 or p_meta:get_int("bl_reloading") == 1
-     or arena.players[p_name].weapons_magazine[name] == weapon.magazine
+     or arena.players[p_name].weapons_magazine[w_name] == weapon.magazine
     then return end
 
   p_meta:set_int("bl_reloading", 1)
@@ -381,8 +382,8 @@ function weapon_reload(weapon, player, name)
       jump = 1.5
     })
 
-    arena.players[p_name].weapons_magazine[name] = weapon.magazine
-    block_league.weapons_hud_update(arena, p_name, name)
+    arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
+    block_league.weapons_hud_update(arena, p_name, w_name)
   end)
 
 end
@@ -456,25 +457,9 @@ function update_magazine(player, weapon)
 
   -- automatically reload if the magazine is now empty
   if arena.players[p_name].weapons_magazine[w_name] == 0 and p_meta:get_int("bl_reloading") == 0 then
-    p_meta:set_int("bl_reloading", 1)
-
-    player:set_physics_override({
-      speed = block_league.SPEED_LOW,
-      jump = 1.5
-    })
-    minetest.after(weapon.reload_time, function()
-      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-      p_meta:set_int("bl_weap_delay", 0)
-      p_meta:set_int("bl_reloading", 0)
-      arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
-      player:set_physics_override({
-        speed = block_league.SPEED,
-        jump = 1.5
-      })
-      block_league.weapons_hud_update(arena, p_name, w_name)
-    end)
+    weapon_reload(weapon, player)
   end
-
+  
   block_league.weapons_hud_update(arena, p_name, w_name)
 end
 
