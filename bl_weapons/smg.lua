@@ -20,6 +20,7 @@ block_league.register_weapon("block_league:smg", {
   continuos_fire = true,
 
   sound_shoot = "bl_smg_shoot",
+  sound_reload = "bl_smg_reload",
   bullet_trail = {
     image = "bl_smg_trail.png",
     amount = 5

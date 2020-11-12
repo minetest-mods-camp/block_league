@@ -41,6 +41,7 @@ function block_league.register_weapon(name, def)
     continuos_fire = def.continuos_fire,
 
     sound_shoot = def.sound_shoot,
+    sound_reload = def.sound_reload,
     bullet_trail = def.bullet_trail,
 
     consume_bullets = def.consume_bullets,
@@ -65,7 +66,7 @@ function block_league.register_weapon(name, def)
 
     -- Q = reload
     on_drop = function(itemstack, user, pointed_thing)
-      weapon_reload(def, user)
+      weapon_reload(user, def)
     end
 
   })
@@ -352,7 +353,7 @@ end
 
 
 
-function weapon_reload(weapon, player)
+function weapon_reload(player, weapon)
 
   local w_name = weapon.name
   local p_name = player:get_player_name()
@@ -364,6 +365,8 @@ function weapon_reload(weapon, player)
      or weapon.magazine == 0 or p_meta:get_int("bl_reloading") == 1
      or arena.players[p_name].weapons_magazine[w_name] == weapon.magazine
     then return end
+
+  minetest.sound_play(weapon.sound_reload, {to_player = p_name})
 
   p_meta:set_int("bl_reloading", 1)
 
@@ -457,9 +460,9 @@ function update_magazine(player, weapon)
 
   -- automatically reload if the magazine is now empty
   if arena.players[p_name].weapons_magazine[w_name] == 0 and p_meta:get_int("bl_reloading") == 0 then
-    weapon_reload(weapon, player)
+    weapon_reload(player, weapon)
   end
-  
+
   block_league.weapons_hud_update(arena, p_name, w_name)
 end
 

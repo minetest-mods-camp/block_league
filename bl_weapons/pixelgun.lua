@@ -21,6 +21,7 @@ block_league.register_weapon("block_league:pixelgun", {
   continuos_fire = false,
 
   sound_shoot = "bl_pixelgun_shoot",
+  sound_reload = "bl_pixelgun_reload",
   bullet_trail = {
     image = "bl_pixelgun_trail.png",
     amount = 20,
