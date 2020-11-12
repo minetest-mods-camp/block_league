@@ -43,6 +43,8 @@ arena_lib.register_minigame("block_league", {
     immunity_time = 6,
     goal_red = {},
     goal_blue = {},
+    waiting_room_red = {},
+    waiting_room_blue = {},
     ball_spawn = {},
     min_y = 0
   },

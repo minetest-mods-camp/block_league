@@ -1,7 +1,6 @@
 local S = minetest.get_translator("block_league")
 
 local function wait_for_respawn() end
-local function death_delay() end
 local function remove_weapons() end
 
 
@@ -47,7 +46,13 @@ minetest.register_on_respawnplayer(function(player)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
 
-  death_delay(arena, p_name, player:get_pos())
+  if player:get_meta():get_int("bl_death_delay") == 1 then
+    if arena.players[p_name].teamID == 1 then
+      player:set_pos(arena.waiting_room_red)
+    else
+      player:set_pos(arena.waiting_room_blue)
+    end
+  end
 
   arena.players[p_name].energy = 100
   block_league.energy_update(arena, p_name)
@@ -78,9 +83,16 @@ function wait_for_respawn(arena, p_name, time_left)
     arena_lib.HUD_send_msg("broadcast", p_name, S("Back in the game in @1", time_left))
   else
     local player = minetest.get_player_by_name(p_name)
+
     player:get_meta():set_int("bl_death_delay", 0)
     player:get_meta():set_int("bl_reloading", 0)
     arena_lib.HUD_hide("broadcast", p_name)
+
+    -- se è nella sala d'attesa
+    if player:get_hp() > 0 then
+      player:set_pos(arena_lib.get_random_spawner(arena, arena.players[p_name].teamID))
+    end
+
     return
   end
 
@@ -89,20 +101,6 @@ function wait_for_respawn(arena, p_name, time_left)
   minetest.after(1, function()
     wait_for_respawn(arena, p_name, time_left)
   end)
-end
-
-
-
-function death_delay(arena, p_name, pos)
-
-  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then return end
-
-  local player = minetest.get_player_by_name(p_name)
-
-  if player:get_meta():get_int("bl_death_delay") == 0 then return end
-
-  player:set_pos(pos)
-  minetest.after(0.2, function() death_delay(arena, p_name, pos) end)
 end
 
 
