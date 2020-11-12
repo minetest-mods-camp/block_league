@@ -32,7 +32,6 @@ minetest.register_on_dieplayer(function(player)
   if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
 
   player:get_meta():set_int("bl_death_delay", 1)
-  block_league.immunity(player)
 
   wait_for_respawn(arena_lib.get_arena_by_player(p_name), p_name, 6)
 end)
@@ -91,6 +90,7 @@ function wait_for_respawn(arena, p_name, time_left)
     -- se è nella sala d'attesa
     if player:get_hp() > 0 then
       player:set_pos(arena_lib.get_random_spawner(arena, arena.players[p_name].teamID))
+      block_league.immunity(player)
     end
 
     return
