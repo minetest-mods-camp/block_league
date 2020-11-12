@@ -7,9 +7,11 @@ function block_league.round_start(arena)
 
       local player = minetest.get_player_by_name(p_name)
 
-      player:set_hp(20)
-      arena.players[p_name].energy = 100
-      block_league.energy_update(arena, p_name)
+      if player:get_hp() > 0 then
+        player:set_hp(20)
+        arena.players[p_name].energy = 100
+        block_league.energy_update(arena, p_name)
+      end
 
       block_league.refill_weapons(arena, p_name)
       player:get_meta():set_int("bl_reloading", 0)
