@@ -15,7 +15,6 @@ block_league.register_weapon("block_league:grenade_launcher", {
 
   pierce = false,
   decrease_damage_with_distance = false,
-  slow_down_when_firing = true,
   continuos_fire = false,
 
   sound_shoot = "bl_rocketlauncher_shoot",

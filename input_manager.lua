@@ -45,7 +45,7 @@ controls.register_on_release(function(player, key)
     local weapon_name = player:get_wielded_item():get_name()
     local weapon = minetest.registered_nodes[weapon_name]
 
-    if not weapon.type or weapon.type == 3 or player:get_meta():get_int("bl_is_shooting") == 0 then return end
+    if not weapon or weapon.type == 3 or player:get_meta():get_int("bl_is_shooting") == 0 then return end
 
     block_league.shoot_end(player, weapon)
   end

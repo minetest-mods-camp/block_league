@@ -16,7 +16,6 @@ block_league.register_weapon("block_league:rocket_launcher", {
 
   pierce = false,
   decrease_damage_with_distance = false,
-  slow_down_when_firing = false,
   continuos_fire = true,
 
   sound_shoot = "bl_rocketlauncher_shoot",

@@ -19,7 +19,6 @@ block_league.register_weapon("block_league:nomearma", {
   weapon_type = 1, --1) Hitscan 2) Entity based 3) Sword
   weapon_range = 100, --Range nel quale opera il raggio hitscan
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
-  slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
   magazine = 0, --Dopo quanti colpi ricaricare
   reload_time = 5,
@@ -28,7 +27,6 @@ block_league.register_weapon("block_league:nomearma", {
 
   weapon_type = 2, --1) Hitscan 2) Entity based 3) Sword
   continuos_fire = false, --Se può sparare tenendo premuto il sinistro
-  slow_down_when_firing = true, --Se rallentare chi spara
   consume_bullets = true, --Se usa proiettili
   magazine = 0, --Dopo quanti colpi ricaricare
   reload_time = 5,

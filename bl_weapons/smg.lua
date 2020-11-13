@@ -16,7 +16,6 @@ block_league.register_weapon("block_league:smg", {
 
   pierce = false,
   decrease_damage_with_distance = true,
-  slow_down_when_firing = true,
   continuos_fire = true,
 
   sound_shoot = "bl_smg_shoot",

@@ -37,7 +37,6 @@ function block_league.register_weapon(name, def)
 
     pierce = def.pierce,
     decrease_damage_with_distance = def.decrease_damage_with_distance,
-    slow_down_when_firing = def.slow_down_when_firing,
     continuos_fire = def.continuos_fire,
 
     sound_shoot = def.sound_shoot,
@@ -335,12 +334,10 @@ function weapon_left_click(weapon, player, pointed_thing)
 
   if not block_league.shoot(weapon, player, pointed_thing) then return end
 
-  if weapon.slow_down_when_firing then
-      player:set_physics_override({
-        speed = block_league.SPEED_LOW,
-        jump = 1.5
-      })
-  end
+  player:set_physics_override({
+    speed = block_league.SPEED_LOW,
+    jump = 1.5
+  })
 
   if weapon.type ~= 3 then
     player:get_meta():set_int("bl_is_shooting", 1)
