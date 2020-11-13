@@ -43,17 +43,10 @@ controls.register_on_release(function(player, key)
   elseif key == "LMB" then
 
     local weapon_name = player:get_wielded_item():get_name()
-    local weap_def = minetest.registered_nodes[weapon_name]
-    local arena = arena_lib.get_arena_by_player(p_name)
+    local weapon = minetest.registered_nodes[weapon_name]
 
-    if not weap_def or not weap_def.slow_down_when_firing then return end
+    if not weapon.type or weapon.type == 3 or player:get_meta():get_int("bl_is_shooting") == 0 then return end
 
-      minetest.after(0.5, function()
-        if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.players[p_name].energy == 0 or player:get_meta():get_int("bl_reloading") == 1 then return end
-        player:set_physics_override({
-          speed = block_league.SPEED,
-          jump = 1.5
-        })
-      end)
-   end
+    block_league.shoot_end(player, weapon)
+  end
 end)
