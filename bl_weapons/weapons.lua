@@ -132,6 +132,30 @@ end
 
 
 
+function block_league.shoot_end(player, weapon)
+
+  local p_name = player:get_player_name()
+  local arena = arena_lib.get_arena_by_player(p_name)
+  local p_meta = player:get_meta()
+
+  p_meta:set_int("bl_is_shooting", 0)
+
+  minetest.after(0.5, function()
+    if not arena_lib.is_player_in_arena(p_name, "block_league")
+      or arena.players[p_name].energy == 0
+      or p_meta:get_int("bl_reloading") == 1
+      or p_meta:get_int("bl_is_shooting") == 1
+      then return end
+
+    player:set_physics_override({
+      speed = block_league.SPEED,
+      jump = 1.5
+    })
+  end)
+end
+
+
+
 -- ritorna un array di giocatori con il numero di giocatori trovati a indice 1.
 -- Se non trova giocatori diversi da se stesso ritorna nil
 function block_league.get_pointed_players(head_pos, dir, range, user, particle, has_piercing)
@@ -317,6 +341,24 @@ function weapon_left_click(weapon, player, pointed_thing)
         jump = 1.5
       })
   end
+
+  if weapon.type ~= 3 then
+    player:get_meta():set_int("bl_is_shooting", 1)
+  end
+
+  -- controls.register_on_release non funziona se un tasto viene premuto E rilasciato
+  -- sullo stesso step. Quindi, quando questo fallisce (perché il giocatore è stato
+  -- troppo veloce), interviene l'after seguente che ricontrolla lo stato del tasto sx
+  -- sullo step subito successivo. Il metadato bl_is_shooting è usato come sistema di
+  -- verifica (attivato quando si spara con successo e disattivato quando si rilascia).
+  -- Se il tasto sx è stato rilasciato ma bl_is_shooting è ancora 1, vuol dire che
+  -- register_on_release ha fallito e c'è bisogno di intervenire chiamando la funzione
+  -- di rilascio
+  minetest.after(0.1, function()
+    if not player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
+      block_league.shoot_end(player, weapon)
+    end
+  end)
 end
 
 
@@ -471,12 +513,11 @@ end
 function check_weapon_type_and_attack(player, weapon, pointed_thing)
 
   if weapon.weapon_type ~= 3 then
-      local bullet = weapon.bullet or nil
 
       if weapon.weapon_type == 1 then
         block_league.shoot_hitscan(player, weapon, pointed_thing)
       elseif weapon.weapon_type == 2 then
-        block_league.shoot_bullet(player, bullet, pointed_thing)
+        block_league.shoot_bullet(player, weapon.bullet, pointed_thing)
       end
 
   else
