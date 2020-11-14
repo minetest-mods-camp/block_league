@@ -58,10 +58,7 @@ minetest.register_on_respawnplayer(function(player)
 
   block_league.refill_weapons(arena, p_name)
 
-  player:set_physics_override({
-            speed = block_league.SPEED,
-            jump = 1.5
-  })
+  player:set_physics_override({ speed = block_league.SPEED })
 end)
 
 

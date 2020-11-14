@@ -146,10 +146,7 @@ function block_league.shoot_end(player, weapon)
       or p_meta:get_int("bl_is_shooting") == 1
       then return end
 
-    player:set_physics_override({
-      speed = block_league.SPEED,
-      jump = 1.5
-    })
+    player:set_physics_override({ speed = block_league.SPEED })
   end)
 end
 
@@ -334,10 +331,7 @@ function weapon_left_click(weapon, player, pointed_thing)
 
   if not block_league.shoot(weapon, player, pointed_thing) then return end
 
-  player:set_physics_override({
-    speed = block_league.SPEED_LOW,
-    jump = 1.5
-  })
+  player:set_physics_override({ speed = block_league.SPEED_LOW })
 
   if weapon.type ~= 3 then
     player:get_meta():set_int("bl_is_shooting", 1)
@@ -409,10 +403,7 @@ function weapon_reload(player, weapon)
 
   p_meta:set_int("bl_reloading", 1)
 
-  player:set_physics_override({
-    speed = block_league.SPEED_LOW,
-    jump = 1.5
-  })
+  player:set_physics_override({ speed = block_league.SPEED_LOW })
 
   minetest.after(weapon.reload_time, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
@@ -421,10 +412,7 @@ function weapon_reload(player, weapon)
 
     local vel = arena.players[p_name].energy > 0 and block_league.SPEED or block_league.SPEED_LOW
 
-    player:set_physics_override({
-      speed = vel,
-      jump = 1.5
-    })
+    player:set_physics_override({ speed = vel })
 
     arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
     block_league.weapons_hud_update(arena, p_name, w_name)

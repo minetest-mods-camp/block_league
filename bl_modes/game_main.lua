@@ -66,10 +66,7 @@ function round_start(arena)
       player:get_meta():set_int("bl_reloading", 0)
       player:get_meta():set_int("bl_death_delay", 0)
 
-      player:set_physics_override({
-        speed = block_league.SPEED,
-        jump = 1.5
-      })
+      player:set_physics_override({ speed = block_league.SPEED })
       player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
 
       minetest.sound_play("bl_voice_fight", {to_player = p_name})
