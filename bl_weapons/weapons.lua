@@ -419,8 +419,10 @@ function weapon_reload(player, weapon)
     p_meta:set_int("bl_weap_delay", 0)
     p_meta:set_int("bl_reloading", 0)
 
+    local vel = arena.players[p_name].energy > 0 and block_league.SPEED or block_league.SPEED_LOW
+
     player:set_physics_override({
-      speed = block_league.SPEED,
+      speed = vel,
       jump = 1.5
     })
 

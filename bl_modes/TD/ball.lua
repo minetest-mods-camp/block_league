@@ -194,10 +194,6 @@ function ball:detach()
   announce_ball_possession_change(self.arena, player:get_player_name(), true)
 
   player:get_meta():set_int("bl_has_ball", 0)
-  player:set_physics_override({
-            speed = 0,
-            jump = 0
-  })
 
   self.object:set_detach()
 
