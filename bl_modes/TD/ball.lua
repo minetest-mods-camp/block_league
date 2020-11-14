@@ -332,15 +332,7 @@ function after_point(w_name, teamID, arena)
 
   -- sennò inizia un nuovo round
   else
-    minetest.after(2, function()
-      for pl_name, _ in pairs(arena.players) do
-        minetest.sound_play("bl_voice_countdown", {to_player = pl_name})
-      end
-    end)
-
-    minetest.after(5, function()
-      block_league.round_start(arena)
-    end)
+    block_league.countdown_and_start(arena, 3)
   end
 end
 

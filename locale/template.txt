@@ -25,6 +25,9 @@ Back in the game in @1=
 # privs.lua
 It allows to use the /bladmin command=
 
+# bl_arena_lib/arena_manager.lua
+The game will start soon=
+
 # bl_arena_lib/arena_timer.lua
 No one=
 
