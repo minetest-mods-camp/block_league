@@ -13,8 +13,6 @@ arena_lib.on_load("block_league", function(arena)
     reset_meta(pl_name)
     equip_weapons(arena, pl_name)
     create_and_show_HUD(arena, pl_name)
-    block_league.HUD_show_inputs(pl_name)
-    arena_lib.HUD_send_msg("broadcast", pl_name, S("The game will start soon"))
     block_league.refill_weapons(arena, pl_name)
   end
 
@@ -22,17 +20,16 @@ arena_lib.on_load("block_league", function(arena)
     block_league.info_panel_update(arena)
   end)
 
+  block_league.HUD_show_inputs(arena)
+  arena_lib.HUD_send_msg_all("broadcast", arena, S("The game will start soon"))
+
   block_league.countdown_and_start(arena, 3)
 end)
 
 
 
 arena_lib.on_start("block_league", function(arena)
-
-  for pl_name, _ in pairs(arena.players) do
-    block_league.HUD_remove_inputs(pl_name)
-  end
-
+  block_league.HUD_remove_inputs(arena)
   block_league.energy_refill_loop(arena)
 end)
 
