@@ -1,53 +1,54 @@
 
 function block_league.info_panel_create(arena, p_name)
-    local panel = Panel:new({
-        name = "bl_info_panel",
-        player = p_name,
-        bg_scale = { x = 45, y = 28 },
-        position = { x = 0.5, y = 0.5 },
-        alignment = { x = 0, y = 0 },
-        title = "PLAYERS\t\t\t\t\t\t\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\tKILLS\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\t\t\t\t\t\t\tDEATHS",
-        title_offset = { x = 0, y = -150},
-        title_color = 0xdff6f5,
 
-        sub_img_elems = {
-          player_indicator = {
-            scale = {x = 44, y = 1.7},
-            offset = {x = 0, y = -121},
-            alignment = { x = 0, y = 0 },
-            text = "bl_hud_panel_playerindicator_teams.png"
-          },
-          team_indicator_red = {
-            scale = {x = 44, y = 1.7},
-            offset = {x = 0, y = -121},
-            alignment = { x = 0, y = 0 },
-            text = "bl_hud_panel_teamindicator_red.png"
-          },
-          team_indicator_blue = {
-            scale = {x = 44, y = 1.7},
-            offset = {x = 0, y = -121},
-            alignment = { x = 0, y = 0 },
-            text = "bl_hud_panel_teamindicator_blue.png"
-          },
+    Panel:new({
+      name = "bl_info_panel",
+      player = p_name,
+      bg_scale = { x = 45, y = 28 },
+      position = { x = 0.5, y = 0.5 },
+      alignment = { x = 0, y = 0 },
+      title = "PLAYERS\t\t\t\t\t\t\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\tKILLS\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\t\t\t\t\t\t\tDEATHS",
+      title_offset = { x = 0, y = -150},
+      title_color = 0xdff6f5,
+
+      sub_img_elems = {
+        player_indicator = {
+          scale = {x = 44, y = 1.7},
+          offset = {x = 0, y = -121},
+          alignment = { x = 0, y = 0 },
+          text = "bl_hud_panel_playerindicator_teams.png"
         },
+        team_indicator_red = {
+          scale = {x = 44, y = 1.7},
+          offset = {x = 0, y = -121},
+          alignment = { x = 0, y = 0 },
+          text = "bl_hud_panel_teamindicator_red.png"
+        },
+        team_indicator_blue = {
+          scale = {x = 44, y = 1.7},
+          offset = {x = 0, y = -121},
+          alignment = { x = 0, y = 0 },
+          text = "bl_hud_panel_teamindicator_blue.png"
+        },
+      },
 
-        sub_txt_elems = {
-          players_clmn = {
-            alignment = { x = 0, y = 1 },
-            offset = {x = -250, y = -130},
-            text = "player"
-          },
-          kls_clmn = {
-            alignment = { x = 0, y = 1 },
-            offset = {x = 0, y = -130},
-            text = "0"
-          },
-          dts_clmn = {
-            alignment = { x = 0, y = 1 },
-            offset = {x = 250, y = -130},
-            text = "0"
-          },
-        }
+      sub_txt_elems = {
+        players_clmn = {
+          alignment = { x = 0, y = 1 },
+          offset = {x = -250, y = -130},
+          text = "player"
+        },
+        kls_clmn = {
+          alignment = { x = 0, y = 1 },
+          offset = {x = 0, y = -130},
+          text = "0"
+        },
+        dts_clmn = {
+          alignment = { x = 0, y = 1 },
+          offset = {x = 250, y = -130},
+          text = "0"
+        },
+      }
     })
 end
 

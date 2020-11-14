@@ -115,6 +115,7 @@ arena_lib.on_disconnect("block_league", function(arena, p_name)
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
   end]]
 
+  remove_HUD(p_name)
   reset_meta(p_name)
 
   block_league.info_panel_update(arena)
@@ -145,7 +146,7 @@ end
 
 
 function create_and_show_HUD(arena, p_name)
-  block_league.broadcast_create(p_name)
+  block_league.HUD_broadcast_create(p_name)
   block_league.info_panel_create(arena, p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.energy_create(arena, p_name)
@@ -154,6 +155,7 @@ function create_and_show_HUD(arena, p_name)
   panel_lib.get_panel(p_name, "bl_scoreboard"):show()
   panel_lib.get_panel(p_name, "bl_energy"):show()
   panel_lib.get_panel(p_name, "bl_bullets"):show()
+  panel_lib.get_panel(p_name, "bl_broadcast"):show()
 end
 
 
@@ -164,7 +166,7 @@ function remove_HUD(p_name)
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_bullets"):remove()
   panel_lib.get_panel(p_name, "bl_energy"):remove()
-  block_league.HUD_broadcast_remove(p_name)
+  panel_lib.get_panel(p_name, "bl_broadcast"):remove()
 end
 
 

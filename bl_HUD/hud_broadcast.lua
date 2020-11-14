@@ -1,52 +1,83 @@
-local saved_huds = {} -- p_name = {indexes}
+local function remove_message() end
 
+function block_league.HUD_broadcast_create(p_name)
 
+  Panel:new({
+    name = "bl_broadcast",
+    player = p_name,
+    position  = {x = 0.5, y = 0.33},
+    bg = "",
+    title = "",
 
-function block_league.broadcast_create(p_name)
-
-  local HUD = {
-    hud_elem_type = "text",
-    position  = {x = 0.5, y = 0.35},
-    alignment = { x = 0, y = 0},
-    text      = "",
-    size      = { x = 2 },
-    number    = "0xFFFFFF"
-  }
-
-  local player = minetest.get_player_by_name(p_name)
-  local HUD_ID = player:hud_add(HUD)
-
-  saved_huds[p_name] = HUD_ID
-
+    sub_txt_elems = {
+      ball = {
+        size    = { x = 2 },
+        number  = "0xFFFFFF",
+        text    = ""
+      },
+      kills = {
+        size    = { x = 1 },
+        offset  = { x = 0, y = 30 },
+        number  = "0xFFFFFF",
+        text    = ""
+      }
+    }
+  })
 end
 
 
 
-function block_league.HUD_broadcast_remove(p_name)
+function block_league.HUD_ball_update(p_name, msg, hex_color)
 
-  minetest.get_player_by_name(p_name):hud_remove(saved_huds[p_name])
-  saved_huds[p_name] = nil
-end
-
-
-
-function block_league.HUD_broadcast_player(p_name, msg, duration, hex_color)
-
-  local HUD_ID = saved_huds[p_name]
-  local player = minetest.get_player_by_name(p_name)
+  local panel = panel_lib.get_panel(p_name, "bl_broadcast")
   local hex_color = hex_color == nil and "0xFFFFFF" or hex_color
 
-  player:hud_change(HUD_ID, "text", msg)
-  player:hud_change(HUD_ID, "number", hex_color)
+  panel:update(nil, {
+      ball = {
+        text = msg,
+        number = hex_color
+      }
+  })
 
-  minetest.after(duration, function()
+  remove_message(panel, "ball")
+end
 
-    if not minetest.get_player_by_name(p_name) then return end    -- potrebbe essersi disconnesso
-    if not player:hud_get(HUD_ID) then return end                 -- potrebbe essere uscito dalla partita (che rimuove la HUD)
 
-    local current_message = player:hud_get(HUD_ID).text
-    if msg == current_message then
-      player:hud_change(HUD_ID, "text", "")
+
+function block_league.HUD_kill_update(p_name, msg)
+
+  local panel = panel_lib.get_panel(p_name, "bl_broadcast")
+
+  panel:update(nil, {
+      kills = {
+        text = msg
+      }
+  })
+
+  remove_message(panel, "kills")
+end
+
+
+
+
+
+----------------------------------------------
+---------------FUNZIONI LOCALI----------------
+----------------------------------------------
+
+function remove_message(panel, field)
+
+  local old_msg = panel[field].text
+
+  minetest.after(3, function()
+    if not panel then return end    -- se è andato offline o uscito dalla partita
+
+    local current_message = panel[field].text
+    if old_msg == current_message then
+      panel:update(nil, {
+          [field] = { text = "" }
+      })
     end
   end)
+
 end

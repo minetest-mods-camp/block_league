@@ -554,7 +554,7 @@ function kill(arena, p_name, target)
   if t_name ~= p_name then
 
     -- informo dell'uccisione
-    block_league.HUD_broadcast_player(p_name, S("YOU'VE KILLED @1", t_name), 2.5)
+    block_league.HUD_kill_update(p_name, S("YOU'VE KILLED @1", t_name))
     minetest.chat_send_player(t_name, minetest.colorize("#d7ded7", S("You've been killed by @1", minetest.colorize("#eea160", p_name))))
 
     local p_stats = arena.players[p_name]
@@ -576,7 +576,7 @@ function kill(arena, p_name, target)
       end
     end
   else
-    block_league.HUD_broadcast_player(t_name, S("You've killed yourself"), 2.5)
+    block_league.HUD_kill_update(t_name, S("You've killed yourself"))
   end
 
 end
