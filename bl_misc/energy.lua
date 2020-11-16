@@ -1,4 +1,4 @@
-local recursive_time = 0.2
+local recursive_time = 0.1
 
 
 
@@ -38,7 +38,7 @@ function block_league.energy_drain(arena, w_name)
   if not arena.in_game or not wielder or wielder:get_meta():get_int("bl_has_ball") == 0 then return end
 
   if arena.players[w_name].energy > 0 then
-    arena.players[w_name].energy = arena.players[w_name].energy -3
+    arena.players[w_name].energy = arena.players[w_name].energy -2
     block_league.energy_update(arena, w_name)
   else
     wielder:set_physics_override({speed = block_league.SPEED_LOW})
