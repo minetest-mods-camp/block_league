@@ -78,7 +78,7 @@ end
 
 
 
-function block_league.weapons_hud_update(arena, p_name, weapon_name)
+function block_league.weapons_hud_update(arena, p_name, weapon_name, is_reloading)
 
   local weapon = minetest.registered_nodes[weapon_name]
   local panel = panel_lib.get_panel(p_name, "bl_bullets")
@@ -89,8 +89,8 @@ function block_league.weapons_hud_update(arena, p_name, weapon_name)
 
   local bg_pic = ""
 
-  if current_magazine == 0 then
-    bg_pic = "bl_hud_bullets_bg_empty.png"
+  if is_reloading then
+    bg_pic = "bl_hud_bullets_bg_reload.png"
   elseif current_magazine <= magazine/3 then
     bg_pic = "bl_hud_bullets_bg_low.png"
   else
