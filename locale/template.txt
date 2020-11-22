@@ -1,4 +1,4 @@
-# version 0.3.0
+# version 0.4.0-dev
 # author(s):
 # reviewer(s):
 # textdomain: block_league
@@ -30,6 +30,12 @@ The game will start soon=
 
 # bl_arena_lib/arena_timer.lua
 No one=
+
+# bl_debug/testkit.lua
+Leave test mode=
+You already are in test mode!=
+You've entered test mode=
+You've left test mode=
 
 # bl_modes/TD/ball.lua
 Ball reset=

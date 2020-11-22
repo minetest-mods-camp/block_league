@@ -195,6 +195,10 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         arena_lib.change_arena_property(sender, "block_league", arena_name, "min_y" , 0)
     end)
 
+    cmd:sub("testkit", function(sender)
+      block_league.enter_test_mode(sender)
+    end)
+
 
 end, {
   description = S("mod management"),

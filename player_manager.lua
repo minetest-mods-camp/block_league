@@ -109,5 +109,6 @@ function remove_weapons(inv)
   inv:remove_item("main", ItemStack("block_league:pixelgun"))
   inv:remove_item("main", ItemStack("block_league:rocket_launcher"))
   inv:remove_item("main", ItemStack("block_league:bouncer"))
+  inv:remove_item("main", ItemStack("block_league:testkit_quit"))
 
 end

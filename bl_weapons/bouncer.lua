@@ -17,7 +17,7 @@ minetest.register_tool("block_league:bouncer", {
     user:get_meta():set_int("bl_bouncer_delay", 1)
 
     minetest.after(0.3, function()
-      if not arena_lib.is_player_in_arena(user:get_player_name()) then return end
+      if not user then return end
       user:get_meta():set_int("bl_bouncer_delay", 0)
       end)
     ----- fine gestione delay -----
@@ -25,10 +25,14 @@ minetest.register_tool("block_league:bouncer", {
     local p_name = user:get_player_name()
     local arena = arena_lib.get_arena_by_player(p_name)
 
-    if not arena then return end
+    -- se non sta puntando un nodo, annullo
+    if pointed_thing.type ~= "node" then return end
 
-    -- se non ha abbastanza energia o non sta puntando un nodo, annullo
-    if not (arena.players[p_name].energy >= 20) or pointed_thing.type ~= "node" then return end
+    if arena then
+      -- se non ha abbastanza energia, annullo
+      if not (arena.players[p_name].energy >= 20) then return end
+      arena.players[p_name].energy = arena.players[p_name].energy - 20
+    end
 
     local dir = user:get_look_dir()
     local knockback = user:get_player_velocity().y < 1 and -15 or -10
@@ -36,6 +40,5 @@ minetest.register_tool("block_league:bouncer", {
     user:add_player_velocity(vector.multiply(dir, knockback))
     minetest.sound_play("bl_bouncer", {to_player = p_name})
 
-    arena.players[p_name].energy = arena.players[p_name].energy - 20
   end,
 })

@@ -80,6 +80,7 @@ dofile(modpath .. "/bl_arena_lib/arena_manager.lua")
 dofile(modpath .. "/bl_arena_lib/arena_timer.lua")
 -- debug
 dofile(modpath .. "/bl_debug/debug.lua")
+dofile(modpath .. "/bl_debug/testkit.lua")
 -- HUD
 dofile(modpath .. "/bl_HUD/hud_achievements.lua")
 dofile(modpath .. "/bl_HUD/hud_broadcast.lua")
