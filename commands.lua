@@ -8,19 +8,19 @@ ChatCmdBuilder.new("bladmin", function(cmd)
     cmd:sub("create :arena :tipologia:int", function(sender, arena_name, tipologia)
         arena_lib.create_arena(sender, mod, arena_name)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "mod" , tipologia)
+        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , tipologia)
     end)
 
     cmd:sub("create :arena :minplayers:int :maxplayers:int :tipologia:int", function(sender, arena_name, min_players, max_players, tipologia)
         arena_lib.create_arena(sender, mod, arena_name, min_players, max_players)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "mod" , tipologia)
+        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , tipologia)
     end)
 
     cmd:sub("create :arena :minplayers:int :maxplayers:int :scorecap:int :tipologia:int", function(sender, arena_name, min_players, max_players, score_cap, tipologia)
         arena_lib.create_arena(sender, mod, arena_name, min_players, max_players)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "mod" , tipologia)
+        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , tipologia)
         arena_lib.change_arena_property(sender, "block_league", arena_name, "score_cap" , score_cap)
     end)
 
@@ -114,7 +114,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
           minetest.chat_send_player(sender, "Invalid parameter")
           return end
 
-        if arena.mod ~= 1 then
+        if arena.mode ~= 1 then
           minetest.chat_send_player(sender, "Invalid parameter")
           return end
 
@@ -142,7 +142,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
           minetest.chat_send_player(sender, "Invalid parameter")
           return end
 
-        if arena.mod == 2 then
+        if arena.mode == 2 then
           minetest.chat_send_player(sender, "Invalid parameter")
           return end
 
@@ -163,7 +163,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         minetest.chat_send_player(sender, "Invalid parameter")
         return end
 
-      if arena.mod ~= 1 then
+      if arena.mode ~= 1 then
         minetest.chat_send_player(sender, "Invalid parameter")
         return end
 

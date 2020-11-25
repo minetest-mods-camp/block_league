@@ -44,7 +44,7 @@ function block_league.scoreboard_update_score(arena)
     local score_red = 0
     local score_blue = 0
 
-    if arena.mod == 1 then
+    if arena.mode == 1 then
       score_red = arena.teams[1].TDs
       score_blue =  arena.teams[2].TDs
     else

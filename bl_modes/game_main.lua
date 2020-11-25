@@ -72,7 +72,7 @@ function round_start(arena)
       minetest.sound_play("bl_voice_fight", {to_player = p_name})
     end
 
-  if arena.mod == 1 then
+  if arena.mode == 1 then
     load_ball(arena)
   end
 
