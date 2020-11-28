@@ -17,6 +17,14 @@ block_league.register_weapon("block_league:sword", {
 
   on_right_click = function(arena, weapon, user, pointed_thing)
 
+    local p_meta = user:get_meta()
+
+    if p_meta:get_int("bl_reloading") == 1 or
+       p_meta:get_int("bl_is_shooting") == 1
+       then return end
+
+    p_meta:set_int("bl_is_speed_locked", 1)
+
     local dir = user:get_look_dir()
     local pos = user:get_pos()
     local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
@@ -37,11 +45,25 @@ block_league.register_weapon("block_league:sword", {
 
     minetest.after(2.5, function()
       if not arena_lib.is_player_in_arena(user:get_player_name(), "block_league") then return end
-      local vel = arena.players[user:get_player_name()].energy > 0 and block_league.SPEED or block_league.SPEED_LOW
+
+      local vel
+
+      if arena.players[user:get_player_name()].energy > 0 then
+        if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_is_shooting") == 1 then
+          vel = block_league.SPEED_LOW
+        else
+          vel = block_league.SPEED
+        end
+      else
+        vel = block_league.SPEED_LOW
+      end
+
       user:set_physics_override({
         speed = vel,
         jump = 1.5
       })
+
+      user:get_meta():set_int("bl_is_speed_locked", 0)
     end)
 
     if not pointed_players then return end
@@ -49,3 +71,5 @@ block_league.register_weapon("block_league:sword", {
 
   end,
 })
+
+--bl_is_speed_locked
