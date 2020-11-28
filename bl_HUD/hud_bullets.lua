@@ -46,8 +46,7 @@ function block_league.bullets_hud_create(p_name)
   end
 
   -- creo pannello
-  Panel:new({
-    name = "bl_bullets",
+  Panel:new("bl_bullets", {
     player = p_name,
     bg = "",
     position = { x = 0.5, y = 1 },

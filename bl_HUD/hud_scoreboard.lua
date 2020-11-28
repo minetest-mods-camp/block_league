@@ -2,8 +2,7 @@ function block_league.scoreboard_create(arena, p_name)
 
   local timer = arena.in_loading and arena.initial_time or arena.current_time
 
-  Panel:new({
-    name = "bl_scoreboard",
+  Panel:new("bl_scoreboard", {
     player = p_name,
     position = { x = 0.5, y  = 0.018},
     alignment = { x = 0, y = 1},

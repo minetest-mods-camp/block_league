@@ -1,8 +1,7 @@
 
 function block_league.info_panel_create(arena, p_name)
 
-    Panel:new({
-      name = "bl_info_panel",
+    Panel:new("bl_info_panel", {
       player = p_name,
       bg_scale = { x = 45, y = 28 },
       position = { x = 0.5, y = 0.5 },
@@ -10,6 +9,8 @@ function block_league.info_panel_create(arena, p_name)
       title = "PLAYERS\t\t\t\t\t\t\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\tKILLS\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\t\t\t\t\t\t\tDEATHS",
       title_offset = { x = 0, y = -150},
       title_color = 0xdff6f5,
+
+      visible = false,
 
       sub_img_elems = {
         player_indicator = {
@@ -36,17 +37,17 @@ function block_league.info_panel_create(arena, p_name)
         players_clmn = {
           alignment = { x = 0, y = 1 },
           offset = {x = -250, y = -130},
-          text = "player"
+          text = ""
         },
         kls_clmn = {
           alignment = { x = 0, y = 1 },
           offset = {x = 0, y = -130},
-          text = "0"
+          text = ""
         },
         dts_clmn = {
           alignment = { x = 0, y = 1 },
           offset = {x = 250, y = -130},
-          text = "0"
+          text = ""
         },
       }
     })

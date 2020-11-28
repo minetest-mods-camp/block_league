@@ -2,8 +2,7 @@ function block_league.energy_create(arena, p_name)
 
   local p_energy = arena.players[p_name].energy
 
-  Panel:new({
-    name = "bl_energy",
+  Panel:new("bl_energy", {
     player = p_name,
     bg = "",
     title = "",

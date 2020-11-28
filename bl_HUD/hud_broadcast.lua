@@ -2,8 +2,7 @@ local function remove_message() end
 
 function block_league.HUD_broadcast_create(p_name)
 
-  Panel:new({
-    name = "bl_broadcast",
+  Panel:new("bl_broadcast", {
     player = p_name,
     position  = {x = 0.5, y = 0.33},
     bg = "",

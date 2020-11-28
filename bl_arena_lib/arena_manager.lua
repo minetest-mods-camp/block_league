@@ -151,11 +151,6 @@ function create_and_show_HUD(arena, p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
-
-  panel_lib.get_panel(p_name, "bl_scoreboard"):show()
-  panel_lib.get_panel(p_name, "bl_energy"):show()
-  panel_lib.get_panel(p_name, "bl_bullets"):show()
-  panel_lib.get_panel(p_name, "bl_broadcast"):show()
 end
 
 
