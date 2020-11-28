@@ -1,0 +1,66 @@
+# version 0.4.0-dev
+# author(s): Dragonop
+# reviewer(s):
+# textdomain: block_league
+
+# init.lua
+red=rojo
+blue=azul
+
+# info_panel.lua
+Team=Equipo
+
+# achievements.lua
+two in one=dos en uno
+three in one=tres en uno
+[!] This player doesn't exist!=[!] ¡Este jugador no existe!
+@1 ACHIEVEMENTS=LOGROS DE @1
+
+# commands.lua
+mod management=gestión del mod
+
+# player_manager.lua
+Back in the game in @1=De vuelta al juego en @1
+
+# privs.lua
+It allows to use the /bladmin command=Permite el uso del comando /bladmin
+
+# bl_arena_lib/arena_manager.lua
+The game will start soon=El juego comenzará pronto
+
+# bl_arena_lib/arena_timer.lua
+No one=Nadie
+
+# bl_debug/testkit.lua
+Leave test mode=Salir del modo de prueba
+You already are in test mode!=¡Ya estás en el modo de prueba!
+You've entered test mode=Has ingresado al modo de prueba
+You've left test mode=Has salido del modo de prueba
+
+# bl_modes/TD/ball.lua
+Ball reset=Pelota reiniciada
+NICE POINT!=¡BUEN PUNTO!
+ENEMY TEAM SCORED...=PUNTO PARA EL EQUIPO ENEMIGO...
+Your team lost the ball!=¡Tu equipo perdió la pelota!
+Enemy team lost the ball!=¡El equipo enemigo ha perdido la pelota!
+Your team got the ball!=¡Tu equipo tiene la pelota!
+You got the ball!=¡Tienes la pelota!
+Enemy team got the ball!=¡El equipo enemigo tiene la pelota!
+
+# bl_weapons/pixelgun.lua
+Pixelgun=Pixelgun
+
+# bl_weapons/rocket_launcher.lua
+Rocket Launcher=Lanzamisiles
+
+# bl_weapons/smg.lua
+Submachine Gun=Submachine Gun
+
+# bl_weapons/sword.lua
+2H Sword=Espada 2H
+
+# bl_weapons/weapons.lua
+has killed @1 players in a row!=ha matado @1 jugadores seguidos!
+YOU'VE KILLED @1=HAS MATADO A @1
+You've been killed by @1=Te ha matado @1
+You've killed yourself=Te has matado
