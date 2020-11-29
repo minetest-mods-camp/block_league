@@ -3,7 +3,7 @@
    local bullet_entity = bullet_set_entity(bullet.name, bullet, damage, bullet_trail)
 
    minetest.register_entity("block_league:" .. bullet.name .. "_entity", bullet_entity)
-   
+
    return bullet_entity
 end
 
@@ -125,6 +125,7 @@ function bullet_set_entity(name, def, dmg, trail)
             if collision.object:is_player() then
 
               if collision.object:get_player_name() ~= self.p_name then
+                -- TODO: non funziona, la funzione è stata cambiata. Bisogna far passare l'arma
                 block_league.apply_damage(minetest.get_player_by_name(self.p_name), collision.object, self.initial_properties.bullet_damage, 0, false)
                 buffer_boolean = true
               elseif collision.object:get_player_name() == self.p_name then

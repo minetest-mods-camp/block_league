@@ -52,25 +52,28 @@ end
 
 
 function round_start(arena)
-    for p_name, stats in pairs(arena.players) do
 
-      local player = minetest.get_player_by_name(p_name)
+  for p_name, stats in pairs(arena.players) do
 
-      if player:get_hp() > 0 then
-        player:set_hp(20)
-        arena.players[p_name].energy = 100
-        block_league.energy_update(arena, p_name)
-      end
+    local player = minetest.get_player_by_name(p_name)
 
-      block_league.refill_weapons(arena, p_name)
-      player:get_meta():set_int("bl_reloading", 0)
-      player:get_meta():set_int("bl_death_delay", 0)
-
-      player:set_physics_override({ speed = block_league.SPEED })
-      player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
-
-      minetest.sound_play("bl_voice_fight", {to_player = p_name})
+    if player:get_hp() > 0 then
+      player:set_hp(20)
+      arena.players[p_name].energy = 100
+      block_league.energy_update(arena, p_name)
     end
+
+    block_league.refill_weapons(arena, p_name)
+    player:get_meta():set_int("bl_reloading", 0)
+    player:get_meta():set_int("bl_death_delay", 0)
+
+    player:set_physics_override({ speed = block_league.SPEED })
+    player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
+
+    minetest.sound_play("bl_voice_fight", {to_player = p_name})
+  end
+
+  block_league.hud_log_clear(arena)
 
   if arena.mode == 1 then
     load_ball(arena)

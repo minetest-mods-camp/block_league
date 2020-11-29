@@ -151,6 +151,7 @@ function create_and_show_HUD(arena, p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
+  block_league.hud_log_create(p_name)
 end
 
 
@@ -162,6 +163,7 @@ function remove_HUD(p_name)
   panel_lib.get_panel(p_name, "bl_bullets"):remove()
   panel_lib.get_panel(p_name, "bl_energy"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
+  panel_lib.get_panel(p_name, "bl_log"):remove()
 end
 
 
