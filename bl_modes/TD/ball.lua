@@ -157,7 +157,7 @@ function ball:on_step(d_time, moveresult)
     -- se il giocatore è vivo
     if w_pos == nil then return end
 
-    local goal = self.team_name == S("red") and arena.goal_red or arena.goal_blue
+    local goal = self.team_name == S("orange") and arena.goal_orange or arena.goal_blue
 
     check_for_touchdown(id, arena, self, wielder, w_pos, goal)
   end
@@ -303,12 +303,12 @@ function add_point(teamID, arena)
 
   for _, pl_name in pairs(team) do
     minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
-    block_league.HUD_ball_update(pl_name, S("NICE POINT!"), "0x43e6FF")
+    block_league.HUD_ball_update(pl_name, S("NICE POINT!"), "0xabf877")
   end
 
   for _, pl_name in pairs(enemy_team) do
     minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
-    block_league.HUD_ball_update(pl_name, S("ENEMY TEAM SCORED..."), "0xFF5D43")
+    block_league.HUD_ball_update(pl_name, S("ENEMY TEAM SCORED..."), "0xff8e8e")
   end
 
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
@@ -348,23 +348,23 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
   if is_ball_lost then
     for _, pl_name in pairs(team) do
       minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Your team lost the ball!"), "0xFF5D43")
+      block_league.HUD_ball_update(pl_name, S("Your team lost the ball!"), "0xff8e8e")
     end
 
     for _, pl_name in pairs(enemy_team) do
       minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Enemy team lost the ball!"), "0x43e6FF")
+      block_league.HUD_ball_update(pl_name, S("Enemy team lost the ball!"), "0xabf877")
     end
   else
     for _, pl_name in pairs(team) do
       minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Your team got the ball!"), "0x43e6FF")
+      block_league.HUD_ball_update(pl_name, S("Your team got the ball!"), "0xabf877")
     end
-    block_league.HUD_ball_update(w_name, S("You got the ball!"), "0x43e6FF")
+    block_league.HUD_ball_update(w_name, S("You got the ball!"), "0xabf877")
 
     for _, pl_name in pairs(enemy_team) do
       minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Enemy team got the ball!"), "0xFF5D43")
+      block_league.HUD_ball_update(pl_name, S("Enemy team got the ball!"), "0xff8e8e")
     end
   end
 end

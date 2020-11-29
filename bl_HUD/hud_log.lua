@@ -61,7 +61,7 @@ end
 
 
 
-function block_league.hud_log_update(arena, action, executor, receiver)
+function block_league.hud_log_update(arena, action_img, executor, receiver)
 
   for pl_name, pl_stats in pairs(arena.players) do
 
@@ -92,7 +92,7 @@ function block_league.hud_log_update(arena, action, executor, receiver)
       },
       action_3 = {
         offset = { x = calc_action_offset(receiver), y = row3_height_img },
-        text = action
+        text = action_img
       }
     },
 

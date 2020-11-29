@@ -4,7 +4,7 @@
 # textdomain: block_league
 
 # init.lua
-red=
+orange=
 blue=
 
 # info_panel.lua

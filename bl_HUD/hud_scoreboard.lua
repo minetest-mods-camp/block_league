@@ -11,7 +11,7 @@ function block_league.scoreboard_create(arena, p_name)
     title = "",
 
     sub_txt_elems = {
-      team_red_score = {
+      team_orange_score = {
         offset    = { x = -88, y = 41 },
         size      = { x = 2 },
         number    = "0xE6482E",
@@ -40,20 +40,20 @@ function block_league.scoreboard_update_score(arena)
   for pl_name, stats in pairs(arena.players) do
 
     local panel = panel_lib.get_panel(pl_name, "bl_scoreboard")
-    local score_red = 0
+    local score_orange = 0
     local score_blue = 0
 
     if arena.mode == 1 then
-      score_red = arena.teams[1].TDs
+      score_orange = arena.teams[1].TDs
       score_blue =  arena.teams[2].TDs
     else
-      score_red = arena.teams[1].kills
+      score_orange = arena.teams[1].kills
       score_blue = arena.teams[2].kills
     end
 
     panel:update(nil, {
-      team_red_score = {
-        text = score_red
+      team_orange_score = {
+        text = score_orange
       },
       team_blue_score = {
         text = score_blue

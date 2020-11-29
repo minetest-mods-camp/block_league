@@ -118,11 +118,11 @@ ChatCmdBuilder.new("bladmin", function(cmd)
           minetest.chat_send_player(sender, "Invalid parameter")
           return end
 
-        if team ~= "red" and team ~= "blue" then
+        if team ~= "orange" and team ~= "blue" then
           minetest.chat_send_player(sender, "Invalid parameter")
           return end
 
-        local team_goal = team == "red" and "goal_red" or "goal_blue"
+        local team_goal = team == "orange" and "goal_orange" or "goal_blue"
 
         if option == "set" then
           local pos = vector.round(minetest.get_player_by_name(sender):get_pos())
@@ -167,11 +167,11 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         minetest.chat_send_player(sender, "Invalid parameter")
         return end
 
-      if team ~= "red" and team ~= "blue" then
+      if team ~= "orange" and team ~= "blue" then
         minetest.chat_send_player(sender, "Invalid parameter")
         return end
 
-      local w_room = team == "red" and "waiting_room_red" or "waiting_room_blue"
+      local w_room = team == "orange" and "waiting_room_orange" or "waiting_room_blue"
 
       if option == "set" then
         local pos = vector.round(minetest.get_player_by_name(sender):get_pos())

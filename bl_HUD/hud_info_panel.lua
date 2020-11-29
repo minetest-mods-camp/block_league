@@ -19,11 +19,11 @@ function block_league.info_panel_create(arena, p_name)
           alignment = { x = 0, y = 0 },
           text = "bl_hud_panel_playerindicator_teams.png"
         },
-        team_indicator_red = {
+        team_indicator_orange = {
           scale = {x = 44, y = 1.7},
           offset = {x = 0, y = -121},
           alignment = { x = 0, y = 0 },
-          text = "bl_hud_panel_teamindicator_red.png"
+          text = "bl_hud_panel_teamindicator_orange.png"
         },
         team_indicator_blue = {
           scale = {x = 44, y = 1.7},
@@ -63,7 +63,7 @@ function block_league.info_panel_update(arena)
 
   -- creo una tabella per avere i giocatori ordinati con nome come KEY
   local players_idx = {}
-  local bar_red = -121
+  local bar_orange = -121
   local bar_blue = -121
 
   local bar_pos = -121             -- posizione Y più alta della barra per evidenziare il giocatore client
@@ -83,8 +83,8 @@ function block_league.info_panel_update(arena)
     kills_clmn = kills_clmn .. team.kills .. "\n\n"
     deaths_clmn = deaths_clmn .. team.deaths .. "\n\n"
 
-    if team.name == S("red") then
-      bar_red = bar_pos
+    if team.name == S("orange") then
+      bar_orange = bar_pos
     elseif team.name == S("blue") then
       bar_blue = bar_pos
     end
@@ -137,8 +137,8 @@ function block_league.info_panel_update(arena)
     {player_indicator = {
       offset = { x = 0, y = bar_height }
     },
-    team_indicator_red = {
-      offset = { x = 0, y = bar_red }
+    team_indicator_orange = {
+      offset = { x = 0, y = bar_orange }
     },
     team_indicator_blue = {
       offset = { x = 0, y = bar_blue }

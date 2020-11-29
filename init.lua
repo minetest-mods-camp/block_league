@@ -10,8 +10,8 @@ dofile(modpath .. "/GLOBALS.lua")
 arena_lib.register_minigame("block_league", {
   prefix = "[Block League] ",
 
-  teams = { S("red"), S("blue") },
-  teams_color_overlay = { "red", "blue"},
+  teams = { S("orange"), S("blue") },
+  teams_color_overlay = { "orange", "blue"},
 
   hotbar = {
     slots = 4,
@@ -39,9 +39,9 @@ arena_lib.register_minigame("block_league", {
     mode = 1,
     score_cap = 10,
     immunity_time = 6,
-    goal_red = {},
+    goal_orange = {},
     goal_blue = {},
-    waiting_room_red = {},
+    waiting_room_orange = {},
     waiting_room_blue = {},
     ball_spawn = {},
     min_y = 0

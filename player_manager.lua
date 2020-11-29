@@ -47,7 +47,7 @@ minetest.register_on_respawnplayer(function(player)
 
   if player:get_meta():get_int("bl_death_delay") == 1 then
     if arena.players[p_name].teamID == 1 then
-      player:set_pos(arena.waiting_room_red)
+      player:set_pos(arena.waiting_room_orange)
     else
       player:set_pos(arena.waiting_room_blue)
     end
