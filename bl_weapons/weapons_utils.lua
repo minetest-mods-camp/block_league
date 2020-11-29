@@ -29,6 +29,7 @@ block_league.explode = function(self)
 
         -- Se colpisco me stesso, prendo 1/5 di danno
         if (target_name ~= p_name) then
+          -- TODO: non funziona, la funzione è stata cambiata. Bisogna far passare l'arma
           block_league.apply_damage(minetest.get_player_by_name(p_name), obj, damage, 0, false)
         else
           block_league.apply_damage(minetest.get_player_by_name(p_name), obj, (damage/5), 0, false)
@@ -86,6 +87,7 @@ block_league.grenade_explode = function(self)
           p_name = self.old_p_name
         end
 
+        -- TODO: non funziona, la funzione è stata cambiata. Bisogna far passare l'arma
         block_league.apply_damage(minetest.get_player_by_name(p_name), obj, damage, 0, false)
 
       elseif obj ~= self.object and obj:get_luaentity() then

@@ -86,6 +86,7 @@ dofile(modpath .. "/bl_HUD/hud_bullets.lua")
 dofile(modpath .. "/bl_HUD/hud_energy.lua")
 dofile(modpath .. "/bl_HUD/hud_info_panel.lua")
 dofile(modpath .. "/bl_HUD/hud_inputs.lua")
+dofile(modpath .. "/bl_HUD/hud_log.lua")
 dofile(modpath .. "/bl_HUD/hud_scoreboard.lua")
 -- abstract weapons
 dofile(modpath .. "/bl_weapons/bullets.lua")

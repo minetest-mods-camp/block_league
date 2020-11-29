@@ -283,6 +283,8 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
     local w_name = wielder:get_player_name()
     local teamID = arena.players[w_name].teamID
 
+    block_league.hud_log_update(arena, "bl_log_TD.png", w_name, "")
+
     add_point(teamID, arena)
     after_point(w_name, teamID, arena)
 
@@ -340,6 +342,8 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
   local enemy_teamID = teamID == 1 and 2 or 1
   local team = arena_lib.get_players_in_team(arena, teamID)
   local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
+
+  block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
 
   if is_ball_lost then
     for _, pl_name in pairs(team) do

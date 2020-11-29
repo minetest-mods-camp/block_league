@@ -99,7 +99,7 @@ function block_league.shoot_hitscan(user, weapon, pointed_thing)
   local pointed_players = block_league.get_pointed_players(pos_head, dir, weapon.weapon_range, user, weapon.bullet_trail, weapon.pierce)
 
   if pointed_players then
-    block_league.apply_damage(user, pointed_players, weapon.damage, weapon.knockback, weapon.decrease_damage_with_distance)
+    block_league.apply_damage(user, pointed_players, weapon, weapon.decrease_damage_with_distance)
   end
 end
 
@@ -235,9 +235,12 @@ end
 
 
 
--- block_league.apply_damage(user, pointed_players, bullet_definition.bullet_damage, bullet_definition.knockback, bullet_definition.decrease_damage_with_distance)
 -- può avere uno o più target: formato ObjectRef
-function block_league.apply_damage(user, targets, damage, knockback, decrease_damage_with_distance, knockback_dir)
+function block_league.apply_damage(user, targets, weapon, decrease_damage_with_distance, knockback_dir)
+
+  local damage = weapon.damage
+  local knockback = weapon.knockback
+
   local p_name = user:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
   local killed_players = 0
@@ -278,7 +281,7 @@ function block_league.apply_damage(user, targets, damage, knockback, decrease_da
       })
     -- sennò kaputt
     else
-      kill(arena, p_name, target)
+      kill(arena, weapon, p_name, target)
       if t_name ~= p_name then
         killed_players = killed_players +1
       end
@@ -520,7 +523,7 @@ function check_weapon_type_and_attack(player, weapon, pointed_thing)
   else
       if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
 
-      block_league.apply_damage(player, pointed_thing.ref, weapon.damage, weapon.knockback, false, player:get_look_dir())
+      block_league.apply_damage(player, pointed_thing.ref, weapon, false, player:get_look_dir())
   end
 end
 
@@ -544,7 +547,7 @@ end
 
 
 
-function kill(arena, p_name, target)
+function kill(arena, weapon, p_name, target)
 
   -- riproduco suono morte
   minetest.sound_play("bl_kill", {to_player = p_name})
@@ -566,6 +569,7 @@ function kill(arena, p_name, target)
 
     -- aggiorno HUD
     block_league.info_panel_update(arena)
+    block_league.hud_log_update(arena, weapon.inventory_image, p_name, t_name)
 
     -- se è DM e il cap è raggiunto, finisce match
     if arena.mode == 2 then
@@ -577,6 +581,7 @@ function kill(arena, p_name, target)
     end
   else
     block_league.HUD_kill_update(t_name, S("You've killed yourself"))
+    block_league.hud_log_update(arena, "bl_log_suicide.png", p_name, t_name)
   end
 
 end
