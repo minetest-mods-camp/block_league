@@ -343,8 +343,6 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
   local team = arena_lib.get_players_in_team(arena, teamID)
   local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
 
-  block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
-
   if is_ball_lost then
     for _, pl_name in pairs(team) do
       minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
@@ -355,7 +353,11 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
       minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
       block_league.HUD_ball_update(pl_name, S("Enemy team lost the ball!"), "0xabf877")
     end
+
   else
+
+    block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
+
     for _, pl_name in pairs(team) do
       minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
       block_league.HUD_ball_update(pl_name, S("Your team got the ball!"), "0xabf877")
