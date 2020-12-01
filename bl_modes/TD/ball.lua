@@ -276,7 +276,8 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
   math.abs(w_pos.x - goal.x) <= 1.5 and
   math.abs(w_pos.z - goal.z) <= 1.5 and
   w_pos.y >= goal.y - 1 and
-  w_pos.y <= goal.y + 3 then
+  w_pos.y <= goal.y + 3 and
+  not arena.in_celebration then
 
     wielder:get_meta():set_int("bl_has_ball", 0)
 
