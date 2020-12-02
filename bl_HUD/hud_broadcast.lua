@@ -69,8 +69,8 @@ function remove_message(panel, field)
   local old_msg = panel[field].text
 
   minetest.after(3, function()
-    if not panel then return end    -- se è andato offline o uscito dalla partita
-
+    if not arena_lib.is_player_in_arena(panel.player_name, "block_league") then return end    -- se è andato offline o uscito dalla partita
+                                                                                              -- usare `not panel` non funziona, non ritorna il riferimento...
     local current_message = panel[field].text
     if old_msg == current_message then
       panel:update(nil, {
