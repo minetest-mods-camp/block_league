@@ -37,7 +37,7 @@ arena_lib.register_minigame("block_league", {
     -- 1 = Touchdown
     -- 2 = Deathmatch
     mode = 1,
-    score_cap = 10,
+    score_cap = 5,
     immunity_time = 6,
     goal_orange = {},
     goal_blue = {},
