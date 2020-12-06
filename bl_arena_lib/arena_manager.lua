@@ -164,6 +164,7 @@ function remove_HUD(p_name)
   panel_lib.get_panel(p_name, "bl_energy"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
+  block_league.HUD_remove_input_player(p_name)
 end
 
 
