@@ -28,3 +28,10 @@ function block_league.HUD_remove_inputs(arena)
     saved_huds[pl_name] = nil
   end
 end
+
+
+
+function block_league.HUD_remove_input_player(p_name)
+  minetest.get_player_by_name(p_name):hud_remove(saved_huds[p_name])
+  saved_huds[p_name] = nil
+end
