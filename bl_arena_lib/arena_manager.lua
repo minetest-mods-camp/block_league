@@ -54,12 +54,20 @@ end)
 
 arena_lib.on_celebration("block_league", function(arena, winner_name)
 
-  --block_league.add_xp(winner_name, 50)
   arena.weapons_disabled = true
 
-  for pl_name, stats in pairs(arena.players) do
+  local winner_team = arena.players[winner_name[1]].teamID
+  local loser_team = winner_team == 1 and 2 or 1
+
+  for pl_name, pl_stats in pairs(arena.players) do
     minetest.get_player_by_name(pl_name):get_meta():set_int("bl_immunity", 1)
     panel_lib.get_panel(pl_name, "bl_info_panel"):show()
+
+    if pl_stats.teamID == winner_team then
+      minetest.sound_play("bl_jingle_victory", {to_player = pl_name})
+    else
+      minetest.sound_play("bl_jingle_defeat", {to_player = pl_name})
+    end
   end
 end)
 
