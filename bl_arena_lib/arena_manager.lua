@@ -56,16 +56,28 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
 
   arena.weapons_disabled = true
 
-  local winner_team = arena.players[winner_name[1]].teamID
-  local loser_team = winner_team == 1 and 2 or 1
-
   for pl_name, pl_stats in pairs(arena.players) do
     minetest.get_player_by_name(pl_name):get_meta():set_int("bl_immunity", 1)
     panel_lib.get_panel(pl_name, "bl_info_panel"):show()
+  end
 
-    if pl_stats.teamID == winner_team then
-      minetest.sound_play("bl_jingle_victory", {to_player = pl_name})
-    else
+  -- se è pareggio, passa una stringa (no one)
+  local is_tie = type(winner_name) == "string" and true or false
+
+  if not is_tie then
+    local winner_team = arena.players[winner_name[1]].teamID
+    local loser_team = winner_team == 1 and 2 or 1
+
+    for pl_name, pl_stats in pairs(arena.players) do
+      if pl_stats.teamID == winner_team then
+        minetest.sound_play("bl_jingle_victory", {to_player = pl_name})
+      else
+        minetest.sound_play("bl_jingle_defeat", {to_player = pl_name})
+      end
+    end
+
+  else
+    for pl_name, pl_stats in pairs(arena.players) do
       minetest.sound_play("bl_jingle_defeat", {to_player = pl_name})
     end
   end
