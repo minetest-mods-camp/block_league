@@ -22,16 +22,15 @@ end
 
 
 
-function block_league.HUD_remove_inputs(arena)
-  for pl_name, _ in pairs(arena.players) do
-    minetest.get_player_by_name(pl_name):hud_remove(saved_huds[pl_name])
-    saved_huds[pl_name] = nil
+function block_league.HUD_remove_inputs(arena_or_player_name)
+  if type(arena_or_player_name) == "table" then
+    for pl_name, _ in pairs(arena_or_player_name.players) do
+      minetest.get_player_by_name(pl_name):hud_remove(saved_huds[pl_name])
+      saved_huds[pl_name] = nil
+    end
+  else
+    local p_name = arena_or_player_name
+    minetest.get_player_by_name(p_name):hud_remove(saved_huds[p_name])
+    saved_huds[p_name] = nil
   end
-end
-
-
-
-function block_league.HUD_remove_input_player(p_name)
-  minetest.get_player_by_name(p_name):hud_remove(saved_huds[p_name])
-  saved_huds[p_name] = nil
 end
