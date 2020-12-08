@@ -57,7 +57,12 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
   arena.weapons_disabled = true
 
   for pl_name, pl_stats in pairs(arena.players) do
-    minetest.get_player_by_name(pl_name):get_meta():set_int("bl_immunity", 1)
+
+    local player = minetest.get_player_by_name(pl_name)
+
+    block_league.deactivate_zoom(player)
+    player:get_meta():set_int("bl_immunity", 1)
+
     panel_lib.get_panel(pl_name, "bl_info_panel"):show()
   end
 
@@ -91,6 +96,7 @@ arena_lib.on_end("block_league", function(arena, players)
 
     remove_HUD(pl_name)
     reset_meta(pl_name)
+    block_league.deactivate_zoom(minetest.get_player_by_name(pl_name))
 
     block_league.update_storage(pl_name)
   end
@@ -123,6 +129,7 @@ arena_lib.on_quit("block_league", function(arena, p_name)
 
   remove_HUD(p_name)
   reset_meta(p_name)
+  block_league.deactivate_zoom(minetest.get_player_by_name(p_name))
 
   block_league.info_panel_update(arena)
 end)
