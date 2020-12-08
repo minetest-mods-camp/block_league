@@ -31,6 +31,7 @@ minetest.register_on_dieplayer(function(player)
 
   if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
 
+  block_league.deactivate_zoom(player)
   player:get_meta():set_int("bl_death_delay", 1)
 
   wait_for_respawn(arena_lib.get_arena_by_player(p_name), p_name, 6)

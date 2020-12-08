@@ -2,6 +2,7 @@ local function get_dist() end
 local function draw_particles() end
 local function weapon_left_click() end
 local function weapon_right_click() end
+local function weapon_zoom() end
 local function weapon_reload() end
 local function can_shoot() end
 local function check_immunity() end
@@ -46,6 +47,8 @@ function block_league.register_weapon(name, def)
     consume_bullets = def.consume_bullets,
     magazine = def.magazine,
     reload_time = def.reload_time,
+
+    zoom = def.zoom,
 
     bullet = def.bullet and block_league.register_bullet(def.bullet, def.damage, def.bullet_trail) or nil,
 
@@ -295,6 +298,27 @@ end
 
 
 
+function block_league.deactivate_zoom(player)
+  --TODO: rimuovere HUD zoom armi
+  player:set_fov(0, _, 0.1)
+end
+
+
+
+-- TEMP: gestione zoom al cambio d'arma. Servirebbe un on_wield_item/on_unwield_item su Minetest
+minetest.register_globalstep(function(dtime)
+
+  for _, player in pairs(arena_lib.get_players_in_minigame("block_league", true)) do
+
+    if player:get_fov() == 11 and (player:get_wielded_item():get_name() ~= "block_league:pixelgun" or player:get_meta():get_int("bl_reloading") == 1) then
+      block_league.deactivate_zoom(player)
+    end
+  end
+
+end)
+
+
+
 
 
 ----------------------------------------------
@@ -362,12 +386,16 @@ end
 
 function weapon_right_click(weapon, player, pointed_thing)
 
-  if not weapon.on_right_click then return end
+  if not weapon.on_right_click and not weapon.zoom then return end
 
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
 
   if not arena or not arena.in_game or player:get_hp() <= 0 or arena.weapons_disabled then return end
+
+  if weapon.zoom then
+    weapon_zoom(weapon, player)
+  return end
 
   local p_meta = player:get_meta()
 
@@ -387,6 +415,22 @@ function weapon_right_click(weapon, player, pointed_thing)
 
   if weapon.on_right_click then
     weapon.on_right_click(arena, weapon, player, pointed_thing)
+  end
+end
+
+
+
+function weapon_zoom(weapon, player)
+
+  local p_meta = player:get_meta()
+
+  if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_death_delay") == 1 then return end
+
+  if player:get_fov() ~= weapon.zoom.fov then
+    player:set_fov(weapon.zoom.fov, _, 0.1)
+    -- TODO: applica texture, riproduci suono
+  else
+    block_league.deactivate_zoom(player)
   end
 end
 
