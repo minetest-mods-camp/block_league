@@ -36,6 +36,8 @@ Countdown announcer by [dbosst](https://freesound.org/people/dbosst/sounds/46414
 Crowd cheering by [wangzhuokun](https://freesound.org/people/wangzhuokun/sounds/442583/)  
 Crowd "oh no" by [dobroide](https://freesound.org/people/dobroide/sounds/35034/)  
 Ball "resetting" voice by [tim.kahn](https://freesound.org/people/tim.kahn/sounds/107546/)  
+Victory jingle by [unadamlar](https://freesound.org/people/unadamlar/sounds/341985/)  
+Defeat jingle by [soundmonster0](https://freesound.org/people/soundmonster0/sounds/533925/)
 
 Most audio files have been tweaked by me
 
