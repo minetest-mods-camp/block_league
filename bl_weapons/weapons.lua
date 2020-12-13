@@ -254,6 +254,8 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
     targets = {targets}
   end
 
+  local remaining_HP
+
   -- per ogni giocatore colpito
   for _, target in pairs(targets) do
 
@@ -271,7 +273,13 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
       target:add_player_velocity(knk)
     end
 
-    local remaining_HP = target:get_hp() - damage
+    if weapon.weapon_type ==  1 and decrease_damage_with_distance then
+      local dist = get_dist(user:get_pos(), target:get_pos())
+      local damage = damage - (damage * dist / weapon.weapon_range)
+      remaining_HP = target:get_hp() - damage
+    else
+      remaining_HP = target:get_hp() - damage
+    end
 
     -- applico il danno
     target:set_hp(remaining_HP, {type = "set_hp", player_name = p_name})
