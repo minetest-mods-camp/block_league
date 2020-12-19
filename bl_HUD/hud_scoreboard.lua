@@ -14,7 +14,7 @@ function block_league.scoreboard_create(arena, p_name)
       team_orange_score = {
         offset    = { x = -88, y = 41 },
         size      = { x = 2 },
-        number    = "0xE6482E",
+        number    = "0xF47E1B",
         text      = "0"
       },
       team_blue_score = {
