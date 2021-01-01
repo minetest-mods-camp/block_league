@@ -31,7 +31,7 @@ block_league.register_weapon("block_league:pixelgun", {
   reload_time = 4,
 
   zoom = {
-    fov = 11,
+    fov = 20,
     -- TODO
     --HUD = "",
     --sound = ""
