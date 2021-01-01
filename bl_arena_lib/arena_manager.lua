@@ -157,7 +157,6 @@ end)
 ----------------------------------------------
 
 function reset_meta(p_name)
-
   local p_meta = minetest.get_player_by_name(p_name):get_meta()
 
   p_meta:set_int("bl_has_ball", 0)
@@ -167,7 +166,6 @@ function reset_meta(p_name)
   p_meta:set_int("bl_death_delay", 0)
   p_meta:set_int("bl_immunity", 0)
   p_meta:set_int("bl_reloading", 0)
-
 end
 
 
