@@ -13,6 +13,11 @@ arena_lib.register_minigame("block_league", {
   teams = { S("orange"), S("blue") },
   teams_color_overlay = { "orange", "blue"},
 
+  camera_offset = {
+    nil,
+    {x=8, y=4, z=-1}
+  },
+
   hotbar = {
     slots = 4,
     background_image = "bl_gui_hotbar.png"
