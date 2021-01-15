@@ -43,7 +43,10 @@ function block_league.enter_test_mode(sender)
   inv:set_list("main", items)
   player:set_physics_override({
             speed = block_league.SPEED,
-            jump = 1.5
+            jump = 1.5,
+            gravity = 1.15,
+            sneak_glitch = true,
+            new_move = true
   })
 
   minetest.chat_send_player(sender, "[Block League] " .. S("You've entered test mode"))
