@@ -625,6 +625,7 @@ function kill(arena, weapon, p_name, target)
 
     -- se è DM e il cap è raggiunto, finisce match
     if arena.mode == 2 then
+      block_league.scoreboard_update_score(arena)
       local team = arena.teams[arena.players[p_name].teamID]
       if team.kills == arena.score_cap then
         local mod = arena_lib.get_mod_by_player(p_name)
