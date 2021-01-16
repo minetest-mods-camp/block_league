@@ -36,7 +36,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
 
     --
    cmd:sub("properties :arena :property :newvalue:text", function(sender, arena_name, property, new_value)
-       arena_lib.change_arena_properties(sender, mod, arena_name, property, new_value)
+       arena_lib.change_arena_property(sender, mod, arena_name, property, new_value)
        end)
 
     -- cambio giocatori minimi/massimi
