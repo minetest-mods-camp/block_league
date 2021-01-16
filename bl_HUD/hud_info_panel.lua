@@ -27,7 +27,7 @@ function block_league.info_panel_create(arena, p_name)
         },
         team_indicator_blue = {
           scale = {x = 44, y = 1.7},
-          offset = {x = 0, y = -121},
+          offset = {x = 0, y = (#arena.players * 36) + (-121) + 98},
           alignment = { x = 0, y = 0 },
           text = "bl_hud_panel_teamindicator_blue.png"
         },

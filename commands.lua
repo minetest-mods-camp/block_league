@@ -163,7 +163,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         minetest.chat_send_player(sender, "Invalid parameter")
         return end
 
-      if arena.mode ~= 1 then
+      if arena.mode ~= 1 and arena.mode ~= 2 then
         minetest.chat_send_player(sender, "Invalid parameter")
         return end
 
