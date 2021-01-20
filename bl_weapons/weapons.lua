@@ -461,6 +461,11 @@ function weapon_reload(player, weapon)
 
   p_meta:set_int("bl_reloading", 1)
 
+  -- rimuovo eventuale zoom
+  if weapon.zoom and player:get_fov() == weapon.zoom.fov then
+    block_league.deactivate_zoom(player)
+  end
+
   if p_meta:get_int("bl_is_speed_locked") == 0 then
     player:set_physics_override({ speed = block_league.SPEED_LOW })
   end
