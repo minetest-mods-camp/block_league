@@ -35,7 +35,9 @@ end)
 
 
 
-arena_lib.on_join("block_league", function(p_name, arena)
+arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
+
+  if as_spectator then return end
 
   reset_meta(p_name)
   equip_weapons(arena, p_name)
