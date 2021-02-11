@@ -104,7 +104,7 @@ function ball:on_step(d_time, moveresult)
 
     -- se nel suo raggio trova un giocatore in vita, si attacca
     for i, object in pairs(objects) do
-      if object:is_player() and object:get_hp() > 0 then
+      if object:is_player() and object:get_hp() > 0 and arena.players[object:get_player_name()] then
 
         self:attach(object)
         return
