@@ -597,7 +597,7 @@ function after_damage(arena, p_name, killed_players)
       block_league.add_achievement(p_name, 2)
     end
 
-    arena_lib.send_message_players_in_arena(arena, minetest.colorize("#eea160", p_name .. " ") .. minetest.colorize("#d7ded7", S("has killed @1 players in a row!", killed_players)))
+    arena_lib.send_message_in_arena(arena, minetest.colorize("#eea160", p_name .. " ") .. minetest.colorize("#d7ded7", S("has killed @1 players in a row!", killed_players)))
   end
 
 end

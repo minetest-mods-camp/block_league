@@ -23,7 +23,7 @@ arena_lib.register_minigame("block_league", {
     background_image = "bl_gui_hotbar.png"
   },
 
-  time_mode = 2,
+  time_mode = "decremental",
 
   join_while_in_progress = true,
   load_time = 6,
