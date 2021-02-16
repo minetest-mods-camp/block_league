@@ -37,7 +37,13 @@ end)
 
 arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
 
-  if as_spectator then return end
+  if as_spectator then
+    create_and_show_HUD(arena, p_name, true)
+    minetest.after(0.1, function()
+      block_league.scoreboard_update_score(arena)
+    end)
+    return
+  end
 
   reset_meta(p_name)
   equip_weapons(arena, p_name)
@@ -92,7 +98,12 @@ end)
 
 
 
-arena_lib.on_end("block_league", function(arena, players)
+arena_lib.on_end("block_league", function(arena, players, winner_name, spectators)
+
+  for sp_name, _ in pairs(spectators) do
+    remove_HUD(sp_name, true)
+    reset_meta(sp_name)
+  end
 
   for pl_name, stats in pairs(players) do
 
@@ -123,13 +134,13 @@ end)
 
 
 
-arena_lib.on_quit("block_league", function(arena, p_name)
+arena_lib.on_quit("block_league", function(arena, p_name, is_spectator)
   --[[TODO: waiting for 5.4 to fix a few bugs
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
   end]]
 
-  remove_HUD(p_name)
+  remove_HUD(p_name, is_spectator)
   reset_meta(p_name)
   block_league.deactivate_zoom(minetest.get_player_by_name(p_name))
 
@@ -138,13 +149,13 @@ end)
 
 
 
-arena_lib.on_disconnect("block_league", function(arena, p_name)
+arena_lib.on_disconnect("block_league", function(arena, p_name, is_spectator)
   --[[TODO: same as before
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
   end]]
 
-  remove_HUD(p_name)
+  remove_HUD(p_name, is_spectator)
   reset_meta(p_name)
 
   block_league.info_panel_update(arena)
@@ -172,10 +183,13 @@ end
 
 
 
-function create_and_show_HUD(arena, p_name)
-  block_league.HUD_broadcast_create(p_name)
-  block_league.info_panel_create(arena, p_name)
+function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.scoreboard_create(arena, p_name)
+  block_league.HUD_broadcast_create(p_name)
+
+  if is_spectator then return end
+
+  block_league.info_panel_create(arena, p_name)
   block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
   block_league.hud_log_create(p_name)
@@ -183,13 +197,16 @@ end
 
 
 
-function remove_HUD(p_name)
+function remove_HUD(p_name, is_spectator)
+  panel_lib.get_panel(p_name, "bl_broadcast"):remove()
+  panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
+
+  if is_spectator then return end
+
   arena_lib.HUD_hide("all", p_name)
   panel_lib.get_panel(p_name, "bl_info_panel"):remove()
-  panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_bullets"):remove()
   panel_lib.get_panel(p_name, "bl_energy"):remove()
-  panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
   block_league.HUD_remove_inputs(p_name)
 end

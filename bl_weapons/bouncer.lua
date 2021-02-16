@@ -42,7 +42,7 @@ minetest.register_tool("block_league:bouncer", {
     local knockback = user:get_player_velocity().y < 1 and -15 or -10
 
     user:add_player_velocity(vector.multiply(dir, knockback))
-    minetest.sound_play("bl_bouncer", {to_player = p_name})
+    block_league.sound_play("bl_bouncer", p_name)
 
   end,
 })

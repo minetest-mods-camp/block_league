@@ -210,10 +210,11 @@ function ball:reset()
   local arena = self.arena
 
   -- annuncio
-  for pl_name, _ in pairs(arena.players) do
-    minetest.sound_play("bl_voice_ball_reset", {to_player = pl_name})
-    block_league.HUD_ball_update(pl_name, S("Ball reset"))
+  for psp_name, _ in pairs(arena.players_and_spectators) do
+    minetest.sound_play("bl_voice_ball_reset", {to_player = psp_name})
+    block_league.HUD_ball_update(psp_name, S("Ball reset"))
   end
+
   --if the player dies because of falling in the void wielder is nil
   if self.wielder then
     self:detach()
@@ -223,6 +224,7 @@ function ball:reset()
   self.timer_bool = false
   self.timer = 0
   self.object:set_pos(arena.ball_spawn)
+
   --if the ball is not moving up or down then start the movement
   if self.object:get_velocity().y == 0 then
     self:oscillate()
@@ -310,6 +312,13 @@ function add_point(teamID, arena)
   for _, pl_name in pairs(enemy_team) do
     minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
     block_league.HUD_ball_update(pl_name, S("ENEMY TEAM SCORED..."), "0xff8e8e")
+  end
+
+  local scoring_team_color = teamID == 1 and "0xf2a05b" or "0x7ebeee"
+
+  for sp_name, _ in pairs(arena.spectators) do
+    minetest.sound_play("bl_crowd_cheer", {to_player = sp_name})
+    block_league.HUD_ball_update(sp_name, S("@1 TEAM SCORED!", string.upper(arena.teams[teamID].name)), scoring_team_color)
   end
 
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1

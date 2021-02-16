@@ -6,8 +6,8 @@ local function load_ball() end
 
 function block_league.countdown_and_start(arena, time)
   minetest.after(3, function()
-    for pl_name, _ in pairs(arena.players) do
-      minetest.sound_play("bl_voice_countdown_" .. time, {to_player = pl_name})
+    for psp_name, _ in pairs(arena.players_and_spectators) do
+      minetest.sound_play("bl_voice_countdown_" .. time, {to_player = psp_name})
     end
     display_and_start_countdown(arena, time)
   end)
@@ -53,24 +53,27 @@ end
 
 function round_start(arena)
 
-  for p_name, stats in pairs(arena.players) do
+  for pl_name, stats in pairs(arena.players) do
 
-    local player = minetest.get_player_by_name(p_name)
+    local player = minetest.get_player_by_name(pl_name)
 
     if player:get_hp() > 0 then
       player:set_hp(20)
-      arena.players[p_name].energy = 100
-      block_league.energy_update(arena, p_name)
+      arena.players[pl_name].energy = 100
+      block_league.energy_update(arena, pl_name)
     end
 
-    block_league.refill_weapons(arena, p_name)
+    block_league.refill_weapons(arena, pl_name)
     player:get_meta():set_int("bl_reloading", 0)
     player:get_meta():set_int("bl_death_delay", 0)
 
     player:set_physics_override({ speed = block_league.SPEED })
     player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
 
-    minetest.sound_play("bl_voice_fight", {to_player = p_name})
+  end
+
+  for psp_name, _ in pairs(arena.players_and_spectators) do
+    minetest.sound_play("bl_voice_fight", {to_player = psp_name})
   end
 
   block_league.hud_log_clear(arena)

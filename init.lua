@@ -77,6 +77,7 @@ dofile(modpath .. "/exp_manager.lua")
 dofile(modpath .. "/input_manager.lua")
 dofile(modpath .. "/player_manager.lua")
 dofile(modpath .. "/privs.lua")
+dofile(modpath .. "/utils.lua")
 
 -- arena_lib
 dofile(modpath .. "/bl_arena_lib/arena_manager.lua")

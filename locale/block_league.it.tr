@@ -1,4 +1,4 @@
-# version 0.4.0
+# version 0.5.0-dev
 # author(s): Zughy
 # reviewer(s):
 # textdomain: block_league
@@ -63,4 +63,6 @@ Submachine Gun=Submachine Gun
 has killed @1 players in a row!=ha ucciso @1 giocatori in un colpo!
 YOU'VE KILLED @1=HAI UCCISO @1
 You've been killed by @1=Sei stato ucciso da @1
+@1 HAS KILLED @2=@1 HA UCCISO @2
+@1 has been killed by @2=@1 è stato ucciso da @2
 You've killed yourself=Ti sei ucciso da solo

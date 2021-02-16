@@ -86,7 +86,7 @@ function block_league.shoot(weapon, player, pointed_thing)
   local p_name = player:get_player_name()
 
   if weapon.sound_shoot then
-    minetest.sound_play(weapon.sound_shoot, {to_player = p_name})
+    block_league.sound_play(weapon.sound_shoot, p_name)
   end
 
   check_weapon_type_and_attack(player, weapon, pointed_thing)
@@ -287,8 +287,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
     -- se è ancora vivo, riproduco suono danno
     if target:get_hp() > 0 then
       minetest.sound_play("bl_hit", {
-        to_player = p_name,
-        max_hear_distance = 1,
+        to_player = p_name
       })
     -- sennò kaputt
     else
@@ -457,7 +456,7 @@ function weapon_reload(player, weapon)
      or arena.players[p_name].weapons_magazine[w_name] == weapon.magazine
     then return end
 
-  minetest.sound_play(weapon.sound_reload, {to_player = p_name})
+  block_league.sound_play(weapon.sound_reload, p_name)
 
   p_meta:set_int("bl_reloading", 1)
 
@@ -607,7 +606,7 @@ end
 function kill(arena, weapon, p_name, target)
 
   -- riproduco suono morte
-  minetest.sound_play("bl_kill", {to_player = p_name})
+  block_league.sound_play("bl_kill", p_name)
 
   local t_name = target:get_player_name()
 
@@ -616,6 +615,18 @@ function kill(arena, weapon, p_name, target)
     -- informo dell'uccisione
     block_league.HUD_kill_update(p_name, S("YOU'VE KILLED @1", t_name))
     minetest.chat_send_player(t_name, minetest.colorize("#d7ded7", S("You've been killed by @1", minetest.colorize("#eea160", p_name))))
+
+    if arena_lib.is_player_spectated(p_name) then
+      for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
+        block_league.HUD_kill_update(sp_name, S("@1 HAS KILLED @2", p_name, t_name))
+      end
+    end
+
+    if arena_lib.is_player_spectated(t_name) then
+      for sp_name, _ in pairs(arena_lib.get_player_spectators(t_name)) do
+        minetest.chat_send_player(sp_name, minetest.colorize("#d7ded7", S("@1 has been killed by @2", minetest.colorize("#eea160", t_name), minetest.colorize("#eea160", p_name))))
+      end
+    end
 
     local p_stats = arena.players[p_name]
     local team = arena.teams[arena.players[p_name].teamID]

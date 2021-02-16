@@ -37,19 +37,19 @@ end
 
 function block_league.scoreboard_update_score(arena)
 
-  for pl_name, stats in pairs(arena.players) do
+  local score_orange = 0
+  local score_blue = 0
 
-    local panel = panel_lib.get_panel(pl_name, "bl_scoreboard")
-    local score_orange = 0
-    local score_blue = 0
+  if arena.mode == 1 then
+    score_orange = arena.teams[1].TDs
+    score_blue =  arena.teams[2].TDs
+  else
+    score_orange = arena.teams[1].kills
+    score_blue = arena.teams[2].kills
+  end
 
-    if arena.mode == 1 then
-      score_orange = arena.teams[1].TDs
-      score_blue =  arena.teams[2].TDs
-    else
-      score_orange = arena.teams[1].kills
-      score_blue = arena.teams[2].kills
-    end
+  for psp_name, _ in pairs(arena.players_and_spectators) do
+    local panel = panel_lib.get_panel(psp_name, "bl_scoreboard")
 
     panel:update(nil, {
       team_orange_score = {
@@ -59,19 +59,20 @@ function block_league.scoreboard_update_score(arena)
         text = score_blue
       }
     })
-
   end
+
 end
 
 
 
 function block_league.scoreboard_update_time(arena)
 
-  for pl_name, _ in pairs(arena.players) do
-    local panel = panel_lib.get_panel(pl_name, "bl_scoreboard")
+  for psp_name, _ in pairs(arena.players_and_spectators) do
+    local panel = panel_lib.get_panel(psp_name, "bl_scoreboard")
 
     panel:update(nil, {
       time = { text = os.date('!%M:%S', arena.current_time)}
     })
   end
+
 end
