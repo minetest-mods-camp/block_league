@@ -175,6 +175,9 @@ function ball:attach(player)
   player:get_meta():set_int("bl_has_ball", 1)
   block_league.energy_drain(arena, p_name)
 
+  arena.players[p_name].points = arena.players[p_name].points + 2
+  block_league.info_panel_update(arena)
+
   self.object:set_attach(player, "Body", {x=0, y=18, z=0}, {x=0, y=0, z=0})
   self.wielder = player
 
@@ -288,7 +291,7 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
 
     block_league.hud_log_update(arena, "bl_log_TD.png", w_name, "")
 
-    add_point(teamID, arena)
+    add_point(w_name, teamID, arena)
     after_point(w_name, teamID, arena)
 
     ball:_destroy()
@@ -298,7 +301,7 @@ end
 
 
 
-function add_point(teamID, arena)
+function add_point(w_name, teamID, arena)
 
   local enemy_teamID = teamID == 1 and 2 or 1
   local team = arena_lib.get_players_in_team(arena, teamID)
@@ -322,7 +325,10 @@ function add_point(teamID, arena)
   end
 
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
+  arena.players[w_name].TDs = arena.players[w_name].TDs + 1
+  arena.players[w_name].points = arena.players[w_name].points + 10
   block_league.scoreboard_update_score(arena)
+  block_league.info_panel_update(arena)
 end
 
 

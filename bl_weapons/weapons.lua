@@ -291,7 +291,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
       })
     -- sennò kaputt
     else
-      kill(arena, weapon, p_name, target)
+      kill(arena, weapon, user, target)
       if t_name ~= p_name then
         killed_players = killed_players +1
       end
@@ -608,17 +608,17 @@ function after_damage(arena, p_name, killed_players)
 
     arena_lib.send_message_in_arena(arena, minetest.colorize("#eea160", p_name .. " ") .. minetest.colorize("#d7ded7", S("has killed @1 players in a row!", killed_players)))
   end
-
 end
 
 
 
-function kill(arena, weapon, p_name, target)
+function kill(arena, weapon, player, target)
+
+  local p_name = player:get_player_name()
+  local t_name = target:get_player_name()
 
   -- riproduco suono morte
   block_league.sound_play("bl_kill", p_name)
-
-  local t_name = target:get_player_name()
 
   if t_name ~= p_name then
 
@@ -641,9 +641,20 @@ function kill(arena, weapon, p_name, target)
     local p_stats = arena.players[p_name]
     local team = arena.teams[arena.players[p_name].teamID]
 
-    -- aggiungo la kill
-    team.kills = team.kills +1
-    p_stats.kills = p_stats.kills +1
+    -- aggiungo l'uccisione
+    team.kills = team.kills + 1
+    p_stats.kills = p_stats.kills + 1
+
+    -- calcolo i punti
+    if arena.mode == 1 then
+      if player:get_meta():get_int("bl_has_ball") == 1 or target:get_meta():get_int("bl_has_ball") == 1 then
+        p_stats.points = p_stats.points + 4
+      else
+        p_stats.points = p_stats.points + 2
+      end
+    else
+      p_stats.points = p_stats.points + 2
+    end
 
     -- aggiorno HUD
     block_league.info_panel_update(arena)

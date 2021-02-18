@@ -6,7 +6,6 @@ function block_league.info_panel_create(arena, p_name)
       bg_scale = { x = 45, y = 28 },
       position = { x = 0.5, y = 0.5 },
       alignment = { x = 0, y = 0 },
-      title = "PLAYERS\t\t\t\t\t\t\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\tKILLS\t\t\t\t\t\t\t\t          \t\t\t\t\t\t\t\t\t\t\t\t\t\tDEATHS",
       title_offset = { x = 0, y = -150},
       title_color = 0xdff6f5,
 
@@ -39,7 +38,7 @@ function block_league.info_panel_create(arena, p_name)
           offset = {x = -250, y = -130},
           text = ""
         },
-        kls_clmn = {
+        pts_clmn = {
           alignment = { x = 0, y = 1 },
           offset = {x = 0, y = -130},
           text = ""
@@ -58,8 +57,8 @@ end
 function block_league.info_panel_update(arena)
 
   local plyrs_clmn = ""
-  local kills_clmn = ""
-  local deaths_clmn = ""
+  local pts_clmn = ""
+  local third_clmn = ""
 
   -- creo una tabella per avere i giocatori ordinati con nome come KEY
   local players_idx = {}
@@ -74,14 +73,25 @@ function block_league.info_panel_update(arena)
   -- ordino i team
   for id, team in pairs(arena.teams) do
     --salvo anche l'id del team così da non dover iterare di nuovo
-    table.insert(sorted_teams, {name = team.name, kills = team.kills, deaths = team.deaths, id = id})
+    table.insert(sorted_teams, {name = team.name, id = id})
+  end
+
+  local third_clmn_title
+  local third_clmn_value
+
+  if arena.mode == 1 then
+    third_clmn_title = S("TDs")
+    third_clmn_value = "TDs"
+  else
+    third_clmn_title = S("Deaths")
+    third_clmn_value = "deaths"
   end
 
   -- determino come stampare i team seguiti dai giocatori
   for _, team in pairs(sorted_teams) do
     plyrs_clmn = plyrs_clmn .. S("Team") .. " " .. team.name .. "\n\n"
-    kills_clmn = kills_clmn .. team.kills .. "\n\n"
-    deaths_clmn = deaths_clmn .. team.deaths .. "\n\n"
+    pts_clmn = pts_clmn .. S("Points") .. "\n\n"
+    third_clmn = third_clmn .. third_clmn_title .. "\n\n"
 
     if team.name == S("orange") then
       bar_orange = bar_pos
@@ -93,7 +103,7 @@ function block_league.info_panel_update(arena)
     local sorted_players = {}
 
     for _, pl_name in pairs(arena_lib.get_players_in_team(arena, team.id)) do
-      table.insert(sorted_players, {pl_name, arena.players[pl_name].kills, arena.players[pl_name].deaths})
+      table.insert(sorted_players, {pl_name, arena.players[pl_name].points, arena.players[pl_name][third_clmn_value]})
     end
 
     table.sort(sorted_players, function (a,b) return a[2] > b[2] end)
@@ -102,8 +112,8 @@ function block_league.info_panel_update(arena)
     for _, stats in pairs(sorted_players) do
 
       plyrs_clmn = plyrs_clmn .. stats[1] .. "\n\n"
-      kills_clmn = kills_clmn .. stats[2] .. "\n\n"
-      deaths_clmn = deaths_clmn .. stats[3] .. "\n\n"
+      pts_clmn = pts_clmn .. stats[2] .. "\n\n"
+      third_clmn = third_clmn .. stats[3] .. "\n\n"
 
       players_idx[stats[1]] = bar_pos
       bar_pos = bar_pos + dist_between_bars
@@ -111,8 +121,8 @@ function block_league.info_panel_update(arena)
     end
 
     plyrs_clmn = plyrs_clmn .. "\n\n"
-    kills_clmn = kills_clmn .. "\n\n"
-    deaths_clmn = deaths_clmn .. "\n\n"
+    pts_clmn = pts_clmn .. "\n\n"
+    third_clmn = third_clmn .. "\n\n"
     bar_pos = bar_pos + dist_between_bars
 
   end
@@ -127,11 +137,11 @@ function block_league.info_panel_update(arena)
     {players_clmn = {
       text = plyrs_clmn
     },
-    kls_clmn = {
-      text = kills_clmn
+    pts_clmn = {
+      text = pts_clmn
     },
     dts_clmn = {
-      text = deaths_clmn
+      text = third_clmn
     }},
 
     {player_indicator = {

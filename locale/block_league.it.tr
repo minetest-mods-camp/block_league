@@ -37,6 +37,11 @@ You already are in test mode!=Sei già in modalità test!
 You've entered test mode=Sei entrato in modalità test
 You've left test mode=Sei uscito dalla modalità test
 
+# bl_HUD/hud_info_panel.lua
+TDs=TD
+Deaths=Morti
+Points=Punti
+
 # bl_modes/TD/ball.lua
 Ball reset=Palla resettata
 NICE POINT!=BEL PUNTO!
