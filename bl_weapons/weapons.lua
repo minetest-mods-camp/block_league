@@ -264,7 +264,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
     local t_name = target:get_player_name()
 
-    -- se player e target sono nella stessa squadra, annullo
+    -- se giocatore e target sono nella stessa squadra, annullo
     if arena_lib.is_player_in_same_team(arena, p_name, t_name) then return end
 
     -- eventuale knockback
@@ -273,7 +273,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
       target:add_player_velocity(knk)
     end
 
-    if weapon.weapon_type ==  1 and decrease_damage_with_distance then
+    if weapon.weapon_type == 1 and decrease_damage_with_distance then
       local dist = get_dist(user:get_pos(), target:get_pos())
       local damage = damage - (damage * dist / weapon.weapon_range)
       remaining_HP = target:get_hp() - damage
@@ -507,15 +507,21 @@ function can_shoot(player, weapon)
   if p_meta:get_int("bl_weap_delay") == 1 or
      p_meta:get_int("bl_death_delay") == 1 or
      p_meta:get_int("bl_reloading") == 1 then
-    return false end
+    return end
 
   p_meta:set_int("bl_weap_delay", 1)
+
+  -- per le armi bianche, aggiorno l'HUD qui che segnala che son state usate
+  if not weapon.magazine then
+    block_league.weapons_hud_update(arena, p_name, w_name, true)
+  end
 
   minetest.after(weapon.fire_delay, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
     if weapon.magazine and p_meta:get_int("bl_reloading") == 0 then
       p_meta:set_int("bl_weap_delay", 0)
     elseif not weapon.magazine then
+      block_league.weapons_hud_update(arena, p_name, w_name)
       p_meta:set_int("bl_weap_delay", 0)
     end
   end)

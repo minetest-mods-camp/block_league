@@ -26,6 +26,7 @@ function block_league.refill_weapons(arena, p_name)
       arena.players[p_name].weapons_magazine[weapon_name] = magazine
       block_league.weapons_hud_update(arena, p_name, weapon_name)
     end
+
   end
 end
 
