@@ -56,7 +56,6 @@ arena_lib.register_minigame("block_league", {
   },
   team_properties = {
     TDs = 0,
-    points = 0,
     kills = 0,
     deaths = 0
   },
