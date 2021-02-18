@@ -317,7 +317,7 @@ minetest.register_globalstep(function(dtime)
 
   for _, player in pairs(arena_lib.get_players_in_minigame("block_league", true)) do
 
-    if player:get_fov() == 11 and (player:get_wielded_item():get_name() ~= "block_league:pixelgun" or player:get_meta():get_int("bl_reloading") == 1) then
+    if player:get_fov() == 20 and (player:get_wielded_item():get_name() ~= "block_league:pixelgun" or player:get_meta():get_int("bl_reloading") == 1) then
       block_league.deactivate_zoom(player)
     end
   end
@@ -398,11 +398,13 @@ function weapon_right_click(weapon, player, pointed_thing)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
 
-  if not arena or not arena.in_game or player:get_hp() <= 0 or arena.weapons_disabled then return end
+  if not arena or not arena.in_game or player:get_hp() <= 0 then return end
 
   if weapon.zoom then
     weapon_zoom(weapon, player)
   return end
+
+  if arena.weapons_disabled then return end
 
   local p_meta = player:get_meta()
 
@@ -500,8 +502,10 @@ function can_shoot(player, weapon)
   local arena = arena_lib.get_arena_by_player(p_name)
   local w_name = weapon.name
 
-  if player:get_hp() <= 0 or arena.weapons_disabled then return end
-  if weapon.magazine and weapon.magazine <= 0 then return end
+  if player:get_hp() <= 0 or
+     arena.weapons_disabled or
+     (weapon.magazine and weapon.magazine <= 0) then
+    return end
 
   ----- gestione delay dell'arma -----
   if p_meta:get_int("bl_weap_delay") == 1 or
