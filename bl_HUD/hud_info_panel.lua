@@ -1,4 +1,3 @@
-
 function block_league.info_panel_create(arena, p_name)
 
     Panel:new("bl_info_panel", {
