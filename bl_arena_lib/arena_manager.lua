@@ -3,6 +3,7 @@ local S = minetest.get_translator("block_league")
 local function reset_meta() end
 local function create_and_show_HUD() end
 local function remove_HUD() end
+local function remove_spectate_HUD() end
 local function equip_weapons() end
 
 
@@ -48,6 +49,7 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
   reset_meta(p_name)
   equip_weapons(arena, p_name)
   create_and_show_HUD(arena, p_name)
+  block_league.HUD_spectate_addplayer(arena, p_name)
   block_league.refill_weapons(arena, p_name)
 
   minetest.sound_play("bl_voice_fight", {to_player = p_name})
@@ -101,12 +103,12 @@ end)
 arena_lib.on_end("block_league", function(arena, players, winner_name, spectators)
 
   for sp_name, _ in pairs(spectators) do
+    block_league.HUD_spectate_remove(players, sp_name)
     remove_HUD(sp_name, true)
     reset_meta(sp_name)
   end
 
   for pl_name, stats in pairs(players) do
-
     remove_HUD(pl_name)
     reset_meta(pl_name)
     block_league.deactivate_zoom(minetest.get_player_by_name(pl_name))
@@ -140,6 +142,7 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator)
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
   end]]
 
+  remove_spectate_HUD(arena, p_name, is_spectator)
   remove_HUD(p_name, is_spectator)
   reset_meta(p_name)
   block_league.deactivate_zoom(minetest.get_player_by_name(p_name))
@@ -155,6 +158,7 @@ arena_lib.on_disconnect("block_league", function(arena, p_name, is_spectator)
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
   end]]
 
+  remove_spectate_HUD(arena, p_name, is_spectator)
   remove_HUD(p_name, is_spectator)
   reset_meta(p_name)
 
@@ -187,7 +191,10 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.scoreboard_create(arena, p_name)
   block_league.HUD_broadcast_create(p_name)
 
-  if is_spectator then return end
+  if is_spectator then
+    block_league.HUD_spectate_create(arena, p_name)
+    return
+  end
 
   block_league.info_panel_create(arena, p_name)
   block_league.energy_create(arena, p_name)
@@ -209,6 +216,16 @@ function remove_HUD(p_name, is_spectator)
   panel_lib.get_panel(p_name, "bl_energy"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
   block_league.HUD_remove_inputs(p_name)
+end
+
+
+
+function remove_spectate_HUD(arena, p_name, is_spectator)
+  if is_spectator then
+    block_league.HUD_spectate_remove(arena.players, p_name)
+  else
+    block_league.HUD_spectate_removeplayer(arena, p_name)
+  end
 end
 
 

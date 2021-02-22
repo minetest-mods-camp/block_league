@@ -658,6 +658,8 @@ function kill(arena, weapon, player, target)
 
     -- aggiorno HUD
     block_league.info_panel_update(arena)
+    block_league.HUD_spectate_update(arena, p_name, "points")
+    block_league.HUD_spectate_update(arena, t_name, "alive")
     block_league.hud_log_update(arena, weapon.inventory_image, p_name, t_name)
 
     -- se è DM e il cap è raggiunto, finisce match

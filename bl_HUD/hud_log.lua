@@ -78,7 +78,7 @@ function block_league.hud_log_update(arena, action_img, executor, receiver)
       receiver_color = "0xabf877"
     end
 
-    panel:update(_,
+    panel:update(nil,
 
     -- icone
     {
@@ -137,7 +137,7 @@ function block_league.hud_log_clear(arena)
   for pl_name, _ in pairs(arena.players) do
     local panel = panel_lib.get_panel(pl_name, "bl_log")
 
-    panel:update(_,
+    panel:update(nil,
 
     -- icone
     {
