@@ -1,5 +1,7 @@
 local S = minetest.get_translator("block_league")
 
+local function get_bullet_count() end
+
 
 
 function block_league.bullets_hud_create(p_name)
@@ -55,6 +57,22 @@ function block_league.bullets_hud_create(p_name)
     sub_txt_elems = sub_txt_elems
   })
 
+end
+
+
+
+function get_bullet_count(definition, inv)
+  if not definition.bullet then return end
+
+  for i=0,inv:get_size("main"),1 do
+
+    local stack = inv:get_stack("main", i)
+    local item_name = stack:get_name()
+
+    if item_name == definition.bullet then
+      return stack:get_count()
+    end
+  end
 end
 
 

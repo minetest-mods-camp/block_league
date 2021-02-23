@@ -46,7 +46,7 @@ minetest.register_on_respawnplayer(function(player)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
 
-  -- se resuscita mentre non sono ancora passati i 6 secondi, lo porto nella sala d'attesa
+  -- se resuscita mentre non può ancora rientrare in partita, lo porto nella sala d'attesa
   if player:get_meta():get_int("bl_death_delay") == 1 then
     if arena.players[p_name].teamID == 1 then
       player:set_pos(arena.waiting_room_orange)
