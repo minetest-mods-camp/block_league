@@ -323,7 +323,7 @@ function add_point(w_name, teamID, arena)
     block_league.HUD_ball_update(pl_name, S("ENEMY TEAM SCORED..."), "0xff8e8e")
   end
 
-  local scoring_team_color = teamID == 1 and "0xf2a05b" or "0x7ebeee"
+  local scoring_team_color = teamID == 1 and "0xf2a05b" or "0x55aef1"
 
   for sp_name, _ in pairs(arena.spectators) do
     minetest.sound_play("bl_crowd_cheer", {to_player = sp_name})

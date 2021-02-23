@@ -63,19 +63,27 @@ end
 
 function block_league.hud_log_update(arena, action_img, executor, receiver)
 
-  for pl_name, pl_stats in pairs(arena.players) do
+  for psp_name, _ in pairs(arena.players_and_spectators) do
 
-    local panel = panel_lib.get_panel(pl_name, "bl_log")
+    local panel = panel_lib.get_panel(psp_name, "bl_log")
+    local executor_color, receiver_color
 
-    local executor_color
-    local receiver_color
-
-    if arena.players[executor].teamID == pl_stats.teamID then
-      executor_color = "0xabf877"
-      receiver_color = "0xff8e8e"
+    if arena.players[psp_name] then
+      if arena.players[executor].teamID == arena.players[psp_name].teamID then
+        executor_color = "0xabf877"
+        receiver_color = "0xff8e8e"
+      else
+        executor_color = "0xff8e8e"
+        receiver_color = "0xabf877"
+      end
     else
-      executor_color = "0xff8e8e"
-      receiver_color = "0xabf877"
+      if arena.players[executor].teamID == 1 then
+        executor_color = "0xf2a05b"
+        receiver_color = "0x55aef1"
+      else
+        executor_color = "0x55aef1"
+        receiver_color = "0xf2a05b"
+      end
     end
 
     panel:update(nil,
@@ -134,7 +142,7 @@ end
 
 function block_league.hud_log_clear(arena)
 
-  for pl_name, _ in pairs(arena.players) do
+  for pl_name, _ in pairs(arena.players_and_spectators) do
     local panel = panel_lib.get_panel(pl_name, "bl_log")
 
     panel:update(nil,
