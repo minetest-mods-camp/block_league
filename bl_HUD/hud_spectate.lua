@@ -167,7 +167,16 @@ function create_panel(arena, sp_name, p_name, y_offset)
   local skin = minetest.get_player_by_name(p_name):get_properties().textures[1]
   local skin_clean = string.match(skin, "(.*)^%[")
   local avatar = "([combine:24x24:0,0=" .. skin_clean .. "^[mask:bl_hud_spectate_avatarmask.png)"
-  local info2_txt = arena.mode == 1 and "TD" or "D"
+  local points_amount = arena.players[p_name].points
+  local info2_txt, info2_amount
+
+  if arena.mode == 1 then
+    info2_txt = "TD"
+    info2_amount = arena.players[p_name].TDs
+  else
+    info2_txt = "D"
+    info2_amount = arena.players[p_name].deaths
+  end
 
   local teamID = arena.players[p_name].teamID
 
@@ -230,12 +239,12 @@ function create_panel(arena, sp_name, p_name, y_offset)
         points_amount = {
           offset = {x = 215, y = 13 },
           alignment = { x = 0, y = 0 },
-          text = "0"
+          text = points_amount
         },
         info2_amount = {
           offset = {x = 245, y = 13 },
           alignment = { x = 0, y = 0 },
-          text = "0"
+          text = info2_amount
         },
       }
     })
@@ -299,12 +308,12 @@ function create_panel(arena, sp_name, p_name, y_offset)
         points_amount = {
           offset = {x = -245, y = 13 },
           alignment = { x = 0, y = 0 },
-          text = "0"
+          text = points_amount
         },
         info2_amount = {
           offset = {x = -215, y = 13 },
           alignment = { x = 0, y = 0 },
-          text = "0"
+          text = info2_amount
         },
       }
     })
