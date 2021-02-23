@@ -327,7 +327,7 @@ function add_point(w_name, teamID, arena)
 
   for sp_name, _ in pairs(arena.spectators) do
     minetest.sound_play("bl_crowd_cheer", {to_player = sp_name})
-    block_league.HUD_ball_update(sp_name, S("@1 TEAM SCORED!", string.upper(arena.teams[teamID].name)), scoring_team_color)
+    block_league.HUD_ball_update(sp_name, "TOUCHDOWN!", scoring_team_color)
   end
 
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
