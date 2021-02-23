@@ -135,7 +135,7 @@ function block_league.HUD_spectate_removeplayer(arena, p_name)
 
   -- ottengo altezza e squadra dal primo spettatore per non ricalcolarle ogni volta
   for sp_name, _ in pairs(arena.spectators) do
-    gone_p_panel = panel_lib.get_panel(sp_name, "bl_spectate_" .. p_name)
+    local gone_p_panel = panel_lib.get_panel(sp_name, "bl_spectate_" .. p_name)
     y = gone_p_panel.background_def.position.y
     teamID = gone_p_panel.spectate_bg.text == "bl_hud_spectate_bg_orange.png" and 1 or 2
     break
