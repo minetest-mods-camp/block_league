@@ -66,6 +66,7 @@ function ball:on_activate(staticdata, d_time)
     self.timer_bool = false
     self.timer = 0
     self.arena = arena
+    self.object:set_hp(65535)
 
     cast_entity_ray(self.object)
 
