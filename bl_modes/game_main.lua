@@ -71,6 +71,7 @@ function round_start(arena)
     player:set_physics_override({ speed = block_league.SPEED })
     player:set_pos(arena_lib.get_random_spawner(arena, stats.teamID))
 
+    block_league.HUD_spectate_update(arena, pl_name, "alive")
   end
 
   for psp_name, _ in pairs(arena.players_and_spectators) do
