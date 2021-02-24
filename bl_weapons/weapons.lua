@@ -286,9 +286,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
     -- se è ancora vivo, riproduco suono danno
     if target:get_hp() > 0 then
-      minetest.sound_play("bl_hit", {
-        to_player = p_name
-      })
+      block_league.sound_play("bl_hit", p_name)
     -- sennò kaputt
     else
       kill(arena, weapon, user, target)
