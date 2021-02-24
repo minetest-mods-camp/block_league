@@ -15,6 +15,8 @@ block_league.register_weapon("block_league:sword", {
   weap_secondary_delay = 3,
   range = 6,
 
+  sound_shoot = "bl_sword_hit",
+
   on_right_click = function(arena, weapon, user, pointed_thing)
 
     local p_meta = user:get_meta()
