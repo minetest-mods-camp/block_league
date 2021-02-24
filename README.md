@@ -29,6 +29,7 @@ Shotgun shooting sound by [coolguy](https://freesound.org/people/coolguy244e/sou
 Shotgun reloading sound by [jeseid77](https://freesound.org/people/jeseid77/sounds/86246/)  
 SMG shooting sound by [kafokafo](https://freesound.org/people/kafokafo/sounds/128229/)  
 SMG shooting sound by [GreenFireSound](https://freesound.org/people/GreenFireSound/sounds/484113/)  
+Sword dash by [LloydEvans09](https://freesound.org/people/LloydEvans09/sounds/185849/)  
 Sword swing by [bay_area_bob](https://freesound.org/people/bay_area_bob/sounds/541996/)  
 Hit sound by [cabled_mess](https://freesound.org/people/cabled_mess/sounds/350926/)  
 Kill sound by [jmayoff](https://freesound.org/people/jmayoff/sounds/255156/)  

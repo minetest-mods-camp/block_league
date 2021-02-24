@@ -25,6 +25,9 @@ block_league.register_weapon("block_league:sword", {
        p_meta:get_int("bl_is_shooting") == 1
        then return end
 
+    local p_name = user:get_player_name()
+
+    block_league.sound_play("bl_sword_dash", p_name)
     p_meta:set_int("bl_is_speed_locked", 1)
 
     local dir = user:get_look_dir()
@@ -46,11 +49,11 @@ block_league.register_weapon("block_league:sword", {
     })
 
     minetest.after(2.5, function()
-      if not arena_lib.is_player_in_arena(user:get_player_name(), "block_league") then return end
+      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
 
       local vel
 
-      if arena.players[user:get_player_name()].energy > 0 then
+      if arena.players[p_name].energy > 0 then
         if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_is_shooting") == 1 then
           vel = block_league.SPEED_LOW
         else
@@ -73,5 +76,3 @@ block_league.register_weapon("block_league:sword", {
 
   end,
 })
-
---bl_is_speed_locked

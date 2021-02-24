@@ -422,9 +422,7 @@ function weapon_right_click(weapon, player, pointed_thing)
 
   check_immunity(player)
 
-  if weapon.on_right_click then
-    weapon.on_right_click(arena, weapon, player, pointed_thing)
-  end
+  weapon.on_right_click(arena, weapon, player, pointed_thing)
 end
 
 
