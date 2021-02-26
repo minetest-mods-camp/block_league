@@ -137,10 +137,11 @@ end)
 
 
 arena_lib.on_quit("block_league", function(arena, p_name, is_spectator)
-  --[[TODO: waiting for 5.4 to fix a few bugs
+
+  -- se aveva la palla, sganciala
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
-  end]]
+  end
 
   remove_spectate_HUD(arena, p_name, is_spectator)
   remove_HUD(p_name, is_spectator)
@@ -153,10 +154,11 @@ end)
 
 
 arena_lib.on_disconnect("block_league", function(arena, p_name, is_spectator)
-  --[[TODO: same as before
+
+  -- se aveva la palla, sganciala
   if minetest.get_player_by_name(p_name):get_children()[1] then
     minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity():detach()
-  end]]
+  end
 
   remove_spectate_HUD(arena, p_name, is_spectator)
   remove_HUD(p_name, is_spectator)
