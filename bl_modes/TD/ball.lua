@@ -27,8 +27,8 @@ local ball = {
     timer_limit = 10,
   },
 
-  wielder = nil,
-  team_name = nil,
+  w_name = nil,
+  team_id = nil,
   timer_bool = false,
   timer = 0,
   has_scored = false
@@ -46,7 +46,7 @@ end
 
 function ball:get_staticdata()
   if self == nil or self.arena == nil then return end
-  return self.wielder
+  return self.w_name
 end
 
 
@@ -61,9 +61,9 @@ function ball:on_activate(staticdata, d_time)
       return
     end
 
-    self.wielder = nil
-    self.team_name = nil
+    self.w_name = nil
     self.timer_bool = false
+    self.team_id = nil
     self.timer = 0
     self.arena = arena
     self.object:set_hp(65535)
@@ -82,7 +82,7 @@ end
 
 
 function ball:on_step(d_time, moveresult)
-  local id, arena = arena_lib.get_arena_by_name("block_league", self.arena.name)
+  local arena = self.arena
 
   if not arena or not arena.in_game then
     self:_destroy()
@@ -90,7 +90,7 @@ function ball:on_step(d_time, moveresult)
   end
 
   --se nessuno la sta portando a spasso...
-  if self.wielder == nil then
+  if self.w_name == nil then
 
     -- se il timer per il reset è attivo, controllo a che punto sta
     if self.timer_bool then
@@ -136,31 +136,22 @@ function ball:on_step(d_time, moveresult)
 
 
   -- se ce l'ha qualcuno
+  -- NB: se quel qualcuno è appena morto, al posto di controllarlo qui su ogni step, viene controllato sul callback della morte in player_manager.lua
   else
+    local w_name = self.w_name
+    local wielder = minetest.get_player_by_name(w_name)
 
-    local wielder = self.wielder
-    local w_name = wielder:get_player_name()
-
-    -- se il giocatore è morto, si sgancia e torna a oscillare
-    if wielder:get_hp() <= 0 then
-      if wielder:get_pos().y < arena.min_y then
-        self:reset()
-      return end
-
+    -- se si è disconnesso
+    if not wielder then
       self:detach()
       self:oscillate()
-
       return
     end
 
     local w_pos = wielder:get_pos()
+    local goal = arena.teams[self.team_id].name == S("orange") and arena.goal_orange or arena.goal_blue
 
-    -- se il giocatore è vivo
-    if w_pos == nil then return end
-
-    local goal = self.team_name == S("orange") and arena.goal_orange or arena.goal_blue
-
-    check_for_touchdown(id, arena, self, wielder, w_pos, goal)
+    check_for_touchdown(arena, self, w_name, w_pos, goal)
   end
 end
 
@@ -171,7 +162,10 @@ function ball:attach(player)
   local arena = self.arena
   local p_name = player:get_player_name()
 
-  announce_ball_possession_change(arena, p_name)
+  self.w_name = p_name
+  self.team_id = arena.players[p_name].teamID
+
+  announce_ball_possession_change(arena, self.team_id, self.w_name)
 
   player:get_meta():set_int("bl_has_ball", 1)
   block_league.energy_drain(arena, p_name)
@@ -180,13 +174,8 @@ function ball:attach(player)
   block_league.info_panel_update(arena)
   block_league.HUD_spectate_update(arena, p_name, "ball")
 
-
   self.object:set_attach(player, "Body", {x=0, y=18, z=0}, {x=0, y=0, z=0})
-  self.wielder = player
 
-  local teamID = arena.players[p_name].teamID
-
-  self.team_name = arena.teams[teamID].name
   self.timer_bool = false
   self.timer = 0
 end
@@ -195,18 +184,20 @@ end
 
 function ball:detach()
 
-  local player = self.wielder
-  local p_name = player:get_player_name()
+  local p_name = self.w_name
+  local player = minetest.get_player_by_name(p_name)
   local arena = self.arena
 
-  announce_ball_possession_change(arena, p_name, true)
+  announce_ball_possession_change(arena, self.team_id, self.w_name, true)
 
-  player:get_meta():set_int("bl_has_ball", 0)
-  block_league.HUD_spectate_update(arena, p_name, "ball")
+  if arena.players[p_name] then
+    player:get_meta():set_int("bl_has_ball", 0)
+    block_league.HUD_spectate_update(arena, p_name, "ball")
+  end
 
   self.object:set_detach()
 
-  self.wielder = nil
+  self.w_name = nil
   self.timer_bool = true
   self.timer = 0
 
@@ -224,12 +215,12 @@ function ball:reset()
     block_league.HUD_ball_update(psp_name, S("Ball reset"))
   end
 
-  --if the player dies because of falling in the void wielder is nil
-  if self.wielder then
+  --if the player dies because of falling in the void wielder_name is nil
+  if self.w_name then
     self:detach()
   end
-  self.wielder = nil
-  self.team_name = nil
+  self.w_name = nil
+  self.team_id = nil
   self.timer_bool = false
   self.timer = 0
   self.object:set_pos(arena.ball_spawn)
@@ -259,6 +250,7 @@ function ball:oscillate()
 end
 
 
+
 ----------------------------------------------
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
@@ -281,7 +273,7 @@ end
 
 
 
-function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
+function check_for_touchdown(arena, ball, w_name, w_pos, goal)
 
   if
   math.abs(w_pos.x - goal.x) <= 1.5 and
@@ -290,13 +282,14 @@ function check_for_touchdown(id, arena, ball, wielder, w_pos, goal)
   w_pos.y <= goal.y + 3 and
   not arena.in_celebration then
 
-    wielder:get_meta():set_int("bl_has_ball", 0)
+    local wielder = minetest.get_player_by_name(w_name)
 
-    local w_name = wielder:get_player_name()
-    local teamID = arena.players[w_name].teamID
+    wielder:get_meta():set_int("bl_has_ball", 0)
 
     block_league.hud_log_update(arena, "bl_log_TD.png", w_name, "")
     block_league.HUD_spectate_update(arena, w_name, "ball")
+
+    local teamID = arena.players[w_name].teamID
 
     add_point(w_name, teamID, arena)
     after_point(w_name, teamID, arena)
@@ -360,9 +353,7 @@ end
 
 
 
-function announce_ball_possession_change(arena, w_name, is_ball_lost)
-
-  local teamID = arena.players[w_name].teamID
+function announce_ball_possession_change(arena, teamID, w_name, is_ball_lost)
   local enemy_teamID = teamID == 1 and 2 or 1
   local team = arena_lib.get_players_in_team(arena, teamID)
   local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
@@ -379,7 +370,6 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
     end
 
   else
-
     block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
 
     for _, pl_name in pairs(team) do
@@ -394,8 +384,6 @@ function announce_ball_possession_change(arena, w_name, is_ball_lost)
     end
   end
 end
-
-
 
 
 
