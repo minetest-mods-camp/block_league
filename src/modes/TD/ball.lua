@@ -165,7 +165,7 @@ function ball:attach(player)
   self.w_name = p_name
   self.team_id = arena.players[p_name].teamID
 
-  announce_ball_possession_change(arena, self.team_id, self.w_name)
+  self:announce_ball_possession_change()
 
   player:get_meta():set_int("bl_has_ball", 1)
   block_league.energy_drain(arena, p_name)
@@ -188,7 +188,7 @@ function ball:detach()
   local player = minetest.get_player_by_name(p_name)
   local arena = self.arena
 
-  announce_ball_possession_change(arena, self.team_id, self.w_name, true)
+  self:announce_ball_possession_change(true)
 
   if arena.players[p_name] then
     player:get_meta():set_int("bl_has_ball", 0)
@@ -247,6 +247,43 @@ function ball:oscillate()
     velocity.y = -velocity.y
     self.object:set_velocity(velocity)
   end)
+end
+
+
+
+function ball:announce_ball_possession_change(is_ball_lost)
+  local arena = self.arena
+  local teamID = self.team_id
+  local enemy_teamID = teamID == 1 and 2 or 1
+  local team = arena_lib.get_players_in_team(arena, teamID)
+  local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
+
+  if is_ball_lost then
+    for _, pl_name in pairs(team) do
+      minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
+      block_league.HUD_ball_update(pl_name, S("Your team lost the ball!"), "0xff8e8e")
+    end
+
+    for _, pl_name in pairs(enemy_team) do
+      minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
+      block_league.HUD_ball_update(pl_name, S("Enemy team lost the ball!"), "0xabf877")
+    end
+
+  else
+    local w_name = self.w_name
+    block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
+
+    for _, pl_name in pairs(team) do
+      minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
+      block_league.HUD_ball_update(pl_name, S("Your team got the ball!"), "0xabf877")
+    end
+    block_league.HUD_ball_update(w_name, S("You got the ball!"), "0xabf877")
+
+    for _, pl_name in pairs(enemy_team) do
+      minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
+      block_league.HUD_ball_update(pl_name, S("Enemy team got the ball!"), "0xff8e8e")
+    end
+  end
 end
 
 
@@ -348,40 +385,6 @@ function after_point(w_name, teamID, arena)
   -- sennò inizia un nuovo round
   else
     block_league.countdown_and_start(arena, 3)
-  end
-end
-
-
-
-function announce_ball_possession_change(arena, teamID, w_name, is_ball_lost)
-  local enemy_teamID = teamID == 1 and 2 or 1
-  local team = arena_lib.get_players_in_team(arena, teamID)
-  local enemy_team = arena_lib.get_players_in_team(arena, enemy_teamID)
-
-  if is_ball_lost then
-    for _, pl_name in pairs(team) do
-      minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Your team lost the ball!"), "0xff8e8e")
-    end
-
-    for _, pl_name in pairs(enemy_team) do
-      minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Enemy team lost the ball!"), "0xabf877")
-    end
-
-  else
-    block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
-
-    for _, pl_name in pairs(team) do
-      minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Your team got the ball!"), "0xabf877")
-    end
-    block_league.HUD_ball_update(w_name, S("You got the ball!"), "0xabf877")
-
-    for _, pl_name in pairs(enemy_team) do
-      minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
-      block_league.HUD_ball_update(pl_name, S("Enemy team got the ball!"), "0xff8e8e")
-    end
   end
 end
 

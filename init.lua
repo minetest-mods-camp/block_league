@@ -1,8 +1,9 @@
-block_league = {}
 local S = minetest.get_translator("block_league")
 local modpath = minetest.get_modpath("block_league")
-local version = "0.4.0"
+local srcpath = modpath .. "/src"
+local version = "0.5.0-dev"
 
+block_league = {}
 dofile(modpath .. "/GLOBALS.lua")
 
 
@@ -71,49 +72,49 @@ arena_lib.register_minigame("block_league", {
 
 -- load other scripts
 
-dofile(modpath .. "/achievements.lua")
-dofile(modpath .. "/chatcmdbuilder.lua")
-dofile(modpath .. "/commands.lua")
-dofile(modpath .. "/database_manager.lua")
-dofile(modpath .. "/exp_manager.lua")
-dofile(modpath .. "/input_manager.lua")
-dofile(modpath .. "/player_manager.lua")
-dofile(modpath .. "/privs.lua")
-dofile(modpath .. "/utils.lua")
+dofile(srcpath .. "/achievements.lua")
+dofile(srcpath .. "/chatcmdbuilder.lua")
+dofile(srcpath .. "/commands.lua")
+dofile(srcpath .. "/database_manager.lua")
+dofile(srcpath .. "/exp_manager.lua")
+dofile(srcpath .. "/input_manager.lua")
+dofile(srcpath .. "/player_manager.lua")
+dofile(srcpath .. "/privs.lua")
+dofile(srcpath .. "/utils.lua")
 
 -- arena_lib
-dofile(modpath .. "/bl_arena_lib/arena_manager.lua")
-dofile(modpath .. "/bl_arena_lib/arena_timer.lua")
+dofile(srcpath .. "/arena_lib/arena_manager.lua")
+dofile(srcpath .. "/arena_lib/arena_timer.lua")
 -- debug
-dofile(modpath .. "/bl_debug/debug.lua")
-dofile(modpath .. "/bl_debug/testkit.lua")
+dofile(srcpath .. "/debug/debug.lua")
+dofile(srcpath .. "/debug/testkit.lua")
 -- HUD
-dofile(modpath .. "/bl_HUD/hud_achievements.lua")
-dofile(modpath .. "/bl_HUD/hud_broadcast.lua")
-dofile(modpath .. "/bl_HUD/hud_bullets.lua")
-dofile(modpath .. "/bl_HUD/hud_energy.lua")
-dofile(modpath .. "/bl_HUD/hud_info_panel.lua")
-dofile(modpath .. "/bl_HUD/hud_inputs.lua")
-dofile(modpath .. "/bl_HUD/hud_log.lua")
-dofile(modpath .. "/bl_HUD/hud_scoreboard.lua")
-dofile(modpath .. "/bl_HUD/hud_spectate.lua")
+dofile(srcpath .. "/HUD/hud_achievements.lua")
+dofile(srcpath .. "/HUD/hud_broadcast.lua")
+dofile(srcpath .. "/HUD/hud_bullets.lua")
+dofile(srcpath .. "/HUD/hud_energy.lua")
+dofile(srcpath .. "/HUD/hud_info_panel.lua")
+dofile(srcpath .. "/HUD/hud_inputs.lua")
+dofile(srcpath .. "/HUD/hud_log.lua")
+dofile(srcpath .. "/HUD/hud_scoreboard.lua")
+dofile(srcpath .. "/HUD/hud_spectate.lua")
 -- abstract weapons
-dofile(modpath .. "/bl_weapons/bullets.lua")
-dofile(modpath .. "/bl_weapons/weapons.lua")
-dofile(modpath .. "/bl_weapons/weapons_utils.lua")
+dofile(srcpath .. "/weapons/bullets.lua")
+dofile(srcpath .. "/weapons/weapons.lua")
+dofile(srcpath .. "/weapons/weapons_utils.lua")
 -- weapons
-dofile(modpath .. "/bl_weapons/bouncer.lua")
-dofile(modpath .. "/bl_weapons/grenade_launcher.lua")
-dofile(modpath .. "/bl_weapons/pixelgun.lua")
-dofile(modpath .. "/bl_weapons/rocket_launcher.lua")
-dofile(modpath .. "/bl_weapons/sword.lua")
-dofile(modpath .. "/bl_weapons/smg.lua")
+dofile(srcpath .. "/weapons/bouncer.lua")
+dofile(srcpath .. "/weapons/grenade_launcher.lua")
+dofile(srcpath .. "/weapons/pixelgun.lua")
+dofile(srcpath .. "/weapons/rocket_launcher.lua")
+dofile(srcpath .. "/weapons/sword.lua")
+dofile(srcpath .. "/weapons/smg.lua")
 -- modes
-dofile(modpath .. "/bl_modes/game_main.lua")
-dofile(modpath .. "/bl_modes/TD/ball.lua")
+dofile(srcpath .. "/modes/game_main.lua")
+dofile(srcpath .. "/modes/TD/ball.lua")
 -- misc
-dofile(modpath .. "/bl_misc/energy.lua")
-dofile(modpath .. "/bl_misc/immunity.lua")
+dofile(srcpath .. "/misc/energy.lua")
+dofile(srcpath .. "/misc/immunity.lua")
 
 block_league.init_storage()
 
