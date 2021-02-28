@@ -32,15 +32,18 @@ minetest.register_on_dieplayer(function(player)
   if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
 
   -- se il giocatore è morto con la palla, questa si sgancia e torna a oscillare
-  if minetest.get_player_by_name(p_name):get_children()[1] then
-    local arena = arena_lib.get_arena_by_player(p_name)
-    local ball = minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity()
+  for _, child in pairs (minetest.get_player_by_name(p_name):get_children()) do
+    if child:get_luaentity() and child:get_luaentity().timer then
+      local arena = arena_lib.get_arena_by_player(p_name)
+      local ball = child:get_luaentity()
 
-    if player:get_pos().y < arena.min_y then
-      ball:reset()
-    else
-      ball:detach()
-      ball:oscillate()
+      if player:get_pos().y < arena.min_y then
+        ball:reset()
+      else
+        ball:detach()
+        ball:oscillate()
+      end
+      break
     end
   end
 
