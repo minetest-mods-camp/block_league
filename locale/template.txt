@@ -25,24 +25,24 @@ Back in the game in @1=
 # privs.lua
 It allows to use the /bladmin command=
 
-# bl_arena_lib/arena_manager.lua
+# arena_lib/arena_manager.lua
 The game will start soon=
 
-# bl_arena_lib/arena_timer.lua
+# arena_lib/arena_timer.lua
 No one=
 
-# bl_debug/testkit.lua
+# debug/testkit.lua
 Leave test mode=
 You already are in test mode!=
 You've entered test mode=
 You've left test mode=
 
-# bl_HUD/hud_info_panel.lua
+# HUD/hud_info_panel.lua
 TDs=
 Deaths=
 Points=
 
-# bl_modes/TD/ball.lua
+# modes/TD/ball.lua
 Ball reset=
 NICE POINT!=
 ENEMY TEAM SCORED...=
@@ -52,19 +52,19 @@ Your team got the ball!=
 You got the ball!=
 Enemy team got the ball!=
 
-# bl_weapons/pixelgun.lua
+# weapons/pixelgun.lua
 Pixelgun=
 
-# bl_weapons/rocket_launcher.lua
+# weapons/rocket_launcher.lua
 Rocket Launcher=
 
-# bl_weapons/smg.lua
+# weapons/smg.lua
 Submachine Gun=
 
-# bl_weapons/sword.lua
+# weapons/sword.lua
 2H Sword=
 
-# bl_weapons/weapons.lua
+# weapons/weapons.lua
 has killed @1 players in a row!=
 YOU'VE KILLED @1=
 You've been killed by @1=
