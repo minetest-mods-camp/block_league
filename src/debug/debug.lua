@@ -1,3 +1,5 @@
+local S = minetest.get_translator("block_league")
+
 -- debug se devo mostrare una posizione
 function block_league.show_position(pos, time)
   minetest.add_particlespawner({
@@ -18,4 +20,16 @@ function block_league.show_position(pos, time)
     texture = "bl_rocket_particle.png",
   })
 
+end
+
+
+function block_league.print_player_stats(sender, p_name)
+  local pl_stats = block_league.players[p_name]
+
+  if not pl_stats then
+    minetest.chat_send_player(sender, minetest.colorize("#e6482e", S("[!] This player doesn't exist!")))
+    return end
+
+  local stats = "[Block League] Player: " .. p_name .. " | Exp: " .. pl_stats.XP
+  minetest.chat_send_player(sender, stats)
 end

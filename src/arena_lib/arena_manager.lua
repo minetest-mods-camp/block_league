@@ -15,6 +15,8 @@ arena_lib.on_load("block_league", function(arena)
     equip_weapons(arena, pl_name)
     create_and_show_HUD(arena, pl_name)
     block_league.refill_weapons(arena, pl_name)
+
+    stats.entering_time = arena.initial_time
   end
 
   minetest.after(0.1, function()
@@ -22,8 +24,8 @@ arena_lib.on_load("block_league", function(arena)
   end)
 
   block_league.HUD_show_inputs(arena)
-  arena_lib.HUD_send_msg_all("broadcast", arena, S("The game will start soon"))
 
+  arena_lib.HUD_send_msg_all("broadcast", arena, S("The game will start soon"))
   block_league.countdown_and_start(arena, 3)
 end)
 
@@ -46,6 +48,8 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
     return
   end
 
+  arena.players[p_name].entering_time = arena.current_time
+
   reset_meta(p_name)
   equip_weapons(arena, p_name)
   create_and_show_HUD(arena, p_name)
@@ -67,11 +71,12 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
   arena.weapons_disabled = true
 
   for pl_name, pl_stats in pairs(arena.players) do
-
     local player = minetest.get_player_by_name(pl_name)
 
     block_league.deactivate_zoom(player)
     player:get_meta():set_int("bl_immunity", 1)
+
+    block_league.calculate_and_add_xp(pl_name, pl_stats.entering_time, pl_stats.points)
 
     panel_lib.get_panel(pl_name, "bl_info_panel"):show()
   end

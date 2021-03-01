@@ -19,6 +19,9 @@ three in one=
 # commands.lua
 mod management=
 
+# exp_manager.lua
+pass points=
+
 # player_manager.lua
 Back in the game in @1=
 

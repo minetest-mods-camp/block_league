@@ -19,6 +19,9 @@ three in one=tre in uno
 # commands.lua
 mod management=gestione della mod
 
+# exp_manager.lua
+pass points=punti pass
+
 # player_manager.lua
 Back in the game in @1=Di nuovo in partita tra @1
 

@@ -64,6 +64,7 @@ arena_lib.register_minigame("block_league", {
     energy = 100,
     TDs = 0,
     points = 0,
+    entering_time = 0,
     weapons_magazine = {}
   }
 })

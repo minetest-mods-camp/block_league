@@ -135,6 +135,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         end
     end)
 
+    -- aggiunta/rimozione palla. option può essere "set" o "remove"
     cmd:sub("ball :option :arena", function(sender, option, arena_name)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
 
@@ -155,6 +156,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         arena_lib.change_arena_property(sender, "block_league", arena_name, "ball_spawn" , new_param)
     end)
 
+    -- aggiunta/rimozione sala d'attesa. option può essere "set" o "remove"
     cmd:sub("wroom :option :arena :team", function(sender, option, arena_name, team)
 
       local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
@@ -199,6 +201,22 @@ ChatCmdBuilder.new("bladmin", function(cmd)
       block_league.enter_test_mode(sender)
     end)
 
+    -- gestione esperienza
+    cmd:sub("exp :player :option :amount:number", function(sender, p_name, option, amount)
+      if option == "set" then
+        block_league.set_xp(p_name, amount)
+      end
+    end)
+
+    cmd:sub("exp :option", function(sender, option)       -- BETA ONLY, DANGER ZONE
+      if option == "resetall" then
+        for pl_name, _ in pairs(block_league.players) do
+          block_league.set_xp(pl_name, 0)
+        end
+        minetest.chat_send_player(sender, "All players' xp has been reset")
+      end
+    end)
+
 
 end, {
   description = S("mod management"),
@@ -215,6 +233,10 @@ ChatCmdBuilder.new("bleague", function(cmd)
 
   cmd:sub("achievements :playername", function(sender, p_name)
     block_league.list_achievements(sender, p_name)
+  end)
+
+  cmd:sub("info :playername", function(sender, p_name)
+    block_league.print_player_stats(sender, p_name)
   end)
 
 end,{})
