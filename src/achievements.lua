@@ -25,6 +25,10 @@ function block_league.list_achievements(sender, t_name)
 
   local p_name = t_name or sender
 
+  if not achievements_lib.is_player_in_storage(p_name, "block_league") then
+    minetest.chat_send_player(sender, minetest.colorize("#e6482e", S("[!] This player doesn't exist!")))
+    return end
+
   local p_achievements = achievements_lib.get_player_achievements(p_name, "block_league")
   local current_achievements = 0
   local achievements_to_text = "\n"
