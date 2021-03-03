@@ -1,4 +1,0 @@
-achievements_lib
-arena_lib
-controls
-panel_lib
