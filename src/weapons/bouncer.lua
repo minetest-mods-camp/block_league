@@ -29,7 +29,7 @@ local function register_bouncer(name, desc, energy)
       end
 
       local dir = user:get_look_dir()
-      local knockback = user:get_player_velocity().y < 1 and -15 or -10
+      local knockback = user:get_velocity().y < 1 and -15 or -10
 
       user:add_velocity(vector.multiply(dir, knockback))
       block_league.sound_play("bl_bouncer", p_name)

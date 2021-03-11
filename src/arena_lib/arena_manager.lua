@@ -193,6 +193,7 @@ end
 
 function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_broadcast_create(p_name)
+  block_league.HUD_critical_create(p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.hud_log_create(p_name)
 
@@ -209,6 +210,7 @@ end
 
 
 function remove_HUD(p_name, is_spectator)
+  block_league.HUD_critical_remove(p_name)
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()

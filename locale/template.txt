@@ -40,6 +40,9 @@ You already are in test mode!=
 You've entered test mode=
 You've left test mode=
 
+# HUD/hud_critical.lua
+CRITICAL!=
+
 # HUD/hud_info_panel.lua
 TDs=
 Deaths=

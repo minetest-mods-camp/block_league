@@ -40,6 +40,9 @@ You already are in test mode!=Sei già in modalità test!
 You've entered test mode=Sei entrato in modalità test
 You've left test mode=Sei uscito dalla modalità test
 
+# HUD/hud_critical.lua
+CRITICAL!=CRITICO!
+
 # HUD/hud_info_panel.lua
 TDs=TD
 Deaths=Morti
