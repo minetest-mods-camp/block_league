@@ -174,7 +174,11 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
 			if hit.ref and hit.ref:is_player() then
         -- e non è colui che spara
 				if hit.ref ~= user then
-					table.insert(players, hit.ref)
+          if (hit.intersection_point.y - hit.ref:get_pos().y) > 1.275 then
+            table.insert(players, {player=hit.ref, headshot=true})
+          else
+            table.insert(players, {player=hit.ref, headshot=false})
+          end
 				end
 			elseif hit.ref:get_luaentity() then
         local entity = hit.ref:get_luaentity()
@@ -193,16 +197,19 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
       -- se è un nodo mi fermo, e ritorno l'array se > 0 (ovvero ha trovato giocatori)
 			if hit.type == "node" then
 				if #players > 0 then
-          if particle ~= nil then
-            if not has_piercing then
-              local impact_dist = get_dist(head_pos, players[1]:get_pos())
-              draw_particles(particle, dir, p1, range, impact_dist)
-            else
+          if has_piercing then
+            if particle ~= nil then
               local impact_dist = get_dist(head_pos, hit.intersection_point)
               draw_particles(particle, dir, p1, range, impact_dist)
             end
+            return players
+          else
+            if particle ~= nil then
+              local impact_dist = get_dist(head_pos, players[1].player:get_pos())
+              draw_particles(particle, dir, p1, range, impact_dist)
+            end
+            return {players[1]}
           end
-					return players
 				else
           if particle ~= nil then
             local impact_dist = get_dist(head_pos, hit.intersection_point)
@@ -223,7 +230,7 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
         return players
       else
         if particle ~= nil then
-          local impact_dist = get_dist(head_pos, players[1]:get_pos())
+          local impact_dist = get_dist(head_pos, players[1].player:get_pos())
           draw_particles(particle, dir, p1, range, impact_dist)
         end
         return {players[1]}
@@ -243,7 +250,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
   local damage = weapon.damage
   local knockback = weapon.knockback
-
+  
   local p_name = user:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
   local killed_players = 0
@@ -259,6 +266,9 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
   -- per ogni giocatore colpito
   for _, target in pairs(targets) do
 
+    headshot = target.headshot
+    target = target.player
+
     if target:get_hp() <= 0 then return end
     if target:get_meta():get_int("bl_immunity") == 1 then return end
 
@@ -270,9 +280,17 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
     -- eventuale knockback
     if knockback > 0 and knockback_dir then
       local knk= vector.multiply(knockback_dir,knockback)
-      target:add_player_velocity(knk)
+      target:add_velocity(knk)
     end
 
+    -- eventuale headshot
+    if headshot and weapon.type ~= 3 then
+      damage = damage * 1.5
+      block_league.HUD_critical_show(p_name)
+      block_league.sound_play("bl_hit_critical", p_name, "not_overlappable")
+    end
+
+    -- eventuale danno decrementato a seconda della distanza
     if weapon.weapon_type == 1 and decrease_damage_with_distance then
       local dist = get_dist(user:get_pos(), target:get_pos())
       local damage = damage - (damage * dist / weapon.weapon_range)
@@ -584,8 +602,8 @@ function check_weapon_type_and_attack(player, weapon, pointed_thing)
 
   else
       if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
-
-      block_league.apply_damage(player, pointed_thing.ref, weapon, false, player:get_look_dir())
+      local target = {{player = pointed_thing.ref, headshot = false}}
+      block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
   end
 end
 
