@@ -75,7 +75,7 @@ function dash(player, energy)
   local rotate_factor = player:get_player_control().left and 1.57 or -1.57
   local dash_dir = vector.rotate_around_axis(minetest.yaw_to_dir(look_horizontal), {x=0,y=1,z=0}, rotate_factor)
 
-  player:add_velocity(vector.multiply(dash_dir, 20))
+  player:add_velocity(vector.multiply(dash_dir, 16))
   block_league.sound_play("bl_sword_dash", p_name)
 end
 
