@@ -32,6 +32,7 @@ SMG shooting sound by [GreenFireSound](https://freesound.org/people/GreenFireSou
 Sword dash by [LloydEvans09](https://freesound.org/people/LloydEvans09/sounds/185849/)  
 Sword swing by [bay_area_bob](https://freesound.org/people/bay_area_bob/sounds/541996/)  
 Hit sound by [cabled_mess](https://freesound.org/people/cabled_mess/sounds/350926/)  
+Critical sound by [EFlexMusic](https://freesound.org/people/EFlexMusic/sounds/418324/)  
 Kill sound by [jmayoff](https://freesound.org/people/jmayoff/sounds/255156/)  
 Countdown announcer by [dbosst](https://freesound.org/people/dbosst/sounds/464145/)  
 "Fight" announcer by [EFlexMusic](https://freesound.org/people/EFlexMusic/)  
