@@ -28,6 +28,7 @@ local ball = {
   },
 
   w_name = nil,
+  is_going_up = nil,
   team_id = nil,
   timer_bool = false,
   timer = 0,
@@ -119,14 +120,22 @@ function ball:on_step(d_time, moveresult)
     for index, table in pairs(moveresult.collisions) do
       if table.type == "node" and table.axis == "y" then
         velocity.y = -table.old_velocity.y
+        if velocity.y > 0 then
+          self.is_going_up = true
+        else
+          self.is_going_up = false
+        end
         self.object:set_velocity(velocity)
         minetest.after(1, function()
-          if self.object ~= nil then
+          if self.object ~= nil and self.is_going_up then
             velocity = self.object:get_velocity()
-            if velocity ~= nil then
-              velocity.y = -velocity.y
-              self.object:set_velocity(velocity)
+            velocity.y = -velocity.y
+            if velocity.y > 0 then
+              self.is_going_up = true
+            else
+              self.is_going_up = false
             end
+            self.object:set_velocity(velocity)
           end
         end)
         break
@@ -225,26 +234,24 @@ function ball:reset()
   self.timer = 0
   self.object:set_pos(arena.ball_spawn)
 
-  --if the ball is not moving up or down then start the movement
-  if self.object:get_velocity().y == 0 then
-    self:oscillate()
-  end
+  self:oscillate()
 
 end
 
 
 function ball:oscillate()
 
-  local velocity = self.object:get_velocity()
+  local velocity = {x = 0, y = 1, z = 0}
 
-  velocity.y = velocity.y + 1
   self.object:set_velocity(velocity)
+  self.is_going_up = true
 
   minetest.after(1, function()
-    if not self.object then return end
+    if not self.object or not self.is_going_up then return end
     velocity = self.object:get_velocity()
     if not velocity then return end
     velocity.y = -velocity.y
+    self.is_going_up = false
     self.object:set_velocity(velocity)
   end)
 end
