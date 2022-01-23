@@ -46,7 +46,7 @@ arena_lib.on_timeout("block_league", function(arena)
     end
   end
 
-  local winner_team = winner_team_ID ~= 0 and arena_lib.get_players_in_team(arena, winner_team_ID) or S("No one")
+  local winner_team = winner_team_ID ~= 0 and winner_team_ID or S("No one")
 
   arena_lib.load_celebration("block_league", arena, winner_team)
 end)

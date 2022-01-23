@@ -250,7 +250,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
   local damage = weapon.damage
   local knockback = weapon.knockback
-  
+
   local p_name = user:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
   local killed_players = 0
@@ -653,7 +653,7 @@ function kill(arena, weapon, player, target)
     end
 
     local p_stats = arena.players[p_name]
-    local team = arena.teams[arena.players[p_name].teamID]
+    local team = arena.teams[p_stats.teamID]
 
     -- aggiungo l'uccisione
     team.kills = team.kills + 1
@@ -676,13 +676,12 @@ function kill(arena, weapon, player, target)
     block_league.HUD_spectate_update(arena, t_name, "alive")
     block_league.hud_log_update(arena, weapon.inventory_image, p_name, t_name)
 
-    -- se è DM e il cap è raggiunto, finisce match
+    -- se è DM e il cap è raggiunto, finisce partita
     if arena.mode == 2 then
       block_league.scoreboard_update_score(arena)
-      local team = arena.teams[arena.players[p_name].teamID]
       if team.kills == arena.score_cap then
         local mod = arena_lib.get_mod_by_player(p_name)
-        arena_lib.load_celebration(mod, arena, {p_name})
+        arena_lib.load_celebration(mod, arena, p_stats.teamID)
       end
     end
   else

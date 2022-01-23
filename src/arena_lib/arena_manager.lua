@@ -66,7 +66,7 @@ end)
 
 
 
-arena_lib.on_celebration("block_league", function(arena, winner_name)
+arena_lib.on_celebration("block_league", function(arena, winners)
 
   arena.weapons_disabled = true
 
@@ -82,14 +82,11 @@ arena_lib.on_celebration("block_league", function(arena, winner_name)
   end
 
   -- se è pareggio, passa una stringa (no one)
-  local is_tie = type(winner_name) == "string" and true or false
+  local is_tie = type(winners) == "string" and true or false
 
   if not is_tie then
-    local winner_team = arena.players[winner_name[1]].teamID
-    local loser_team = winner_team == 1 and 2 or 1
-
     for pl_name, pl_stats in pairs(arena.players) do
-      if pl_stats.teamID == winner_team then
+      if pl_stats.teamID == winners then
         minetest.sound_play("bl_jingle_victory", {to_player = pl_name})
       else
         minetest.sound_play("bl_jingle_defeat", {to_player = pl_name})
@@ -105,7 +102,7 @@ end)
 
 
 
-arena_lib.on_end("block_league", function(arena, players, winner_name, spectators)
+arena_lib.on_end("block_league", function(arena, players, winners, spectators)
 
   for sp_name, _ in pairs(spectators) do
     block_league.HUD_spectate_remove(players, sp_name)

@@ -129,13 +129,15 @@ function ball:on_step(d_time, moveresult)
         minetest.after(1, function()
           if self.object ~= nil and self.is_going_up then
             velocity = self.object:get_velocity()
-            velocity.y = -velocity.y
-            if velocity.y > 0 then
-              self.is_going_up = true
-            else
-              self.is_going_up = false
+            if velocity ~= nil then
+              velocity.y = -velocity.y
+              if velocity.y > 0 then
+                self.is_going_up = true
+              else
+                self.is_going_up = false
+              end
+              self.object:set_velocity(velocity)
             end
-            self.object:set_velocity(velocity)
           end
         end)
         break
@@ -387,7 +389,7 @@ function after_point(w_name, teamID, arena)
 
   -- se i TD della squadra raggiungono il cap, vince
   if arena.teams[teamID].TDs == arena.score_cap then
-    arena_lib.load_celebration("block_league", arena, {w_name})
+    arena_lib.load_celebration("block_league", arena, teamID)
 
   -- sennò inizia un nuovo round
   else
