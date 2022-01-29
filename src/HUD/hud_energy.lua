@@ -1,4 +1,4 @@
-function block_league.energy_create(arena, p_name)
+function block_league.HUD_energy_create(arena, p_name)
 
   Panel:new("bl_energy", {
     player = p_name,
@@ -19,10 +19,10 @@ function block_league.energy_create(arena, p_name)
 end
 
 
-function block_league.energy_update(arena, p_name)
+function block_league.HUD_energy_update(arena, p_name)
 
-  local panel = panel_lib.get_panel(p_name, "bl_energy")
   local energy = arena.players[p_name].energy
+  local panel = panel_lib.get_panel(p_name, "bl_energy")
 
   panel:update(nil,
     {energy_indicator = {
@@ -30,4 +30,13 @@ function block_league.energy_update(arena, p_name)
     }}
   )
 
+  for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
+    local panel = panel_lib.get_panel(sp_name, "bl_energy")
+
+    panel:update(nil,
+      {energy_indicator = {
+        scale = {x = (energy / 100) * 1.5, y = 1.5},
+      }}
+    )
+  end
 end

@@ -57,9 +57,12 @@ end)
 
 minetest.register_on_respawnplayer(function(player)
 
-  if not arena_lib.is_player_in_arena(player:get_player_name(), "block_league") then return end
-
   local p_name = player:get_player_name()
+
+  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena_lib.is_player_spectating(p_name) then
+    return
+  end
+
   local arena = arena_lib.get_arena_by_player(p_name)
 
   -- se resuscita mentre non può ancora rientrare in partita, lo porto nella sala d'attesa
@@ -74,7 +77,7 @@ minetest.register_on_respawnplayer(function(player)
   end
 
   arena.players[p_name].energy = 100
-  block_league.energy_update(arena, p_name)
+  block_league.HUD_energy_update(arena, p_name)
 
   block_league.refill_weapons(arena, p_name)
 

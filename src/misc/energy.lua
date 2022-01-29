@@ -16,7 +16,7 @@ function block_league.energy_refill_loop(arena)
     if health > 0 then
       if player:get_meta():get_int("bl_has_ball") == 0 and arena.players[pl_name].energy < MAX_ENERGY then
         arena.players[pl_name].energy = arena.players[pl_name].energy + 1
-        block_league.energy_update(arena, pl_name)
+        block_league.HUD_energy_update(arena, pl_name)
       end
 
       if player:get_pos().y < arena.min_y then
@@ -41,7 +41,7 @@ function block_league.energy_drain(arena, w_name)
 
   if arena.players[w_name].energy > 0 then
     arena.players[w_name].energy = arena.players[w_name].energy -2
-    block_league.energy_update(arena, w_name)
+    block_league.HUD_energy_update(arena, w_name)
   else
     wielder:set_physics_override({speed = block_league.SPEED_LOW})
     return

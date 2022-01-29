@@ -123,7 +123,7 @@ end)
 
 arena_lib.on_death("block_league", function(arena, p_name, reason)
 
-  -- se muoio suicida, perdo una kill
+  -- se muoio suicida, perdo un'uccisione
   if reason.type == "fall" or reason.player_name == p_name then
 
     local p_stats = arena.players[p_name]
@@ -133,6 +133,16 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
     team.deaths = team.deaths + 1
     block_league.info_panel_update(arena)
   end
+end)
+
+
+
+arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, target, prev_target)
+  if type(target) ~= "string" then return end
+  -- ritardo di 0.1 perché on_join non è ancora stato chiamato, quindi non hanno ancora la HUD
+  minetest.after(0.1, function()
+    block_league.HUD_energy_update(arena, target)
+  end)
 end)
 
 
@@ -191,6 +201,7 @@ end
 function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_broadcast_create(p_name)
   block_league.HUD_critical_create(p_name)
+  block_league.HUD_energy_create(arena, p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.hud_log_create(p_name)
 
@@ -200,7 +211,6 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   end
 
   block_league.info_panel_create(arena, p_name)
-  block_league.energy_create(arena, p_name)
   block_league.bullets_hud_create(p_name)
 end
 
@@ -208,6 +218,7 @@ end
 
 function remove_HUD(p_name, is_spectator)
   block_league.HUD_critical_remove(p_name)
+  panel_lib.get_panel(p_name, "bl_energy"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
@@ -217,7 +228,6 @@ function remove_HUD(p_name, is_spectator)
   arena_lib.HUD_hide("all", p_name)
   panel_lib.get_panel(p_name, "bl_info_panel"):remove()
   panel_lib.get_panel(p_name, "bl_bullets"):remove()
-  panel_lib.get_panel(p_name, "bl_energy"):remove()
   block_league.HUD_remove_inputs(p_name)
 end
 
