@@ -33,7 +33,7 @@ function block_league.show_achievement(mod_key, p_name, achvmt_ID)
   local player = minetest.get_player_by_name(p_name)
   local last_ID = saved_huds[p_name][#saved_huds[p_name]]      -- prendo l'ultimo elemento della lista
   local last_HUD = player:hud_get(last_ID)
-  local img = achievements_lib.get_achievement(mod_key, achvmt_ID).img
+  local img = achvmt_lib.get_achievement(mod_key, achvmt_ID).img
 
   -- se già sta mostrando un achievement, slitto la HUD
   if player:hud_get(last_ID).text ~= "" then
