@@ -8,6 +8,8 @@ local function can_shoot() end
 local function check_immunity() end
 local function update_magazine() end
 local function check_weapon_type_and_attack() end
+local function shoot_hitscan() end
+local function shoot_bullet() end
 local function after_damage() end
 local function kill() end
 
@@ -91,45 +93,6 @@ function block_league.shoot(weapon, player, pointed_thing)
 
   check_weapon_type_and_attack(player, weapon, pointed_thing)
   return true
-end
-
-
-
-function block_league.shoot_hitscan(user, weapon, pointed_thing)
-  local dir = user:get_look_dir()
-  local pos = user:get_pos()
-  local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-  local pointed_players = block_league.get_pointed_players(pos_head, dir, weapon.weapon_range, user, weapon.bullet_trail, weapon.pierce)
-
-  if pointed_players then
-    block_league.apply_damage(user, pointed_players, weapon, weapon.decrease_damage_with_distance)
-  end
-end
-
-
-
-function block_league.shoot_bullet(user, bullet, pointed_thing)
-
-  local pos = user:get_pos()
-  local pos_head = {x = pos.x, y = pos.y + user:get_properties().eye_height, z = pos.z}
-  local bullet_name = bullet.name .. '_entity'
-
-  local bullet = minetest.add_entity(pos_head, bullet_name, user:get_player_name())
-
-  local speed = bullet.speed
-  local dir = user:get_look_dir()
-
-  bullet:set_velocity({
-    x=(dir.x * speed),
-    y=(dir.y * speed),
-    z=(dir.z * speed),
-  })
-
-  local yaw = user:get_look_horizontal()
-  local pitch = user:get_look_vertical()
-  local rotation = ({x = -pitch, y = yaw, z = 0})
-
-  bullet:set_rotation(rotation)
 end
 
 
@@ -595,9 +558,9 @@ function check_weapon_type_and_attack(player, weapon, pointed_thing)
   if weapon.weapon_type ~= 3 then
 
       if weapon.weapon_type == 1 then
-        block_league.shoot_hitscan(player, weapon, pointed_thing)
+        shoot_hitscan(player, weapon, pointed_thing)
       elseif weapon.weapon_type == 2 then
-        block_league.shoot_bullet(player, weapon.bullet, pointed_thing)
+        shoot_bullet(player, weapon.bullet, pointed_thing)
       end
 
   else
@@ -605,6 +568,45 @@ function check_weapon_type_and_attack(player, weapon, pointed_thing)
       local target = {{player = pointed_thing.ref, headshot = false}}
       block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
   end
+end
+
+
+
+function shoot_hitscan(user, weapon, pointed_thing)
+  local dir = user:get_look_dir()
+  local pos = user:get_pos()
+  local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
+  local pointed_players = block_league.get_pointed_players(pos_head, dir, weapon.weapon_range, user, weapon.bullet_trail, weapon.pierce)
+
+  if pointed_players then
+    block_league.apply_damage(user, pointed_players, weapon, weapon.decrease_damage_with_distance)
+  end
+end
+
+
+
+function shoot_bullet(user, bullet, pointed_thing)
+
+  local pos = user:get_pos()
+  local pos_head = {x = pos.x, y = pos.y + user:get_properties().eye_height, z = pos.z}
+  local bullet_name = bullet.name .. '_entity'
+
+  local bullet = minetest.add_entity(pos_head, bullet_name, user:get_player_name())
+
+  local speed = bullet.speed
+  local dir = user:get_look_dir()
+
+  bullet:set_velocity({
+    x=(dir.x * speed),
+    y=(dir.y * speed),
+    z=(dir.z * speed),
+  })
+
+  local yaw = user:get_look_horizontal()
+  local pitch = user:get_look_vertical()
+  local rotation = ({x = -pitch, y = yaw, z = 0})
+
+  bullet:set_rotation(rotation)
 end
 
 
