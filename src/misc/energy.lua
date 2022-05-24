@@ -11,19 +11,12 @@ function block_league.energy_refill_loop(arena)
 
     local player = minetest.get_player_by_name(pl_name)
     local health = player:get_hp()
+    local energy = arena.players[pl_name].energy
 
-    -- se è vivo
-    if health > 0 then
-      if player:get_meta():get_int("bl_has_ball") == 0 and arena.players[pl_name].energy < MAX_ENERGY then
-        arena.players[pl_name].energy = arena.players[pl_name].energy + 1
-        block_league.HUD_energy_update(arena, pl_name)
-      end
-
-      if player:get_pos().y < arena.min_y then
-        player:set_hp(0)
-        player:get_meta():set_int("bl_has_ball", 0)
-        block_league.hud_log_update(arena, "bl_log_suicide.png", pl_name, "")
-      end
+    -- se è vivo, senza palla e con energia non al massimo
+    if health > 0 and player:get_meta():get_int("bl_has_ball") == 0 and energy < MAX_ENERGY then
+      arena.players[pl_name].energy = energy + 1
+      block_league.HUD_energy_update(arena, pl_name)
     end
   end
 

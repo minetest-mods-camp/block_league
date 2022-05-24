@@ -116,6 +116,7 @@ dofile(srcpath .. "/modes/game_main.lua")
 dofile(srcpath .. "/modes/TD/ball.lua")
 -- misc
 dofile(srcpath .. "/misc/energy.lua")
+dofile(srcpath .. "/misc/fall.lua")
 dofile(srcpath .. "/misc/immunity.lua")
 
 block_league.init_storage()

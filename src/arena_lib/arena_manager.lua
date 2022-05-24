@@ -34,6 +34,7 @@ end)
 arena_lib.on_start("block_league", function(arena)
   block_league.HUD_remove_inputs(arena)
   block_league.energy_refill_loop(arena)
+  block_league.fall_check_loop(arena)
 end)
 
 
@@ -144,7 +145,6 @@ arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, ta
     block_league.HUD_energy_update(arena, target)
   end)
 end)
-
 
 
 
