@@ -13,5 +13,5 @@ function block_league.fall_check_loop(arena)
     end
   end
 
-  minetest.after(0.1, function() block_league.fall_check(arena) end)
+  minetest.after(0.1, function() block_league.fall_check_loop(arena) end)
 end
