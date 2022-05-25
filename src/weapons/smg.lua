@@ -3,7 +3,7 @@ local S = minetest.get_translator("block_league")
 block_league.register_weapon("block_league:smg", {
 
   description = S("Submachine Gun"),
-  wield_image = "bl_smg.png",
+  wield_image = "bl_smg.png^[transformFX",
   wield_scale = {x=1, y=1, z=1},
   inventory_image = "bl_smg.png",
 
