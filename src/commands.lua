@@ -59,11 +59,6 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         arena_lib.print_arena_info(sender, mod, arena_name)
     end)
 
-    -- info su stats partita
-    cmd:sub("score :arena", function(sender, arena_name)
-        arena_lib.print_arena_stats(sender, mod, arena_name)
-    end)
-
 
     -- modifiche arena
     --editor
