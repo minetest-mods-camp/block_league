@@ -62,7 +62,7 @@ function ball:on_activate(staticdata, d_time)
       return
     end
 
-    arena_lib.add_spectable_target("block_league", arena.name, "entity", "Ball", self)
+    arena_lib.add_spectate_entity("block_league", arena, "Ball", self)
 
     self.w_name = nil
     self.timer_bool = false
