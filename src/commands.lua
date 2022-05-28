@@ -41,11 +41,6 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         arena_lib.set_sign(sender, nil, nil, mod, arena)
     end)
 
-    -- teletrasporto
-    cmd:sub("tp :arena", function(sender, arena)
-      arena_lib.teleport_in_arena(sender, mod, arena)
-    end)
-
     -- abilitazione e disabilitazione arene
     cmd:sub("enable :arena", function(sender, arena)
         arena_lib.enable_arena(sender, mod, arena)
