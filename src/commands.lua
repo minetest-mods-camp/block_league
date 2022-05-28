@@ -5,23 +5,10 @@ local mod = "block_league"
 ChatCmdBuilder.new("bladmin", function(cmd)
 
     -- creazione arene
-    cmd:sub("create :arena :tipologia:int", function(sender, arena_name, tipologia)
+    cmd:sub("create :arena :mode:int", function(sender, arena_name, mode)
         arena_lib.create_arena(sender, mod, arena_name)
         local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , tipologia)
-    end)
-
-    cmd:sub("create :arena :minplayers:int :maxplayers:int :tipologia:int", function(sender, arena_name, min_players, max_players, tipologia)
-        arena_lib.create_arena(sender, mod, arena_name, min_players, max_players)
-        local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , tipologia)
-    end)
-
-    cmd:sub("create :arena :minplayers:int :maxplayers:int :scorecap:int :tipologia:int", function(sender, arena_name, min_players, max_players, score_cap, tipologia)
-        arena_lib.create_arena(sender, mod, arena_name, min_players, max_players)
-        local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , tipologia)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "score_cap" , score_cap)
+        arena_lib.change_arena_property(sender, "block_league", arena_name, "mode" , mode)
     end)
 
     -- rimozione arene
@@ -34,21 +21,6 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         arena_lib.rename_arena(sender, mod, arena_name, new_name)
     end)
 
-    --
-   cmd:sub("properties :arena :property :newvalue:text", function(sender, arena_name, property, new_value)
-       arena_lib.change_arena_property(sender, mod, arena_name, property, new_value)
-       end)
-
-    -- cambio giocatori minimi/massimi
-    cmd:sub("setplayers :arena :minplayers:int :maxplayers:int", function(sender, arena_name, min_players, max_players)
-        arena_lib.change_players_amount(sender, mod, arena_name, min_players, max_players)
-    end)
-
-    -- abilitazione/disabilitazione team per arena (enable 0 o 1)
-    cmd:sub("toggleteams :arena :enable:int", function(sender, arena_name, enable)
-        arena_lib.toggle_teams_per_arena(sender, mod, arena_name, enable)
-    end)
-
     -- lista arene
     cmd:sub("list", function(sender)
         arena_lib.print_arenas(sender, mod)
@@ -59,31 +31,14 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         arena_lib.print_arena_info(sender, mod, arena_name)
     end)
 
-
-    -- modifiche arena
     --editor
     cmd:sub("edit :arena", function(sender, arena)
         arena_lib.enter_editor(sender, mod, arena)
     end)
 
-    --inline
     -- cartello arena
     cmd:sub("setsign :arena", function(sender, arena)
         arena_lib.set_sign(sender, nil, nil, mod, arena)
-    end)
-
-    -- spawner (ie. deleteall)
-    cmd:sub("setspawn :arena :param:word :ID:int", function(sender, arena, param, ID)
-        arena_lib.set_spawner(sender, mod, arena, nil, param, ID)
-    end)
-
-    -- spawner (ie. deleteall)
-    cmd:sub("setspawn :arena :team:word :param:word :ID:int", function(sender, arena, team_name, param, ID)
-        arena_lib.set_spawner(sender, mod, arena, team_name, param, ID)
-    end)
-
-    cmd:sub("setspawn :arena", function(sender, arena)
-        arena_lib.set_spawner(sender, mod, arena)
     end)
 
     -- teletrasporto
@@ -179,17 +134,6 @@ ChatCmdBuilder.new("bladmin", function(cmd)
         minetest.chat_send_player(sender, "Invalid parameter")
         return
       end
-    end)
-
-    cmd:sub("addminy :arena", function(sender, arena_name)
-        local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        local pos = vector.round(minetest.get_player_by_name(sender):get_pos())
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "min_y" , pos.y)
-    end)
-
-    cmd:sub("removeminy :arena", function(sender, arena_name)
-        local id, arena = arena_lib.get_arena_by_name("block_league", arena_name)
-        arena_lib.change_arena_property(sender, "block_league", arena_name, "min_y" , 0)
     end)
 
     cmd:sub("testkit", function(sender)
