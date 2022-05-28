@@ -15,7 +15,7 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 Feel free to:
 * open an [issue](https://gitlab.com/zughy-friends-minetest/block_league/-/issues)
 * submit a merge request. In this case, PLEASE, do follow milestones and my [coding guidelines](https://cryptpad.fr/pad/#/2/pad/view/-l75iHl3x54py20u2Y5OSAX4iruQBdeQXcO7PGTtGew/embed/). I won't merge features for milestones that are different from the upcoming one (if it's declared), nor messy code
-* contact me on the [Minetest Forum](https://forum.minetest.net/memberlist.php?mode=viewprofile&u=26472)
+* contact me on Matrix, on my server [dev room](https://matrix.to/#/!viLipqDNOHxQJqQRGI:matrix.org)
 
 ### Resources
 2D graphic assets by me  
