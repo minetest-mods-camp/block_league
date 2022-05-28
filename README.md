@@ -11,6 +11,23 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 * [controls](https://github.com/Arcelmi/minetest-controls) by Arcelmi
 * [panel_lib](https://gitlab.com/zughy-friends-minetest/panel_lib) by me and friends
 
+### Set up an arena
+1. run `/bladmin create <arena_name> <mode>`, where `mode` is `1` for Touchdown and `2` for Deathmatch
+2. enter the editor via `/bladmin edit <arena_name>`
+3. have fun customising it
+
+If it's TD, you must also
+1. set the two goals via `/bladmin goal [set|remove] <arena_name> <team_name>`
+2. set the two waiting rooms via `/bladmin wroom [set|remove] <arena_name> <team_name>`
+3. set the ball spawn point via `/bladmin [set|remove] <arena_name>`  
+
+(one day™ these 3 last steps will be included in the editor... maybe)
+
+### Utility commands
+* `/bladmin list`: list all arenas
+* `/bladmin info <arena_name>`: list all the info about the specific arena
+* `/bladmin testkit`: gives you the bouncer and the in-game physics, to easily test your maps. The last object in the hotbar restores your inventory and physics
+
 ### Want to help?
 Feel free to:
 * open an [issue](https://gitlab.com/zughy-friends-minetest/block_league/-/issues)
