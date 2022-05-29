@@ -204,6 +204,7 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_broadcast_create(p_name)
   block_league.HUD_critical_create(p_name)
   block_league.HUD_energy_create(arena, p_name)
+  block_league.HUD_weapons_create(p_name)
   block_league.scoreboard_create(arena, p_name)
   block_league.hud_log_create(p_name)
 
@@ -213,7 +214,6 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   end
 
   block_league.info_panel_create(arena, p_name)
-  block_league.bullets_hud_create(p_name)
 end
 
 
@@ -221,6 +221,7 @@ end
 function remove_HUD(p_name, is_spectator)
   block_league.HUD_critical_remove(p_name)
   panel_lib.get_panel(p_name, "bl_energy"):remove()
+  panel_lib.get_panel(p_name, "bl_weapons"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
@@ -229,7 +230,6 @@ function remove_HUD(p_name, is_spectator)
 
   arena_lib.HUD_hide("all", p_name)
   panel_lib.get_panel(p_name, "bl_info_panel"):remove()
-  panel_lib.get_panel(p_name, "bl_bullets"):remove()
   block_league.HUD_remove_inputs(p_name)
 end
 

@@ -449,7 +449,7 @@ function weapon_reload(player, weapon)
     player:set_physics_override({ speed = block_league.SPEED_LOW })
   end
 
-  block_league.weapons_hud_update(arena, p_name, w_name, true)
+  block_league.HUD_weapons_update(arena, p_name, w_name, true)
 
   minetest.after(weapon.reload_time, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
@@ -463,7 +463,7 @@ function weapon_reload(player, weapon)
     end
 
     arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
-    block_league.weapons_hud_update(arena, p_name, w_name)
+    block_league.HUD_weapons_update(arena, p_name, w_name)
   end)
 
 end
@@ -495,7 +495,7 @@ function can_shoot(player, weapon)
 
   -- per le armi bianche, aggiorno l'HUD qui che segnala che son state usate
   if not weapon.magazine then
-    block_league.weapons_hud_update(arena, p_name, w_name, true)
+    block_league.HUD_weapons_update(arena, p_name, w_name, true)
   end
 
   minetest.after(weapon.fire_delay, function()
@@ -503,7 +503,7 @@ function can_shoot(player, weapon)
     if weapon.magazine and p_meta:get_int("bl_reloading") == 0 then
       p_meta:set_int("bl_weap_delay", 0)
     elseif not weapon.magazine then
-      block_league.weapons_hud_update(arena, p_name, w_name)
+      block_league.HUD_weapons_update(arena, p_name, w_name)
       p_meta:set_int("bl_weap_delay", 0)
     end
   end)
@@ -513,7 +513,7 @@ function can_shoot(player, weapon)
   if weapon.consume_bullets then
     if inv:contains_item("main", weapon.bullet) then
       inv:remove_item("main", weapon.bullet)
-      block_league.weapons_hud_update(arena, p_name, w_name)
+      block_league.HUD_weapons_update(arena, p_name, w_name)
     else
       return false
     end
@@ -547,7 +547,7 @@ function update_magazine(player, weapon)
   if arena.players[p_name].weapons_magazine[w_name] == 0 and p_meta:get_int("bl_reloading") == 0 then
     weapon_reload(player, weapon)
   else
-    block_league.weapons_hud_update(arena, p_name, w_name)
+    block_league.HUD_weapons_update(arena, p_name, w_name)
   end
 
 end

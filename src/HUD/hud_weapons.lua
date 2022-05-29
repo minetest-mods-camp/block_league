@@ -4,13 +4,21 @@ local function get_bullet_count() end
 
 
 
-function block_league.bullets_hud_create(p_name)
+function block_league.HUD_weapons_create(p_name)
 
-  local inv = minetest.get_player_by_name(p_name):get_inventory()
+  local inv = ""
   local sub_img_elems = {}
   local sub_txt_elems = {}
   local offset_x = -90
-  local offset_y = -125
+  local offset_y = ""
+
+  if arena_lib.is_player_spectating(p_name) then
+    inv = minetest.get_player_by_name(arena_lib.get_player_spectated(p_name)):get_inventory()
+    offset_y = -160
+  else
+    inv = minetest.get_player_by_name(p_name):get_inventory()
+    offset_y = -125
+  end
 
   for i = 1, 3 do
 
@@ -46,7 +54,7 @@ function block_league.bullets_hud_create(p_name)
   end
 
   -- creo pannello
-  Panel:new("bl_bullets", {
+  Panel:new("bl_weapons", {
     player = p_name,
     bg = "",
     position = { x = 0.5, y = 1 },
@@ -77,12 +85,12 @@ end
 
 
 
-function block_league.weapons_hud_update(arena, p_name, w_name, is_reloading)
+function block_league.HUD_weapons_update(arena, p_name, w_name, is_reloading)
 
   local weapon = minetest.registered_nodes[w_name]
   local current_magazine = not weapon.magazine and "" or arena.players[p_name].weapons_magazine[w_name]
 
-  local panel = panel_lib.get_panel(p_name, "bl_bullets")
+  local panel = panel_lib.get_panel(p_name, "bl_weapons")
   local bg_pic = ""
 
   if is_reloading then
@@ -94,13 +102,16 @@ function block_league.weapons_hud_update(arena, p_name, w_name, is_reloading)
   end
 
   panel:update(nil,
-    {
-    [w_name .. "_magazine_txt"] = {
-      text = current_magazine
-    }
-  }, {
-    [w_name .. "_bg"] = {
-      text = bg_pic
-    }
-  })
+    {[w_name .. "_magazine_txt"] = { text = current_magazine }},
+    {[w_name .. "_bg"] = { text = bg_pic }}
+  )
+
+  for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
+    local panel = panel_lib.get_panel(sp_name, "bl_weapons")
+
+    panel:update(nil,
+      {[w_name .. "_magazine_txt"] = { text = current_magazine }},
+      {[w_name .. "_bg"] = { text = bg_pic }}
+    )
+  end
 end
