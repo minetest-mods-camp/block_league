@@ -1,7 +1,7 @@
 local S = minetest.get_translator("block_league")
 local modpath = minetest.get_modpath("block_league")
 local srcpath = modpath .. "/src"
-local version = "0.5.0-dev"
+local version = "0.6.0"
 
 block_league = {}
 dofile(modpath .. "/GLOBALS.lua")
