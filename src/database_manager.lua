@@ -1,29 +1,29 @@
-block_league.players = {}      -- KEY: p_name, INDEX: {lv (int), xp (int), kills (int), time_playing (int)}
+local p_data = {}      -- KEY: p_name, INDEX: {equip = {weapons = {...}}}
 
 local storage = minetest.get_mod_storage()
 
 
 
-function block_league.init_storage()
-
-  -- carico tutti i giocatori
-  for pl_name, pl_stats in pairs(storage:to_table().fields) do
-    block_league.players[pl_name] = minetest.deserialize(pl_stats)
-  end
-
+-- TODO: una funzione legata a un comando per aggiornare tutto il database quando viene in qualche modo modificato,
+-- sennò bisogna stare a ricancellarlo ogni volta, e magari anche no
+function block_league.create_player_data(p_name)
+  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
+  block_league.set_player_weapons(p_name, default_weapons)
+  p_data[p_name] = {equip = { weapons = default_weapons}}
+  storage:set_string(p_name, minetest.serialize(p_data[p_name]))
 end
 
 
 
-function block_league.add_player_to_storage(p_name)
-  block_league.players[p_name] = {LV = 0, XP = 0, KILLS = 0, TIME_PLAYING = 0}
-  storage:set_string(p_name, minetest.serialize(block_league.players[p_name]))
+function block_league.load_player_data(p_name)
+  p_data[p_name] = minetest.deserialize(storage:get_string(p_name))
+  block_league.set_player_weapons(p_name, p_data[p_name].equip.weapons)
 end
 
 
 
 function block_league.update_storage(p_name)
-  storage:set_string( p_name, minetest.serialize(block_league.players[p_name]))
+  storage:set_string( p_name, minetest.serialize(p_data[p_name]))
 end
 
 

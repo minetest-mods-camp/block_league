@@ -24,7 +24,7 @@ end
 
 
 function block_league.print_player_stats(sender, p_name)
-  local pl_stats = block_league.players[p_name]
+  local pl_stats --= block_league.players[p_name]
 
   if not pl_stats then
     minetest.chat_send_player(sender, minetest.colorize("#e6482e", S("[!] This player doesn't exist!")))

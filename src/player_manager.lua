@@ -9,18 +9,21 @@ minetest.register_on_joinplayer(function(player)
 
   local p_name = player:get_player_name()
 
-  -- se non è nello storage della mod, lo aggiungo
+  block_league.init_equip(p_name)
+
+  -- se non è nello spazio d'archiviazione della mod, lo aggiungo
   if not block_league.is_player_in_storage(p_name) then
-    block_league.add_player_to_storage(p_name)
+    block_league.create_player_data(p_name)
+  else
+    block_league.load_player_data(p_name)
   end
 
-  -- genero l'HUD per gli achievement
+  -- genero l'HUD per i prestigi
   block_league.HUD_achievements_create(p_name)
 
   -- non è possibile modificare l'inventario da offline. Se sono crashati o hanno chiuso il gioco in partita,
   -- questo è l'unico modo per togliere loro l'arma
   remove_weapons(player:get_inventory())
-
 end)
 
 

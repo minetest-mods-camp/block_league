@@ -73,11 +73,9 @@ arena_lib.register_minigame("block_league", {
 
 -- load other scripts
 
-dofile(srcpath .. "/achievements.lua")
 dofile(srcpath .. "/chatcmdbuilder.lua")
 dofile(srcpath .. "/commands.lua")
 dofile(srcpath .. "/database_manager.lua")
-dofile(srcpath .. "/exp_manager.lua")
 dofile(srcpath .. "/input_manager.lua")
 dofile(srcpath .. "/player_manager.lua")
 dofile(srcpath .. "/privs.lua")
@@ -100,6 +98,17 @@ dofile(srcpath .. "/HUD/hud_log.lua")
 dofile(srcpath .. "/HUD/hud_scoreboard.lua")
 dofile(srcpath .. "/HUD/hud_spectate.lua")
 dofile(srcpath .. "/HUD/hud_weapons.lua")
+-- misc
+dofile(srcpath .. "/misc/energy.lua")
+dofile(srcpath .. "/misc/fall.lua")
+dofile(srcpath .. "/misc/immunity.lua")
+-- modes
+dofile(srcpath .. "/modes/game_main.lua")
+dofile(srcpath .. "/modes/TD/ball.lua")
+-- player
+dofile(srcpath .. "/player/achievements.lua")
+dofile(srcpath .. "/player/equip.lua")
+dofile(srcpath .. "/player/exp.lua")
 -- abstract weapons
 dofile(srcpath .. "/weapons/bullets.lua")
 dofile(srcpath .. "/weapons/weapons.lua")
@@ -111,14 +120,5 @@ dofile(srcpath .. "/weapons/pixelgun.lua")
 dofile(srcpath .. "/weapons/rocket_launcher.lua")
 dofile(srcpath .. "/weapons/sword.lua")
 dofile(srcpath .. "/weapons/smg.lua")
--- modes
-dofile(srcpath .. "/modes/game_main.lua")
-dofile(srcpath .. "/modes/TD/ball.lua")
--- misc
-dofile(srcpath .. "/misc/energy.lua")
-dofile(srcpath .. "/misc/fall.lua")
-dofile(srcpath .. "/misc/immunity.lua")
-
-block_league.init_storage()
 
 minetest.log("action", "[BLOCK_LEAGUE] Mod initialised, running version " .. version)

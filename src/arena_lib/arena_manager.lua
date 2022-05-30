@@ -247,12 +247,11 @@ end
 
 function equip_weapons(arena, p_name)
 
-  --TODO avere una tabella  per giocatore che tenga traccia delle armi equipaggiate
-  local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
+  local weapons = block_league.get_player_weapons(p_name)
   local bouncer = arena.mode == 1 and "block_league:bouncer" or "block_league:bouncer_dm"
   local inv = minetest.get_player_by_name(p_name):get_inventory()
 
-  for i, weapon_name in pairs(default_weapons) do
+  for i, weapon_name in pairs(weapons) do
     inv:add_item("main", ItemStack(weapon_name))
   end
   inv:add_item("main", ItemStack(bouncer))
