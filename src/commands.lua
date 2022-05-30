@@ -135,22 +135,6 @@ ChatCmdBuilder.new("bladmin", function(cmd)
       block_league.enter_test_mode(sender)
     end)
 
-    -- gestione esperienza
-    cmd:sub("exp :player :option :amount:number", function(sender, p_name, option, amount)
-      if option == "set" then
-        block_league.set_xp(p_name, amount)
-      end
-    end)
-
-    cmd:sub("exp :option", function(sender, option)       -- BETA ONLY, DANGER ZONE
-      if option == "resetall" then
-        for pl_name, _ in pairs(block_league.players) do
-          block_league.set_xp(pl_name, 0)
-        end
-        minetest.chat_send_player(sender, "All players' xp has been reset")
-      end
-    end)
-
 
 end, {
   description = S("mod management"),
@@ -167,10 +151,6 @@ ChatCmdBuilder.new("bleague", function(cmd)
 
   cmd:sub("achievements :playername", function(sender, p_name)
     block_league.list_achievements(sender, p_name)
-  end)
-
-  cmd:sub("info :playername", function(sender, p_name)
-    block_league.print_player_stats(sender, p_name)
   end)
 
 end,{})

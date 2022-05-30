@@ -77,8 +77,6 @@ arena_lib.on_celebration("block_league", function(arena, winners)
     block_league.deactivate_zoom(player)
     player:get_meta():set_int("bl_immunity", 1)
 
-    --block_league.calculate_and_add_xp(pl_name, pl_stats.entering_time, pl_stats.points)
-
     panel_lib.get_panel(pl_name, "bl_info_panel"):show()
   end
 

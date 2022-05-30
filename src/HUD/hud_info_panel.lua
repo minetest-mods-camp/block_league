@@ -69,9 +69,9 @@ function block_league.info_panel_update(arena)
 
   local sorted_teams = {}
 
-  -- ordino i team
+  -- ordino le squadre
   for id, team in pairs(arena.teams) do
-    --salvo anche l'id del team così da non dover iterare di nuovo
+    --salvo anche l'id della squadra così da non dover iterare di nuovo
     table.insert(sorted_teams, {name = team.name, id = id})
   end
 
@@ -86,7 +86,7 @@ function block_league.info_panel_update(arena)
     third_clmn_value = "deaths"
   end
 
-  -- determino come stampare i team seguiti dai giocatori
+  -- determino come stampare le squadre seguite dai giocatori
   for _, team in pairs(sorted_teams) do
     plyrs_clmn = plyrs_clmn .. S("Team") .. " " .. team.name .. "\n\n"
     pts_clmn = pts_clmn .. S("Points") .. "\n\n"

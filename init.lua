@@ -85,7 +85,6 @@ dofile(srcpath .. "/utils.lua")
 dofile(srcpath .. "/arena_lib/arena_manager.lua")
 dofile(srcpath .. "/arena_lib/arena_timer.lua")
 -- debug
-dofile(srcpath .. "/debug/debug.lua")
 dofile(srcpath .. "/debug/testkit.lua")
 -- HUD
 dofile(srcpath .. "/HUD/hud_achievements.lua")

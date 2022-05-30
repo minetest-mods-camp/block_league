@@ -7,20 +7,8 @@
 orange=arancione
 blue=blu
 
-# info_panel.lua
-Team=Squadra
-
-# achievements.lua
-two in one=due in uno
-three in one=tre in uno
-[!] This player doesn't exist!=[!] Questo giocatore non esiste!
-@1 ACHIEVEMENTS=PRESTIGI DI @1
-
 # commands.lua
 mod management=gestione della mod
-
-# exp_manager.lua
-pass points=punti pass
 
 # player_manager.lua
 Back in the game in @1=Di nuovo in partita tra @1
@@ -47,6 +35,7 @@ CRITICAL!=CRITICO!
 TDs=TD
 Deaths=Morti
 Points=Punti
+Team=Squadra
 
 # modes/TD/ball.lua
 Ball reset=Palla resettata
@@ -57,6 +46,12 @@ Enemy team lost the ball!=La squadra avversaria ha perso la palla!
 Your team got the ball!=La tua squadra ha preso la palla!
 You got the ball!=Hai preso la palla!
 Enemy team got the ball!=La squadra avversaria ha preso la palla!
+
+# player/achievements.lua
+two in one=due in uno
+three in one=tre in uno
+[!] This player doesn't exist!=[!] Questo giocatore non esiste!
+@1 ACHIEVEMENTS=PRESTIGI DI @1
 
 # weapons/pixelgun.lua
 Pixelgun=Pixelgun
