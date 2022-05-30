@@ -136,13 +136,14 @@ end)
 
 
 
-arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, target, prev_target)
-  if type(target) ~= "string" then return end
+arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_type, t_name, prev_type, prev_spectated)
+  if t_type ~= "player" then return end
   -- ritardo di 0.1 perché on_join non è ancora stato chiamato, quindi non hanno ancora la HUD
   minetest.after(0.1, function()
-    if minetest.is_player(target) and target:get_hp() <= 0 then
-      block_league.HUD_energy_update(arena, target)
+    for _, weap_name in pairs(block_league.get_player_weapons(t_name)) do
+      block_league.HUD_weapons_update(arena, t_name, weap_name)
     end
+    block_league.HUD_energy_update(arena, t_name)
   end)
 end)
 
