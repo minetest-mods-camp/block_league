@@ -69,22 +69,6 @@ end
 
 
 
-function get_bullet_count(definition, inv)
-  if not definition.bullet then return end
-
-  for i=0,inv:get_size("main"),1 do
-
-    local stack = inv:get_stack("main", i)
-    local item_name = stack:get_name()
-
-    if item_name == definition.bullet then
-      return stack:get_count()
-    end
-  end
-end
-
-
-
 function block_league.HUD_weapons_update(arena, p_name, w_name, is_reloading)
 
   local weapon = minetest.registered_nodes[w_name]
@@ -113,5 +97,27 @@ function block_league.HUD_weapons_update(arena, p_name, w_name, is_reloading)
       {[w_name .. "_magazine_txt"] = { text = current_magazine }},
       {[w_name .. "_bg"] = { text = bg_pic }}
     )
+  end
+end
+
+
+
+
+
+----------------------------------------------
+---------------FUNZIONI LOCALI----------------
+----------------------------------------------
+
+function get_bullet_count(definition, inv)
+  if not definition.bullet then return end
+
+  for i=0,inv:get_size("main"),1 do
+
+    local stack = inv:get_stack("main", i)
+    local item_name = stack:get_name()
+
+    if item_name == definition.bullet then
+      return stack:get_count()
+    end
   end
 end
