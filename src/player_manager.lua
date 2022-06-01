@@ -44,7 +44,6 @@ minetest.register_on_dieplayer(function(player)
         ball:reset()
       else
         ball:detach()
-        ball:oscillate()
       end
       break
     end
