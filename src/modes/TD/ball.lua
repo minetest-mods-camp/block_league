@@ -12,18 +12,13 @@ local ball = {
   initial_properties = {
     physical = true,
     collide_with_objects = false,
-    visual = "cube",
-    visual_size = {x = 1.0, y = 1.0, z = 1.0},
-    collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+    visual = "mesh",
+    mesh = "bl_ball.b3d",
+    visual_size = {x = 5.0, y = 5.0, z = 5.0},
+    collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.8, 0.5},
+    use_texture_alpha = true,
 
-    textures = {
-      "bl_bullet_rocket.png",
-      "bl_bullet_rocket.png",
-      "bl_bullet_rocket.png",
-      "bl_bullet_rocket.png",
-      "bl_bullet_rocket.png",
-      "bl_bullet_rocket.png",
-    },
+    textures = {"bl_ball_unclaimed.png"},
     timer_limit = 10,
   },
 
@@ -64,18 +59,20 @@ function ball:on_activate(staticdata, d_time)
 
     arena_lib.add_spectate_entity("block_league", arena, "Ball", self)
 
+    local ball_obj = self.object
+
     self.w_name = nil
     self.timer_bool = false
     self.team_id = nil
     self.timer = 0
     self.arena = arena
-    self.object:set_hp(65535)
 
-    cast_entity_ray(self.object)
+    ball_obj:set_hp(65535)
+    ball_obj:set_animation({x=0,y=40}, 20, 0, true)
 
-    self:oscillate()
+    cast_entity_ray(ball_obj)
 
-  else --se gli staticdata sono nil
+  else -- se gli staticdata sono nil
     self:_destroy()
     return
   end
@@ -157,7 +154,6 @@ function ball:on_step(d_time, moveresult)
     -- se si è disconnesso
     if not wielder then
       self:detach()
-      self:oscillate()
       return
     end
 
@@ -187,10 +183,17 @@ function ball:attach(player)
   block_league.info_panel_update(arena)
   block_league.HUD_spectate_update(arena, p_name, "ball")
 
-  self.object:set_attach(player, "Body", {x=0, y=18, z=0}, {x=0, y=0, z=0})
+  local ball_obj = self.object
+  local team_texture = self.team_id == 1 and "bl_ball_orange.png" or "bl_ball_blue.png"
+
+  ball_obj:set_attach(player, "Body", {x=0, y=18, z=0}, {x=0, y=0, z=0})
 
   self.timer_bool = false
   self.timer = 0
+
+  ball_obj:set_properties({textures={team_texture}})
+  ball_obj:set_animation({x=120,y=160}, 20, 0, true)   -- smette di oscillare quando presa
+
 end
 
 
@@ -208,11 +211,16 @@ function ball:detach()
     block_league.HUD_spectate_update(arena, p_name, "ball")
   end
 
-  self.object:set_detach()
+  local ball_obj = self.object
+
+  ball_obj:set_detach()
 
   self.w_name = nil
   self.timer_bool = true
   self.timer = 0
+
+  ball_obj:set_properties({textures={"bl_ball_unclaimed.png"}})
+  ball_obj:set_animation({x=0,y=40}, 20, 0, true)
 
 end
 
@@ -236,28 +244,12 @@ function ball:reset()
   self.team_id = nil
   self.timer_bool = false
   self.timer = 0
-  self.object:set_pos(arena.ball_spawn)
 
-  self:oscillate()
+  local ball_obj = self.object
 
-end
+  ball_obj:set_pos(arena.ball_spawn)
+  ball_obj:set_properties({textures={"bl_ball_unclaimed.png"}})
 
-
-function ball:oscillate()
-
-  local velocity = {x = 0, y = 1, z = 0}
-
-  self.object:set_velocity(velocity)
-  self.is_going_up = true
-
-  minetest.after(1, function()
-    if not self.object or not self.is_going_up then return end
-    velocity = self.object:get_velocity()
-    if not velocity then return end
-    velocity.y = -velocity.y
-    self.is_going_up = false
-    self.object:set_velocity(velocity)
-  end)
 end
 
 
@@ -308,8 +300,8 @@ function cast_entity_ray(ent)
     attached = ent, -- If defined, particle positions, velocities and accelerations are relative to this object's position and yaw
     amount = 10,
     time = 0,
-    minpos = {x=0, y=1, z=0},
-    maxpos = {x=0, y=1, z=0},
+    minpos = {x=0, y=3, z=0},
+    maxpos = {x=0, y=3, z=0},
     minvel = vector.multiply({x= 0, y = 1, z = 0}, 30),
     maxvel = vector.multiply({x= 0, y = 1, z = 0}, 30),
     minsize = 20,

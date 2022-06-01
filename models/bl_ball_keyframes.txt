@@ -1,0 +1,3 @@
+oscillate_and_spin = {x=0,y=40}
+oscillate_no_spin = {x=60,y=100}
+spin_no_oscillate = {x=120,y=160}
