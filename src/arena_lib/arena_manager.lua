@@ -5,6 +5,7 @@ local function create_and_show_HUD() end
 local function remove_HUD() end
 local function remove_spectate_HUD() end
 local function equip_weapons() end
+local function wait_for_respawn() end
 
 
 
@@ -122,9 +123,26 @@ end)
 
 arena_lib.on_death("block_league", function(arena, p_name, reason)
 
-  -- se muoio suicida, perdo un'uccisione
-  if reason.type == "fall" or reason.player_name == p_name then
+  local player = minetest.get_player_by_name(p_name)
 
+  -- TD: se il giocatore è morto con la palla, questa si sgancia e torna a oscillare
+  if arena.mode == 1 then
+    for _, child in pairs (player:get_children()) do
+      if child:get_luaentity() and child:get_luaentity().timer then
+        local arena = arena_lib.get_arena_by_player(p_name)
+        local ball = child:get_luaentity()
+
+        if player:get_pos().y < arena.min_y then
+          ball:reset()
+        else
+          ball:detach()
+        end
+        break
+      end
+    end
+
+  -- DM: se muoio suicida, perdo un'uccisione
+  elseif arena.mode == 2 then
     local p_stats = arena.players[p_name]
 
     p_stats.kills = p_stats.kills - 1
@@ -132,7 +150,13 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
     team.deaths = team.deaths + 1
     block_league.info_panel_update(arena)
   end
+
+  block_league.deactivate_zoom(player)
+  player:get_meta():set_int("bl_death_delay", 1)
+
+  wait_for_respawn(arena, p_name, 6)
 end)
+
 
 
 
@@ -253,4 +277,38 @@ function equip_weapons(arena, p_name)
     inv:add_item("main", ItemStack(weapon_name))
   end
   inv:add_item("main", ItemStack(bouncer))
+end
+
+
+
+function wait_for_respawn(arena, p_name, time_left)
+
+  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then
+    arena_lib.HUD_hide("broadcast", p_name)
+  return end
+
+  if time_left > 0 then
+    arena_lib.HUD_send_msg("broadcast", p_name, S("Back in the game in @1", time_left))
+  else
+    local player = minetest.get_player_by_name(p_name)
+
+    player:get_meta():set_int("bl_death_delay", 0)
+    player:get_meta():set_int("bl_reloading", 0)
+    arena_lib.HUD_hide("broadcast", p_name)
+
+    -- se è nella sala d'attesa
+    if player:get_hp() > 0 then
+      block_league.HUD_spectate_update(arena, p_name, "alive")
+      player:set_pos(arena_lib.get_random_spawner(arena, arena.players[p_name].teamID))
+      block_league.immunity(player)
+    end
+
+    return
+  end
+
+  time_left = time_left -1
+
+  minetest.after(1, function()
+    wait_for_respawn(arena, p_name, time_left)
+  end)
 end

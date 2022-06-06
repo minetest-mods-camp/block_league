@@ -28,35 +28,6 @@ end)
 
 
 
-minetest.register_on_dieplayer(function(player)
-
-  local p_name = player:get_player_name()
-
-  if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-
-  -- se il giocatore è morto con la palla, questa si sgancia e torna a oscillare
-  for _, child in pairs (minetest.get_player_by_name(p_name):get_children()) do
-    if child:get_luaentity() and child:get_luaentity().timer then
-      local arena = arena_lib.get_arena_by_player(p_name)
-      local ball = child:get_luaentity()
-
-      if player:get_pos().y < arena.min_y then
-        ball:reset()
-      else
-        ball:detach()
-      end
-      break
-    end
-  end
-
-  block_league.deactivate_zoom(player)
-  player:get_meta():set_int("bl_death_delay", 1)
-
-  wait_for_respawn(arena_lib.get_arena_by_player(p_name), p_name, 6)
-end)
-
-
-
 minetest.register_on_respawnplayer(function(player)
 
   local p_name = player:get_player_name()
@@ -93,40 +64,6 @@ end)
 ----------------------------------------------
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
-
-function wait_for_respawn(arena, p_name, time_left)
-
-  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then
-    arena_lib.HUD_hide("broadcast", p_name)
-  return end
-
-  if time_left > 0 then
-    arena_lib.HUD_send_msg("broadcast", p_name, S("Back in the game in @1", time_left))
-  else
-    local player = minetest.get_player_by_name(p_name)
-
-    player:get_meta():set_int("bl_death_delay", 0)
-    player:get_meta():set_int("bl_reloading", 0)
-    arena_lib.HUD_hide("broadcast", p_name)
-
-    -- se è nella sala d'attesa
-    if player:get_hp() > 0 then
-      block_league.HUD_spectate_update(arena, p_name, "alive")
-      player:set_pos(arena_lib.get_random_spawner(arena, arena.players[p_name].teamID))
-      block_league.immunity(player)
-    end
-
-    return
-  end
-
-  time_left = time_left -1
-
-  minetest.after(1, function()
-    wait_for_respawn(arena, p_name, time_left)
-  end)
-end
-
-
 
 function remove_weapons(inv)
 
