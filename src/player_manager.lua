@@ -28,37 +28,6 @@ end)
 
 
 
-minetest.register_on_respawnplayer(function(player)
-
-  local p_name = player:get_player_name()
-
-  if not arena_lib.is_player_in_arena(p_name, "block_league") or arena_lib.is_player_spectating(p_name) then
-    return
-  end
-
-  local arena = arena_lib.get_arena_by_player(p_name)
-
-  -- se resuscita mentre non può ancora rientrare in partita, lo porto nella sala d'attesa
-  if player:get_meta():get_int("bl_death_delay") == 1 then
-    if arena.players[p_name].teamID == 1 then
-      player:set_pos(arena.waiting_room_orange)
-    else
-      player:set_pos(arena.waiting_room_blue)
-    end
-  else
-    block_league.HUD_spectate_update(arena, p_name, "alive")
-  end
-
-  arena.players[p_name].energy = 100
-  block_league.HUD_energy_update(arena, p_name)
-
-  block_league.refill_weapons(arena, p_name)
-
-  player:set_physics_override({ speed = block_league.SPEED })
-end)
-
-
-
 
 
 ----------------------------------------------

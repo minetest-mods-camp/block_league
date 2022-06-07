@@ -159,6 +159,29 @@ end)
 
 
 
+arena_lib.on_respawn("block_league", function(arena, p_name)
+
+  local player = minetest.get_player_by_name(p_name)
+
+  -- se resuscita mentre non può ancora rientrare in partita, lo porto nella sala d'attesa
+  if player:get_meta():get_int("bl_death_delay") == 1 then
+    if arena.players[p_name].teamID == 1 then
+      player:set_pos(arena.waiting_room_orange)
+    else
+      player:set_pos(arena.waiting_room_blue)
+    end
+  else
+    block_league.HUD_spectate_update(arena, p_name, "alive")
+  end
+
+  arena.players[p_name].energy = 100
+  block_league.HUD_energy_update(arena, p_name)
+  block_league.refill_weapons(arena, p_name)
+  player:set_physics_override({ speed = block_league.SPEED })
+end)
+
+
+
 arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_type, t_name, prev_type, prev_spectated)
   if t_type ~= "player" then return end
   -- ritardo di 0.1 perché on_join non è ancora stato chiamato, quindi non hanno ancora la HUD
