@@ -195,25 +195,20 @@ end)
 
 
 
-arena_lib.on_quit("block_league", function(arena, p_name, is_spectator)
+arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
 
-  -- se aveva la palla, sganciala
-  if minetest.get_player_by_name(p_name):get_children()[1] then
-    local ball = minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity()
-    ball:detach()
+  -- se non si è disconnesso, sgancia la palla e togli lo zoom. A quanto pare la
+  -- palla non si sgancia da qua per chi si sconnette, prob get_player_name ritorna nullo
+  if reason ~= 0 then
+    if not is_spectator and arena.mode == 1 then
+      if minetest.get_player_by_name(p_name):get_children()[1] then
+        local ball = minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity()
+        ball:detach()
+      end
+    end
+
+    block_league.deactivate_zoom(minetest.get_player_by_name(p_name))
   end
-
-  remove_spectate_HUD(arena, p_name, is_spectator)
-  remove_HUD(p_name, is_spectator)
-  reset_meta(p_name)
-  block_league.deactivate_zoom(minetest.get_player_by_name(p_name))
-
-  block_league.info_panel_update(arena)
-end)
-
-
-
-arena_lib.on_disconnect("block_league", function(arena, p_name, is_spectator)
 
   remove_spectate_HUD(arena, p_name, is_spectator)
   remove_HUD(p_name, is_spectator)
