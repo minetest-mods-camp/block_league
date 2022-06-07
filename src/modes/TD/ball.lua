@@ -23,7 +23,6 @@ local ball = {
   },
 
   w_name = nil,
-  is_going_up = nil,
   team_id = nil,
   timer_bool = false,
   timer = 0,
@@ -112,38 +111,6 @@ function ball:on_step(d_time, moveresult)
 
       end
     end
-
-    local velocity = self.object:get_velocity()
-
-    -- sennò oscilla
-    for index, table in pairs(moveresult.collisions) do
-      if table.type == "node" and table.axis == "y" then
-        velocity.y = -table.old_velocity.y
-        if velocity.y > 0 then
-          self.is_going_up = true
-        else
-          self.is_going_up = false
-        end
-        self.object:set_velocity(velocity)
-        minetest.after(1, function()
-          if self.object ~= nil and self.is_going_up then
-            velocity = self.object:get_velocity()
-            if velocity ~= nil then
-              velocity.y = -velocity.y
-              if velocity.y > 0 then
-                self.is_going_up = true
-              else
-                self.is_going_up = false
-              end
-              self.object:set_velocity(velocity)
-            end
-          end
-        end)
-        break
-      end
-    end
-
-
 
   -- se ce l'ha qualcuno
   -- NB: se quel qualcuno è appena morto, al posto di controllarlo qui su ogni step, viene controllato sul callback della morte in player_manager.lua

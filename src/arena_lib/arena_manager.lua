@@ -159,7 +159,6 @@ end)
 
 
 
-
 arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_type, t_name, prev_type, prev_spectated)
   if t_type ~= "player" then return end
   -- ritardo di 0.1 perché on_join non è ancora stato chiamato, quindi non hanno ancora la HUD
