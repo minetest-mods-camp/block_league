@@ -29,6 +29,7 @@ function block_league.register_weapon(name, def)
     wield_image = def.wield_image or nil,
     wield_scale = def.wield_scale,
     inventory_image = def.inventory_image,
+    use_texture_alpha = def.mesh and "clip" or nil,
 
     weapon_type = def.weapon_type,
 
@@ -230,8 +231,8 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
   -- per ogni giocatore colpito
   for _, target in pairs(targets) do
 
-    headshot = target.headshot
-    target = target.player
+    local headshot = target.headshot
+    local target = target.player
 
     if target:get_hp() <= 0 then return end
     if target:get_meta():get_int("bl_immunity") == 1 then return end
@@ -287,7 +288,7 @@ end
 
 function block_league.deactivate_zoom(player)
   --TODO: rimuovere HUD zoom armi
-  player:set_fov(0, _, 0.1)
+  player:set_fov(0, nil, 0.1)
 end
 
 
@@ -414,7 +415,7 @@ function weapon_zoom(weapon, player)
   if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_death_delay") == 1 then return end
 
   if player:get_fov() ~= weapon.zoom.fov then
-    player:set_fov(weapon.zoom.fov, _, 0.1)
+    player:set_fov(weapon.zoom.fov, nil, 0.1)
     -- TODO: applica texture, riproduci suono
   else
     block_league.deactivate_zoom(player)
