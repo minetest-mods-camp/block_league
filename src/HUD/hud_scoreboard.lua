@@ -1,6 +1,8 @@
 function block_league.scoreboard_create(arena, p_name)
 
   local timer = arena.in_loading and arena.initial_time or arena.current_time
+  local teamID = arena.players[p_name].teamID
+  local team_marker = teamID == 1 and "bl_hud_scoreboard_orangemark.png" or "bl_hud_scoreboard_bluemark.png"
 
   Panel:new("bl_scoreboard", {
     player = p_name,
@@ -29,6 +31,12 @@ function block_league.scoreboard_create(arena, p_name)
         number    = "0xDFF6F5",
         text      = os.date('!%M:%S', timer)
       },
+    },
+
+    sub_img_elems = {
+      team_marker = {
+        text = team_marker
+      }
     }
   })
 end
