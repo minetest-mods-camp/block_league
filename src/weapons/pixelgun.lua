@@ -4,9 +4,9 @@ block_league.register_weapon("block_league:pixelgun", {
 
   description = S("Pixelgun"),
   mesh = "bl_pixelgun.obj",
-  tiles = {"bl_pixelgun.png"},
+  tiles = {"bl_pixelgun_texture.png"},
   wield_scale = {x=1.3, y=1.3, z=1.3},
-  inventory_image = "bl_pixelgun_icon.png",
+  inventory_image = "bl_pixelgun.png",
 
   weapon_type = 1,
 

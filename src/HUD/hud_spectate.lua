@@ -213,7 +213,7 @@ function create_panel(arena, sp_name, p_name, y_offset)
         weapon3 = {
           scale = { x = 1.4, y = 1.4 },
           offset = { x = 110, y = 10 },
-          text   = "bl_pixelgun_icon.png"
+          text   = "bl_pixelgun.png"
         },
         icon = {
           scale = { x = 3, y = 3 },
@@ -282,7 +282,7 @@ function create_panel(arena, sp_name, p_name, y_offset)
         weapon3 = {
           scale = { x = 1.4, y = 1.4 },
           offset = { x = -60, y = 10 },
-          text   = "bl_pixelgun_icon.png"
+          text   = "bl_pixelgun.png"
         },
         icon = {
           scale = { x = 3, y = 3 },

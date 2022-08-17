@@ -36,7 +36,7 @@ Feel free to:
 
 ### Resources
 2D graphic assets by me  
-3D models by Scarecrow  
+3D models by Scarecrow01  
 Bouncer sound by [iozonic](https://freesound.org/people/iozonic/sounds/380763/)  
 HMG shooting sound by [tcpp](https://freesound.org/people/tcpp/sounds/105025/)  
 Pixelgun shooting sound by [debsound](https://freesound.org/people/debsound/sounds/339169/)  
