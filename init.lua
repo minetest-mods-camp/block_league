@@ -11,7 +11,7 @@ dofile(modpath .. "/GLOBALS.lua")
 arena_lib.register_minigame("block_league", {
   name = "Block League",
   prefix = "[Block League] ",
-  icon = "bl_pixelgun_icon.png",
+  icon = "bl_pixelgun.png",
 
   teams = { S("orange"), S("blue") },
   teams_color_overlay = { "orange", "blue"},
