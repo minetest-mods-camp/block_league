@@ -6,7 +6,7 @@ block_league.register_weapon("block_league:smg", {
   mesh = "bl_smg.obj",
   tiles = {"bl_smg_texture.png"},
   --wield_image = "bl_smg.png^[transformFX",
-  wield_scale = {x=1.32, y=1.32, z=1.32},
+  wield_scale = {x=1.34, y=1.34, z=1.34},
   inventory_image = "bl_smg.png",
 
   weapon_type = 1,
