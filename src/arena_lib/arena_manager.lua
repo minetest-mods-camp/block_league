@@ -244,7 +244,7 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_critical_create(p_name)
   block_league.HUD_energy_create(arena, p_name)
   block_league.HUD_weapons_create(p_name)
-  block_league.scoreboard_create(arena, p_name)
+  block_league.scoreboard_create(arena, p_name, is_spectator)
   block_league.hud_log_create(p_name)
 
   if is_spectator then

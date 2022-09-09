@@ -1,8 +1,12 @@
-function block_league.scoreboard_create(arena, p_name)
+function block_league.scoreboard_create(arena, p_name, is_spectator)
 
   local timer = arena.in_loading and arena.initial_time or arena.current_time
-  local teamID = arena.players[p_name].teamID
-  local team_marker = teamID == 1 and "bl_hud_scoreboard_orangemark.png" or "bl_hud_scoreboard_bluemark.png"
+  local team_marker = ""
+
+  if not is_spectator then
+    local teamID = arena.players[p_name].teamID
+    team_marker = teamID == 1 and "bl_hud_scoreboard_orangemark.png" or "bl_hud_scoreboard_bluemark.png"
+  end
 
   Panel:new("bl_scoreboard", {
     player = p_name,
