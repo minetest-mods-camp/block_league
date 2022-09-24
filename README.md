@@ -19,7 +19,7 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 If it's TD, you must also
 1. set the two goals via `/bladmin goal [set|remove] <arena_name> <team_name>`
 2. set the two waiting rooms via `/bladmin wroom [set|remove] <arena_name> <team_name>`
-3. set the ball spawn point via `/bladmin [set|remove] <arena_name>`  
+3. set the ball spawn point via `/bladmin ball [set|remove] <arena_name>`  
 
 (one day™ these 3 last steps will be included in the editor... maybe)
 
