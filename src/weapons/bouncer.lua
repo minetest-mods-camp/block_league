@@ -3,7 +3,7 @@ local function dash() end
 
 
 
-local function register_bouncer(name, desc, energy)
+local function register_bouncer(name, desc, stamina)
 
   minetest.register_tool("block_league:" .. name, {
     description = desc,
@@ -24,8 +24,8 @@ local function register_bouncer(name, desc, energy)
 
       if arena then
         -- se non ha abbastanza energia, annullo
-        if not (arena.players[p_name].energy >= energy) then return end
-        arena.players[p_name].energy = arena.players[p_name].energy - energy
+        if not (arena.players[p_name].stamina >= stamina) then return end
+        arena.players[p_name].stamina = arena.players[p_name].stamina - stamina
       end
 
       local dir = user:get_look_dir()
@@ -36,11 +36,11 @@ local function register_bouncer(name, desc, energy)
     end,
 
     on_secondary_use = function(itemstack, user, pointed_thing)
-      dash(user, energy)
+      dash(user, stamina)
     end,
 
     on_place = function(itemstack, user, pointed_thing)
-      dash(user, energy)
+      dash(user, stamina)
     end
   })
 end
@@ -58,7 +58,7 @@ register_bouncer("bouncer_dm", "Deathmatch Bouncer", 50)
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
-function dash(player, energy)
+function dash(player, stamina)
   if not can_use(player) then return end
 
   local p_name = player:get_player_name()
@@ -66,8 +66,8 @@ function dash(player, energy)
 
   if arena then
     -- se non ha abbastanza energia, annullo
-    if not (arena.players[p_name].energy >= energy) then return end
-    arena.players[p_name].energy = arena.players[p_name].energy - energy
+    if not (arena.players[p_name].stamina >= stamina) then return end
+    arena.players[p_name].stamina = arena.players[p_name].stamina - stamina
   end
 
   local dir = player:get_look_dir()
@@ -81,7 +81,7 @@ end
 
 
 
-function can_use(player, energy)
+function can_use(player, stamina)
   local meta = player:get_meta()
   if meta:get_int("bl_bouncer_delay") == 1 or
      meta:get_int("bl_death_delay") == 1 or

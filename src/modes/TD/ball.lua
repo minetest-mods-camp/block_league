@@ -144,7 +144,7 @@ function ball:attach(player)
   self:announce_ball_possession_change()
 
   player:get_meta():set_int("bl_has_ball", 1)
-  block_league.energy_drain(arena, p_name)
+  block_league.stamina_drain(arena, p_name)
 
   arena.players[p_name].points = arena.players[p_name].points + 2
   block_league.info_panel_update(arena)

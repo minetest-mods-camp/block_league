@@ -34,7 +34,7 @@ end)
 
 arena_lib.on_start("block_league", function(arena)
   block_league.HUD_remove_inputs(arena)
-  block_league.energy_refill_loop(arena)
+  block_league.stamina_refill_loop(arena)
   block_league.fall_check_loop(arena)
 end)
 
@@ -174,8 +174,8 @@ arena_lib.on_respawn("block_league", function(arena, p_name)
     block_league.HUD_spectate_update(arena, p_name, "alive")
   end
 
-  arena.players[p_name].energy = 100
-  block_league.HUD_energy_update(arena, p_name)
+  arena.players[p_name].stamina = 100
+  block_league.HUD_stamina_update(arena, p_name)
   block_league.refill_weapons(arena, p_name)
   player:set_physics_override({ speed = block_league.SPEED })
 end)
@@ -189,7 +189,7 @@ arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_
     for _, weap_name in pairs(block_league.get_player_weapons(t_name)) do
       block_league.HUD_weapons_update(arena, t_name, weap_name)
     end
-    block_league.HUD_energy_update(arena, t_name)
+    block_league.HUD_stamina_update(arena, t_name)
   end)
 end)
 
@@ -242,7 +242,7 @@ end
 function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_broadcast_create(p_name)
   block_league.HUD_critical_create(p_name)
-  block_league.HUD_energy_create(arena, p_name)
+  block_league.HUD_stamina_create(arena, p_name)
   block_league.HUD_weapons_create(p_name)
   block_league.scoreboard_create(arena, p_name, is_spectator)
   block_league.hud_log_create(p_name)
@@ -259,7 +259,7 @@ end
 
 function remove_HUD(p_name, is_spectator)
   block_league.HUD_critical_remove(p_name)
-  panel_lib.get_panel(p_name, "bl_energy"):remove()
+  panel_lib.get_panel(p_name, "bl_stamina"):remove()
   panel_lib.get_panel(p_name, "bl_weapons"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
