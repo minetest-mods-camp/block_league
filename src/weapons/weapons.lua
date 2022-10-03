@@ -109,7 +109,7 @@ function block_league.shoot_end(player, weapon)
 
   minetest.after(0.5, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league")
-      or arena.players[p_name].energy == 0
+      or arena.players[p_name].stamina == 0
       or p_meta:get_int("bl_reloading") == 1
       or p_meta:get_int("bl_is_shooting") == 1
       or p_meta:get_int("bl_is_speed_locked") == 1
@@ -457,7 +457,7 @@ function weapon_reload(player, weapon)
     p_meta:set_int("bl_weap_delay", 0)
     p_meta:set_int("bl_reloading", 0)
 
-    local vel = arena.players[p_name].energy > 0 and block_league.SPEED or block_league.SPEED_LOW
+    local vel = arena.players[p_name].stamina > 0 and block_league.SPEED or block_league.SPEED_LOW
 
     if p_meta:get_int("bl_is_speed_locked") == 0 then
       player:set_physics_override({ speed = vel })

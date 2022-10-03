@@ -63,7 +63,7 @@ arena_lib.register_minigame("block_league", {
     deaths = 0
   },
   player_properties = {
-    energy = 100,
+    stamina = 100,
     TDs = 0,
     points = 0,
     entering_time = 0,
@@ -92,7 +92,7 @@ dofile(srcpath .. "/debug/testkit.lua")
 dofile(srcpath .. "/HUD/hud_achievements.lua")
 dofile(srcpath .. "/HUD/hud_broadcast.lua")
 dofile(srcpath .. "/HUD/hud_critical.lua")
-dofile(srcpath .. "/HUD/hud_energy.lua")
+dofile(srcpath .. "/HUD/hud_stamina.lua")
 dofile(srcpath .. "/HUD/hud_info_panel.lua")
 dofile(srcpath .. "/HUD/hud_inputs.lua")
 dofile(srcpath .. "/HUD/hud_log.lua")
@@ -100,7 +100,7 @@ dofile(srcpath .. "/HUD/hud_scoreboard.lua")
 dofile(srcpath .. "/HUD/hud_spectate.lua")
 dofile(srcpath .. "/HUD/hud_weapons.lua")
 -- misc
-dofile(srcpath .. "/misc/energy.lua")
+dofile(srcpath .. "/misc/stamina.lua")
 dofile(srcpath .. "/misc/fall.lua")
 dofile(srcpath .. "/misc/immunity.lua")
 -- modes

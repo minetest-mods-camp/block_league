@@ -60,8 +60,8 @@ function round_start(arena)
 
     if player:get_hp() > 0 then
       player:set_hp(20)
-      arena.players[pl_name].energy = 100
-      block_league.HUD_energy_update(arena, pl_name)
+      arena.players[pl_name].stamina = 100
+      block_league.HUD_stamina_update(arena, pl_name)
     end
 
     block_league.refill_weapons(arena, pl_name)

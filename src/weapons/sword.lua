@@ -53,7 +53,7 @@ block_league.register_weapon("block_league:sword", {
 
       local vel
 
-      if arena.players[p_name].energy > 0 then
+      if arena.players[p_name].stamina > 0 then
         if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_is_shooting") == 1 then
           vel = block_league.SPEED_LOW
         else
