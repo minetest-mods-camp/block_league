@@ -22,7 +22,7 @@ function get_formspec(p_name)
     "listcolors[#ffffff;#ffffff;#ffffff;#3153b7;#ffffff]",
     "style[hp;padding=15]",
     "style[sp;padding=15]",
-    "model[0,0.35;5,3.6;chara;" .. p_props.mesh .. ";" .. p_props.textures[1] .. ";0,-150;false;true]",
+    "model[0,0.35;5,3.6;chara;" .. p_props.mesh .. ";" .. table.concat(p_props.textures, ",") .. ";0,-150;false;true]",
     -- caselle equipaggiamento
     "container[0.42,4.25]",
     "image[0,0;1,1;bl_gui_profile_button_weap.png]",
