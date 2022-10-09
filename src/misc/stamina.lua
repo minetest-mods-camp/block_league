@@ -1,5 +1,4 @@
 local recursive_time = 0.1
-local MAX_stamina = 100
 
 
 
@@ -12,9 +11,10 @@ function block_league.stamina_refill_loop(arena)
     local player = minetest.get_player_by_name(pl_name)
     local health = player:get_hp()
     local stamina = arena.players[pl_name].stamina
+    local max_stamina = arena.players[pl_name].stamina_max
 
     -- se è vivo, senza palla e con energia non al massimo
-    if health > 0 and player:get_meta():get_int("bl_has_ball") == 0 and stamina < MAX_stamina then
+    if health > 0 and player:get_meta():get_int("bl_has_ball") == 0 and stamina < max_stamina then
       arena.players[pl_name].stamina = stamina + 1
       block_league.HUD_stamina_update(arena, pl_name)
     end

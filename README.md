@@ -57,7 +57,8 @@ Crowd cheering by [wangzhuokun](https://freesound.org/people/wangzhuokun/sounds/
 Crowd "oh no" by [dobroide](https://freesound.org/people/dobroide/sounds/35034/)  
 Ball "resetting" voice by [tim.kahn](https://freesound.org/people/tim.kahn/sounds/107546/)  
 Victory jingle by [unadamlar](https://freesound.org/people/unadamlar/sounds/341985/)  
-Defeat jingle by [soundmonster0](https://freesound.org/people/soundmonster0/sounds/533925/)
+Defeat jingle by [soundmonster0](https://freesound.org/people/soundmonster0/sounds/533925/)  
+GUI equip sound by [EminYILDIRIM](https://freesound.org/people/EminYILDIRIM/sounds/588681/)
 
 Most audio files have been tweaked by me
 

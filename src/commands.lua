@@ -153,4 +153,12 @@ ChatCmdBuilder.new("bleague", function(cmd)
     block_league.list_achievements(sender, p_name)
   end)
 
+  cmd:sub("profile", function(sender)
+    if arena_lib.is_player_in_arena(sender) then
+      minetest.chat_send_player(sender, minetest.colorize("#e6482e", S("[!] You can't perform this action right now!")))
+      return end
+
+    block_league.show_profile(sender)
+  end)
+
 end,{})

@@ -9,6 +9,7 @@ blue=blu
 
 # commands.lua
 mod management=gestione della mod
+[!] You can't perform this action right now!=[!] Al momento non puoi eseguire quest'azione!
 
 # player_manager.lua
 Back in the game in @1=Di nuovo in partita tra @1
@@ -27,6 +28,12 @@ Leave test mode=Esci dalla modalità test
 You already are in test mode!=Sei già in modalità test!
 You've entered test mode=Sei entrato in modalità test
 You've left test mode=Sei uscito dalla modalità test
+
+# GUI/gui_profile.lua
+Welcome to your Block League profile!=Benvenuto/a nel tuo profilo di Block League!
+Here you can change your passive skill: select one from the panel on the left to know more about it=Qui puoi cambiare la tua abilità passiva: selezionane una dal pannello sulla sinistra per saperne di più
+More customisations will be possible in the future@1 (donations help)=In futuro saran possibili ulteriori personalizzazioni@1 (le donazioni aiutano)
+EQUIP=EQUIPAGGIA
 
 # HUD/hud_critical.lua
 CRITICAL!=CRITICO!
@@ -52,6 +59,14 @@ two in one=due in uno
 three in one=tre in uno
 [!] This player doesn't exist!=[!] Questo giocatore non esiste!
 @1 ACHIEVEMENTS=PRESTIGI DI @1
+
+# skills/hp.lua
+Increases your health points by 5 @1(20>25)=Aumenta i tuoi punti vita di 5 @1(20>25)
+Great for remaining in action longer, providing firepower to sustain your team. Get tanky!=Ottima per rimanere in vita più a lungo, fornendo potenza di fuoco e sostegno alla squadra.
+
+# skills/sp.lua
+Increases your stamina points by 25 @1(100>125)=Aumenta i tuoi punti stamina di 25 @1(100>125)
+Great choice for strikers, as it allows players to run more and perform tricks more often.=Ottima scelta per le punte, poiché permette di correre di più ed eseguire più acrobazie.
 
 # weapons/pixelgun.lua
 Pixelgun=Pixelgun

@@ -9,6 +9,7 @@ blue=
 
 # commands.lua
 mod management=
+[!] You can't perform this action right now!=
 
 # player_manager.lua
 Back in the game in @1=
@@ -27,6 +28,12 @@ Leave test mode=
 You already are in test mode!=
 You've entered test mode=
 You've left test mode=
+
+# GUI/gui_profile.lua
+Welcome to your Block League profile!=
+Here you can change your passive skill: select one from the panel on the left to know more about it=
+More customisations will be possible in the future@1 (donations help)=
+EQUIP=
 
 # HUD/hud_critical.lua
 CRITICAL!=
@@ -52,6 +59,14 @@ two in one=
 three in one=
 [!] This player doesn't exist!=
 @1 ACHIEVEMENTS=
+
+# skills/hp.lua
+Increases your health points by 5 @1(20>25)=
+Great for remaining in action longer, providing firepower to sustain your team. Get tanky!=
+
+# skills/sp.lua
+Increases your stamina points by 25 @1(100>125)=
+Great choice for strikers, as it allows players to run more and perform tricks more often.=
 
 # weapons/pixelgun.lua
 Pixelgun=

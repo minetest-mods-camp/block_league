@@ -59,8 +59,8 @@ function round_start(arena)
     local player = minetest.get_player_by_name(pl_name)
 
     if player:get_hp() > 0 then
-      player:set_hp(20)
-      arena.players[pl_name].stamina = 100
+      player:set_hp(999)
+      arena.players[pl_name].stamina = arena.players[pl_name].stamina_max
       block_league.HUD_stamina_update(arena, pl_name)
     end
 
