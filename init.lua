@@ -64,6 +64,7 @@ arena_lib.register_minigame("block_league", {
   },
   player_properties = {
     stamina = 100,
+    stamina_max = 100,
     TDs = 0,
     points = 0,
     entering_time = 0,
@@ -88,6 +89,8 @@ dofile(srcpath .. "/arena_lib/arena_manager.lua")
 dofile(srcpath .. "/arena_lib/arena_timer.lua")
 -- debug
 dofile(srcpath .. "/debug/testkit.lua")
+-- GUI
+dofile(srcpath .. "/GUI/gui_profile.lua")
 -- HUD
 dofile(srcpath .. "/HUD/hud_achievements.lua")
 dofile(srcpath .. "/HUD/hud_broadcast.lua")
@@ -97,6 +100,7 @@ dofile(srcpath .. "/HUD/hud_info_panel.lua")
 dofile(srcpath .. "/HUD/hud_inputs.lua")
 dofile(srcpath .. "/HUD/hud_log.lua")
 dofile(srcpath .. "/HUD/hud_scoreboard.lua")
+dofile(srcpath .. "/HUD/hud_skill.lua")
 dofile(srcpath .. "/HUD/hud_spectate.lua")
 dofile(srcpath .. "/HUD/hud_weapons.lua")
 -- misc
@@ -110,6 +114,9 @@ dofile(srcpath .. "/modes/TD/ball.lua")
 dofile(srcpath .. "/player/achievements.lua")
 dofile(srcpath .. "/player/equip.lua")
 dofile(srcpath .. "/player/exp.lua")
+-- skills
+dofile(srcpath .. "/skills/sp+.lua")
+dofile(srcpath .. "/skills/hp+.lua")
 -- abstract weapons
 dofile(srcpath .. "/weapons/bullets.lua")
 dofile(srcpath .. "/weapons/weapons.lua")

@@ -4,7 +4,7 @@ local function reset_meta() end
 local function create_and_show_HUD() end
 local function remove_HUD() end
 local function remove_spectate_HUD() end
-local function equip_weapons() end
+local function equip() end
 local function wait_for_respawn() end
 
 
@@ -13,7 +13,7 @@ arena_lib.on_load("block_league", function(arena)
 
   for pl_name, stats in pairs(arena.players) do
     reset_meta(pl_name)
-    equip_weapons(arena, pl_name)
+    equip(arena, pl_name)
     create_and_show_HUD(arena, pl_name)
     block_league.refill_weapons(arena, pl_name)
 
@@ -53,7 +53,7 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
   arena.players[p_name].entering_time = arena.current_time
 
   reset_meta(p_name)
-  equip_weapons(arena, p_name)
+  equip(arena, p_name)
   create_and_show_HUD(arena, p_name)
   block_league.HUD_spectate_addplayer(arena, p_name)
   block_league.refill_weapons(arena, p_name)
@@ -114,8 +114,9 @@ arena_lib.on_end("block_league", function(arena, players, winners, spectators)
     remove_HUD(pl_name)
     reset_meta(pl_name)
     block_league.deactivate_zoom(minetest.get_player_by_name(pl_name))
+    pl_name:get_skill(block_league.get_player_skill(pl_name)):disable()
 
-    block_league.update_storage(pl_name)
+    --block_league.update_storage(pl_name)
   end
 end)
 
@@ -189,6 +190,7 @@ arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_
     for _, weap_name in pairs(block_league.get_player_weapons(t_name)) do
       block_league.HUD_weapons_update(arena, t_name, weap_name)
     end
+    block_league.HUD_skill_update(sp_name)
     block_league.HUD_stamina_update(arena, t_name)
   end)
 end)
@@ -213,6 +215,7 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
   remove_spectate_HUD(arena, p_name, is_spectator)
   remove_HUD(p_name, is_spectator)
   reset_meta(p_name)
+  p_name:get_skill(block_league.get_player_skill(p_name)):disable()
 
   block_league.info_panel_update(arena)
 end)
@@ -244,6 +247,7 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_critical_create(p_name)
   block_league.HUD_stamina_create(arena, p_name)
   block_league.HUD_weapons_create(p_name)
+  block_league.HUD_skill_create(p_name)
   block_league.scoreboard_create(arena, p_name, is_spectator)
   block_league.hud_log_create(p_name)
 
@@ -261,6 +265,7 @@ function remove_HUD(p_name, is_spectator)
   block_league.HUD_critical_remove(p_name)
   panel_lib.get_panel(p_name, "bl_stamina"):remove()
   panel_lib.get_panel(p_name, "bl_weapons"):remove()
+  panel_lib.get_panel(p_name, "bl_skill"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
@@ -284,7 +289,7 @@ end
 
 
 
-function equip_weapons(arena, p_name)
+function equip(arena, p_name)
 
   local weapons = block_league.get_player_weapons(p_name)
   local bouncer = arena.mode == 1 and "block_league:bouncer" or "block_league:bouncer_dm"
@@ -294,6 +299,10 @@ function equip_weapons(arena, p_name)
     inv:add_item("main", ItemStack(weapon_name))
   end
   inv:add_item("main", ItemStack(bouncer))
+
+  local skill = block_league.get_player_skill(p_name)
+
+  p_name:get_skill(skill):enable()
 end
 
 

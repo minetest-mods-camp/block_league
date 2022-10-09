@@ -22,11 +22,12 @@ end
 function block_league.HUD_stamina_update(arena, p_name)
 
   local stamina = arena.players[p_name].stamina
+  local stamina_max = arena.players[p_name].stamina_max
   local panel = panel_lib.get_panel(p_name, "bl_stamina")
 
   panel:update(nil,
     {stamina_indicator = {
-      scale = {x = (stamina / 100) * 1.5, y = 1.5},
+      scale = {x = (stamina / stamina_max) * 1.5, y = 1.5},
     }}
   )
 
@@ -35,7 +36,7 @@ function block_league.HUD_stamina_update(arena, p_name)
 
     panel:update(nil,
       {stamina_indicator = {
-        scale = {x = (stamina / 100) * 1.5, y = 1.5},
+        scale = {x = (stamina / stamina_max) * 1.5, y = 1.5},
       }}
     )
   end

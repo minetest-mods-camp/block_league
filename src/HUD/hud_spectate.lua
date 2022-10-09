@@ -215,6 +215,11 @@ function create_panel(arena, sp_name, p_name, y_offset)
           offset = { x = 110, y = 10 },
           text   = "bl_pixelgun.png"
         },
+        skill = {
+          scale  = { x = 1.4, y = 1.4 },
+          offset = { x = 165, y = 10 },
+          text   = "bl_skill_" .. block_league.get_player_skill(p_name):sub(14, -1) .. ".png"
+        },
         icon = {
           scale = { x = 3, y = 3 },
           offset = { x = 265 }
@@ -283,6 +288,11 @@ function create_panel(arena, sp_name, p_name, y_offset)
           scale = { x = 1.4, y = 1.4 },
           offset = { x = -60, y = 10 },
           text   = "bl_pixelgun.png"
+        },
+        skill = {
+          scale  = { x = 1.4, y = 1.4 },
+          offset = { x = -165, y = 10 },
+          text   = "bl_skill_" .. block_league.get_player_skill(p_name):sub(14, -1) .. ".png"
         },
         icon = {
           scale = { x = 3, y = 3 },
