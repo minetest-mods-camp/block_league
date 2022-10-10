@@ -74,9 +74,10 @@ arena_lib.register_minigame("block_league", {
 
 
 
--- load other scripts
+-- libs
+dofile(modpath .. "/libs/chatcmdbuilder.lua")
 
-dofile(srcpath .. "/chatcmdbuilder.lua")
+-- general
 dofile(srcpath .. "/commands.lua")
 dofile(srcpath .. "/database_manager.lua")
 dofile(srcpath .. "/input_manager.lua")
