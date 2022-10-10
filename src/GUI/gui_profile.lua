@@ -61,7 +61,7 @@ function get_formspec(p_name)
     info_section = {
       item,
       "hypertext[5.5,2.85;4,2;elem_name;<global size=24><b>" .. elem_name .. "</b>]",
-      "hypertext[5.5,3.5;4,4;elem_desc;<global size=16><i>" .. elem_desc .. "</i>]",
+      "hypertext[5.5,3.5;4,2.6;elem_desc;<global size=16><i>" .. elem_desc .. "</i>]",
       "image_button[6.4,6.2;2.2,0.8;bl_gui_profile_button_confirm.png;equip;" .. S("EQUIP") .. "]"
     }
   else
