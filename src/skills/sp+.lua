@@ -13,6 +13,6 @@ skillz.register_skill("block_league:sp", {
 
     if not arena then return end
 
-    arena.players[p_name].energy_max = 125
+    arena.players[p_name].stamina_max = 125
   end
 })
