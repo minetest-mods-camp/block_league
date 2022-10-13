@@ -249,7 +249,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
     end
 
     -- eventuale headshot
-    if headshot and weapon.type ~= 3 then
+    if headshot and weapon.weapon_type ~= 3 then
       damage = damage * 1.5
       block_league.HUD_critical_show(p_name)
       block_league.sound_play("bl_hit_critical", p_name, "not_overlappable")
@@ -351,9 +351,7 @@ function weapon_left_click(weapon, player, pointed_thing)
     player:set_physics_override({ speed = block_league.SPEED_LOW })
   end
 
-  if weapon.type ~= 3 then
-    player:get_meta():set_int("bl_is_shooting", 1)
-  end
+  player:get_meta():set_int("bl_is_shooting", 1)
 
   -- controls.register_on_release non funziona se un tasto viene premuto E rilasciato
   -- sullo stesso step. Quindi, quando questo fallisce (perché il giocatore è stato
@@ -457,9 +455,8 @@ function weapon_reload(player, weapon)
     p_meta:set_int("bl_weap_delay", 0)
     p_meta:set_int("bl_reloading", 0)
 
-    local vel = arena.players[p_name].stamina > 0 and block_league.SPEED or block_league.SPEED_LOW
-
     if p_meta:get_int("bl_is_speed_locked") == 0 then
+      local vel = arena.players[p_name].stamina > 0 and block_league.SPEED or block_league.SPEED_LOW
       player:set_physics_override({ speed = vel })
     end
 

@@ -15,7 +15,7 @@ controls.register_on_hold(function(player, key)
 
   local p_name = player:get_player_name()
 
-  if key~="LMB" or not arena_lib.is_player_in_arena(p_name, "block_league") or arena_lib.is_player_spectating(p_name) then return end
+  if key ~="LMB" or not arena_lib.is_player_in_arena(p_name, "block_league") or arena_lib.is_player_spectating(p_name) then return end
 
   local weapon_name = player:get_wielded_item():get_name()
   local weap_def = minetest.registered_nodes[weapon_name]
@@ -45,7 +45,7 @@ controls.register_on_release(function(player, key)
     local weapon_name = player:get_wielded_item():get_name()
     local weapon = minetest.registered_nodes[weapon_name]
 
-    if not weapon or weapon.type == 3 or player:get_meta():get_int("bl_is_shooting") == 0 then return end
+    if not weapon or player:get_meta():get_int("bl_is_shooting") == 0 then return end
 
     block_league.shoot_end(player, weapon)
   end
