@@ -36,6 +36,7 @@ function block_league.stamina_drain(arena, w_name)
     arena.players[w_name].stamina = arena.players[w_name].stamina -2
     block_league.HUD_stamina_update(arena, w_name)
   else
+    arena.players[w_name].stamina = 0 -- in case went to -1
     wielder:set_physics_override({speed = block_league.SPEED_LOW})
     return
   end
