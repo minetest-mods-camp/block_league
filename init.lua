@@ -26,12 +26,13 @@ arena_lib.register_minigame("block_league", {
     background_image = "bl_gui_hotbar.png"
   },
 
-  time_mode = "decremental",
-
-  join_while_in_progress = true,
   load_time = 6,
   celebration_time = 5,
+  join_while_in_progress = true,
+  time_mode = "decremental",
 
+  disable_inventory = true,
+  disabled_damage_types = {"fall", "punch"},
   in_game_physics = {
     speed = block_league.SPEED,
     jump = 1.5,
@@ -39,12 +40,9 @@ arena_lib.register_minigame("block_league", {
     sneak_glitch = true,
     new_move = true
   },
-  disabled_damage_types = {"fall", "punch"},
 
   properties = {
-    -- 1 = Touchdown
-    -- 2 = Deathmatch
-    mode = 1,
+    mode = 1,           -- 1 TD, 2 DM
     score_cap = 5,
     immunity_time = 6,
     goal_orange = {},
