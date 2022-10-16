@@ -21,7 +21,7 @@ arena_lib.on_load("block_league", function(arena)
   end
 
   minetest.after(0.1, function()
-    block_league.info_panel_update(arena)
+    block_league.info_panel_update_all(arena)
   end)
 
   block_league.HUD_show_inputs(arena)
@@ -61,7 +61,7 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
   minetest.sound_play("bl_voice_fight", {to_player = p_name})
 
   minetest.after(0.1, function()
-    block_league.info_panel_update(arena)
+    block_league.info_panel_update_all(arena)
     block_league.scoreboard_update_score(arena)
   end)
 end)
@@ -147,9 +147,10 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
     local p_stats = arena.players[p_name]
 
     p_stats.kills = p_stats.kills - 1
-    local team = arena.teams[p_stats.teamID]
+    local team_id = p_stats.teamID
+    local team = arena.teams[team_id]
     team.deaths = team.deaths + 1
-    block_league.info_panel_update(arena)
+    block_league.info_panel_update(arena, team_id)
   end
 
   block_league.deactivate_zoom(player)
@@ -217,7 +218,7 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
   reset_meta(p_name)
   p_name:get_skill(block_league.get_player_skill(p_name)):disable()
 
-  block_league.info_panel_update(arena)
+  block_league.info_panel_update_all(arena)
 end)
 
 
@@ -248,15 +249,15 @@ function create_and_show_HUD(arena, p_name, is_spectator)
   block_league.HUD_stamina_create(arena, p_name)
   block_league.HUD_weapons_create(p_name)
   block_league.HUD_skill_create(p_name)
-  block_league.scoreboard_create(arena, p_name, is_spectator)
   block_league.hud_log_create(p_name)
 
   if is_spectator then
     block_league.HUD_spectate_create(arena, p_name)
-    return
+  else
+    block_league.info_panel_create(arena, p_name)
   end
 
-  block_league.info_panel_create(arena, p_name)
+  block_league.scoreboard_create(arena, p_name, is_spectator)
 end
 
 

@@ -654,7 +654,8 @@ function kill(arena, weapon, player, target)
     end
 
     local p_stats = arena.players[p_name]
-    local team = arena.teams[p_stats.teamID]
+    local team_id = p_stats.teamID
+    local team = arena.teams[team_id]
 
     -- aggiungo l'uccisione
     team.kills = team.kills + 1
@@ -672,7 +673,7 @@ function kill(arena, weapon, player, target)
     end
 
     -- aggiorno HUD
-    block_league.info_panel_update(arena)
+    block_league.info_panel_update(arena, team_id)
     block_league.HUD_spectate_update(arena, p_name, "points")
     block_league.HUD_spectate_update(arena, t_name, "alive")
     block_league.hud_log_update(arena, weapon.inventory_image, p_name, t_name)
@@ -682,7 +683,7 @@ function kill(arena, weapon, player, target)
       block_league.scoreboard_update_score(arena)
       if team.kills == arena.score_cap then
         local mod = arena_lib.get_mod_by_player(p_name)
-        arena_lib.load_celebration(mod, arena, p_stats.teamID)
+        arena_lib.load_celebration(mod, arena, team_id)
       end
     end
   else

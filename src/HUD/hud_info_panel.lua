@@ -2,7 +2,8 @@ function block_league.info_panel_create(arena, p_name)
 
     Panel:new("bl_info_panel", {
       player = p_name,
-      bg_scale = { x = 45, y = 28 },
+      bg = "bl_hud_panel_bg.png",
+      bg_scale = { x = 2000, y = 2000 },
       position = { x = 0.5, y = 0.5 },
       alignment = { x = 0, y = 0 },
       title_offset = { x = 0, y = -150},
@@ -11,40 +12,50 @@ function block_league.info_panel_create(arena, p_name)
       visible = false,
 
       sub_img_elems = {
-        player_indicator = {
-          scale = {x = 44, y = 1.7},
+        -- TODO: indicator currently broken
+        --[[player_indicator = {
+          scale = {x = 30, y = 1.7},
           offset = {x = 0, y = -121},
           alignment = { x = 0, y = 0 },
           text = "bl_hud_panel_playerindicator_teams.png"
-        },
-        team_indicator_orange = {
-          scale = {x = 44, y = 1.7},
+        },]]
+        teams_indicator = {
+          scale = {x = 2.2, y = 2.2},
           offset = {x = 0, y = -121},
           alignment = { x = 0, y = 0 },
-          text = "bl_hud_panel_teamindicator_orange.png"
-        },
-        team_indicator_blue = {
-          scale = {x = 44, y = 1.7},
-          offset = {x = 0, y = (#arena.players * 36) + (-121) + 98},
-          alignment = { x = 0, y = 0 },
-          text = "bl_hud_panel_teamindicator_blue.png"
-        },
+          text = "bl_hud_panel_teamsindicator.png"
+        }
       },
 
       sub_txt_elems = {
-        players_clmn = {
+        y_players_clmn = {
           alignment = { x = 0, y = 1 },
-          offset = {x = -250, y = -130},
+          offset = {x = -380, y = -130},
           text = ""
         },
-        pts_clmn = {
+        y_pts_clmn = {
           alignment = { x = 0, y = 1 },
-          offset = {x = 0, y = -130},
+          offset = {x = -150, y = -130},
           text = ""
         },
-        dts_clmn = {
+        y_trd_clmn = {
           alignment = { x = 0, y = 1 },
-          offset = {x = 250, y = -130},
+          offset = {x = -75, y = -130},
+          text = ""
+        },
+        b_players_clmn = {
+          alignment = { x = 0, y = 1 },
+          offset = {x = 100, y = -130},
+          text = ""
+        },
+        b_pts_clmn = {
+          alignment = { x = 0, y = 1 },
+          offset = {x = 340, y = -130},
+          text = ""
+        },
+        b_trd_clmn = {
+          alignment = { x = 0, y = 1 },
+          offset = {x = 415, y = -130},
           text = ""
         },
       }
@@ -53,7 +64,14 @@ end
 
 
 
-function block_league.info_panel_update(arena)
+function block_league.info_panel_update_all(arena)
+  block_league.info_panel_update(arena, 1)
+  block_league.info_panel_update(arena, 2)
+end
+
+
+
+function block_league.info_panel_update(arena, team_id)
 
   local plyrs_clmn = ""
   local pts_clmn = ""
@@ -61,19 +79,9 @@ function block_league.info_panel_update(arena)
 
   -- creo una tabella per avere i giocatori ordinati con nome come KEY
   local players_idx = {}
-  local bar_orange = -121
-  local bar_blue = -121
 
   local bar_pos = -121             -- posizione Y più alta della barra per evidenziare il giocatore client
   local dist_between_bars = 36     -- distanza Y tra un giocatore e l'altro (equivalente a "\n\n")
-
-  local sorted_teams = {}
-
-  -- ordino le squadre
-  for id, team in pairs(arena.teams) do
-    --salvo anche l'id della squadra così da non dover iterare di nuovo
-    table.insert(sorted_teams, {name = team.name, id = id})
-  end
 
   local third_clmn_title
   local third_clmn_value
@@ -87,41 +95,29 @@ function block_league.info_panel_update(arena)
   end
 
   -- determino come stampare le squadre seguite dai giocatori
-  for _, team in pairs(sorted_teams) do
-    plyrs_clmn = plyrs_clmn .. S("Team") .. " " .. team.name .. "\n\n"
-    pts_clmn = pts_clmn .. S("Points") .. "\n\n"
-    third_clmn = third_clmn .. third_clmn_title .. "\n\n"
+  plyrs_clmn = plyrs_clmn .. S("Team") .. " " .. arena.teams[team_id].name .. "\n\n"
+  pts_clmn = pts_clmn .. S("Points") .. "\n\n"
+  third_clmn = third_clmn .. third_clmn_title .. "\n\n"
 
-    if team.name == S("orange") then
-      bar_orange = bar_pos
-    elseif team.name == S("blue") then
-      bar_blue = bar_pos
-    end
-    bar_pos = bar_pos + dist_between_bars
+  bar_pos = bar_pos + dist_between_bars
 
-    local sorted_players = {}
+  local sorted_players = {}
 
-    for _, pl_name in pairs(arena_lib.get_players_in_team(arena, team.id)) do
-      table.insert(sorted_players, {pl_name, arena.players[pl_name].points, arena.players[pl_name][third_clmn_value]})
-    end
+  -- ordino i giocatori
+  for _, pl_name in pairs(arena_lib.get_players_in_team(arena, team_id)) do
+    table.insert(sorted_players, {pl_name, arena.players[pl_name].points, arena.players[pl_name][third_clmn_value]})
+  end
 
-    table.sort(sorted_players, function (a,b) return a[2] > b[2] end)
+  table.sort(sorted_players, function (a,b) return a[2] > b[2] end)
 
-    -- creo le stringhe dei giocatori
-    for _, stats in pairs(sorted_players) do
+  -- creo le stringhe dei giocatori
+  for _, stats in pairs(sorted_players) do
 
-      plyrs_clmn = plyrs_clmn .. stats[1] .. "\n\n"
-      pts_clmn = pts_clmn .. stats[2] .. "\n\n"
-      third_clmn = third_clmn .. stats[3] .. "\n\n"
+    plyrs_clmn = plyrs_clmn .. stats[1] .. "\n\n"
+    pts_clmn = pts_clmn .. stats[2] .. "\n\n"
+    third_clmn = third_clmn .. stats[3] .. "\n\n"
 
-      players_idx[stats[1]] = bar_pos
-      bar_pos = bar_pos + dist_between_bars
-
-    end
-
-    plyrs_clmn = plyrs_clmn .. "\n\n"
-    pts_clmn = pts_clmn .. "\n\n"
-    third_clmn = third_clmn .. "\n\n"
+    players_idx[stats[1]] = bar_pos
     bar_pos = bar_pos + dist_between_bars
 
   end
@@ -129,30 +125,50 @@ function block_league.info_panel_update(arena)
   -- aggiorno il pannello
   for pl_name, stats in pairs(arena.players) do
     local panel = panel_lib.get_panel(pl_name, "bl_info_panel")
-    local bar_height = players_idx[pl_name]    -- l'altezza della barra che segnala al client dove si trova nel panello
+    local x_off = stats.teamID == 1 and -280 or 280
 
-    panel:update(nil,
+    -- l'altezza della barra che segnala al client dove si trova nel panello
+    --local bar_height = stats.teamID == team_id and players_idx[pl_name] or nil
 
-    {players_clmn = {
-      text = plyrs_clmn
-    },
-    pts_clmn = {
-      text = pts_clmn
-    },
-    dts_clmn = {
-      text = third_clmn
-    }},
+    if team_id == 1 then
 
-    {player_indicator = {
-      offset = { x = 0, y = bar_height }
-    },
-    team_indicator_orange = {
-      offset = { x = 0, y = bar_orange }
-    },
-    team_indicator_blue = {
-      offset = { x = 0, y = bar_blue }
-    },
-  })
+      panel:update(nil,
 
+      {y_players_clmn = {
+        text = plyrs_clmn
+      },
+      y_pts_clmn = {
+        text = pts_clmn
+      },
+      y_trd_clmn = {
+        text = third_clmn
+      }}--[[,
+
+      {player_indicator = {
+        offset = { x = x_off, y = bar_height }
+      }
+    })]]
+    )
+
+    else
+
+      panel:update(nil,
+
+        {b_players_clmn = {
+          text = plyrs_clmn
+        },
+        b_pts_clmn = {
+          text = pts_clmn
+        },
+        b_trd_clmn = {
+          text = third_clmn
+        }}--[[,
+
+        {player_indicator = {
+          offset = { x = x_off, y = bar_height }
+        }
+      })]]
+    )
+    end
   end
 end

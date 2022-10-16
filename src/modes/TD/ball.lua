@@ -147,7 +147,7 @@ function ball:attach(player)
   block_league.stamina_drain(arena, p_name)
 
   arena.players[p_name].points = arena.players[p_name].points + 2
-  block_league.info_panel_update(arena)
+  block_league.info_panel_update(arena, self.team_id)
   block_league.HUD_spectate_update(arena, p_name, "ball")
 
   local ball_obj = self.object
@@ -335,7 +335,7 @@ function add_point(w_name, teamID, arena)
   arena.players[w_name].TDs = arena.players[w_name].TDs + 1
   arena.players[w_name].points = arena.players[w_name].points + 10
   block_league.scoreboard_update_score(arena)
-  block_league.info_panel_update(arena)
+  block_league.info_panel_update(arena, teamID)
   block_league.HUD_spectate_update(arena, w_name, "TD")
 end
 
