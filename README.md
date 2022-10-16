@@ -6,10 +6,11 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 
 ### Dependencies
 * [achievements_lib](https://gitlab.com/zughy-friends-minetest/achievements_lib) by me
-* [arena_lib](https://gitlab.com/zughy-friends-minetest/arena_lib/) by me and friends
+* [arena_lib](https://gitlab.com/zughy-friends-minetest/arena_lib/) by me
 * (already inside) [ChatCMDBuilder](https://github.com/rubenwardy/ChatCmdBuilder/) by rubenwardy
 * [controls](https://github.com/Arcelmi/minetest-controls) by Arcelmi
-* [panel_lib](https://gitlab.com/zughy-friends-minetest/panel_lib) by me and friends
+* [panel_lib](https://gitlab.com/zughy-friends-minetest/panel_lib) by me
+* [skillz](https://gitlab.com/zughy-friends-minetest/skillz) by Giov4
 
 ### Set up an arena
 1. run `/bladmin create <arena_name> <mode>`, where `mode` is `1` for Touchdown and `2` for Deathmatch
