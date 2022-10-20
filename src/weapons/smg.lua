@@ -1,19 +1,21 @@
 local S = minetest.get_translator("block_league")
+local dmg = 3
 
 block_league.register_weapon("block_league:smg", {
 
   description = S("Submachine Gun"),
+  profile_description = S("Your go-to weapon for close combat") .. "\n\n"
+    .. S("LMB: shoot @1♥, hold down for a barrage of shots", "<style color=#7a9090>" .. dmg) .. "</style>",
+
   mesh = "bl_smg.obj",
   tiles = {"bl_smg_texture.png"},
-  --wield_image = "bl_smg.png^[transformFX",
   wield_scale = {x=1.34, y=1.34, z=1.34},
   inventory_image = "bl_smg.png",
 
   weapon_type = 1,
 
-  damage = 3,
+  damage = dmg,
   weapon_range = 30,
-  knockback = 0,
   fire_delay = 0.1,
 
   pierce = false,

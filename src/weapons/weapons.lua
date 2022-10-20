@@ -23,6 +23,7 @@ function block_league.register_weapon(name, def)
     name = def.name,
 
     description = def.description,
+    profile_description = def.profile_description or "",
     drawtype = def.mesh and "mesh" or "item",
     mesh = def.mesh or nil,
     tiles = def.tiles or nil,
@@ -35,7 +36,7 @@ function block_league.register_weapon(name, def)
 
     damage = def.damage,
     weapon_range = def.weapon_range,
-    knockback = def.knockback,
+    knockback = def.knockback or 0,
     fire_delay = def.fire_delay,
     range = def.range and def.range or 0,
     node_placement_prediction = "", -- disable prediction

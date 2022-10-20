@@ -1,15 +1,20 @@
 local S = minetest.get_translator("block_league")
+local dmg = 7
 
 block_league.register_weapon("block_league:sword", {
 
   description = S("2H Sword"),
+  profile_description = S("Keep your friends close and your enemies further -Sun Zhu") .. "\n\n"
+    .. S("LMB: push @1♥", "<style color=#7a9090>" .. dmg)  .. "</style>\n"
+    .. S("RMB: dash @1♥", "<style color=#7a9090>" .. dmg),
+
   wield_image = "bl_sword.png",
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_sword.png",
 
   weapon_type = 3,
 
-  damage = 7,
+  damage = dmg,
   knockback = 40,
   fire_delay = 1.4,
   weap_secondary_delay = 3,

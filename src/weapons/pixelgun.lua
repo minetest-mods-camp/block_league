@@ -1,8 +1,13 @@
 local S = minetest.get_translator("block_league")
+local dmg = 18
 
 block_league.register_weapon("block_league:pixelgun", {
 
   description = S("Pixelgun"),
+  profile_description = S("Sniping weapon: you'll never be too far away") .. "\n\n"
+    .. S("LMB: shoot @1♥", "<style color=#7a9090>" .. dmg) .. "</style>\n"
+    .. S("RMB: zoom"),
+
   mesh = "bl_pixelgun.obj",
   tiles = {"bl_pixelgun_texture.png"},
   wield_scale = {x=1.3, y=1.3, z=1.3},
@@ -10,9 +15,8 @@ block_league.register_weapon("block_league:pixelgun", {
 
   weapon_type = 1,
 
-  damage = 18,
+  damage = dmg,
   weapon_range = 150,
-  knockback = 0,
   fire_delay = 0.9,
 
   pierce = true,

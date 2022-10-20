@@ -31,8 +31,10 @@ You've left test mode=
 
 # GUI/gui_profile.lua
 Welcome to your Block League profile!=
-Here you can change your passive skill: select one from the panel on the left to know more about it=
+Here you can learn about weapons and change your passive skill: select one from the panel on the left to know more about it=
 More customisations will be possible in the future@1 (donations help)=
+Decrease damage with distance=
+Pierce through=
 EQUIP=
 
 # HUD/hud_critical.lua
@@ -70,15 +72,23 @@ Great choice for strikers, as it allows players to run more and perform tricks m
 
 # weapons/pixelgun.lua
 Pixelgun=
+Sniping weapon: you'll never be too far away=
+LMB: shoot @1♥=
+RMB: zoom=
 
 # weapons/rocket_launcher.lua
 Rocket Launcher=
 
 # weapons/smg.lua
 Submachine Gun=
+Your go-to weapon for close combat=
+LMB: shoot @1♥, hold down for a barrage of shots=
 
 # weapons/sword.lua
 2H Sword=
+Keep your friends close and your enemies further -Sun Zhu=
+LMB: push @1♥=
+RMB: dash @1♥=
 
 # weapons/weapons.lua
 has killed @1 players in a row!=
