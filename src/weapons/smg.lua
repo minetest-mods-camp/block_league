@@ -15,6 +15,7 @@ block_league.register_weapon("block_league:smg", {
   weapon_type = 1,
 
   damage = dmg,
+  knockback = 0,
   weapon_range = 30,
   fire_delay = 0.1,
 

@@ -36,7 +36,7 @@ function block_league.register_weapon(name, def)
 
     damage = def.damage,
     weapon_range = def.weapon_range,
-    knockback = def.knockback or 0,
+    knockback = def.knockback,
     fire_delay = def.fire_delay,
     range = def.range and def.range or 0,
     node_placement_prediction = "", -- disable prediction
