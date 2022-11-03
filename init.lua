@@ -72,9 +72,6 @@ arena_lib.register_minigame("block_league", {
 
 
 
--- libs
-dofile(modpath .. "/libs/chatcmdbuilder.lua")
-
 -- general
 dofile(srcpath .. "/commands.lua")
 dofile(srcpath .. "/database_manager.lua")
