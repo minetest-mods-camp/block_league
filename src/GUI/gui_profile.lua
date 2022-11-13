@@ -37,7 +37,7 @@ function get_formspec(p_name)
     "item_image_button[0.1,0.08;0.82,0.82;" .. p_weaps[1] .. ";weap1;]",
     "item_image_button[1.15,0.08;0.82,0.82;" .. p_weaps[2] .. ";weap2;]",
     "item_image_button[2.2,0.08;0.82,0.82;" .. p_weaps[3] .. ";weap3;]",
-    "image_button[3.25,0.08;0.82,0.82;" .. skillz.get_skill_def(p_skill).icon .. ";skill;]",
+    "image_button[3.25,0.08;0.82,0.82;" .. skills.get_skill_def(p_skill).icon .. ";skill;]",
     "tooltip[skill;" .. p_skill .. "]",
     "container_end[]",
     "container[0.85,5.66]",
@@ -61,7 +61,7 @@ function get_formspec(p_name)
   else
     local item, elem_name, elem_desc, properties, button
     local weap = minetest.registered_items["block_league:" .. elem]
-    local skill = skillz.get_skill_def("block_league:" .. elem)
+    local skill = skills.get_skill_def("block_league:" .. elem)
 
     -- se è un'arma..
     if weap then

@@ -1,7 +1,7 @@
 local S = minetest.get_translator("block_league")
 
 -- there is no "+" in the registration name as it causes issues when retrieving images names
-skillz.register_skill("block_league:sp", {
+skills.register_skill("block_league:sp", {
   name = "SP+",
   icon = "bl_skill_sp.png",
   profile_description = S("Increases your stamina points by 25 @1(100>125)", "<style color=#abc0c0>") .. "</style>\n\n"
