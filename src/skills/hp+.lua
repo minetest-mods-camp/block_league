@@ -13,6 +13,6 @@ skills.register_skill("block_league:hp", {
     player:set_hp(25)
   end,
   on_stop = function(self)
-    self.player:get_properties().hp_max = minetest.PLAYER_MAX_HP_DEFAULT
+    self.player:set_properties({hp_max = minetest.PLAYER_MAX_HP_DEFAULT})
   end
 })
