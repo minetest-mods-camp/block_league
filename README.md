@@ -13,20 +13,17 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 * [skills](https://gitlab.com/zughy-friends-minetest/skills) by Giov4
 
 ### Set up an arena
-1. run `/bladmin create <arena_name> <mode>`, where `mode` is `1` for Touchdown and `2` for Deathmatch
-2. enter the editor via `/bladmin edit <arena_name>`
-3. have fun customising it
-
-If it's TD, you must also
-1. set the two goals via `/bladmin goal [set|remove] <arena_name> <team_name>`
+1. run `/arenas create block_league <arena_name>`
 2. set the two waiting rooms via `/bladmin wroom [set|remove] <arena_name> <team_name>`
-3. set the ball spawn point via `/bladmin ball [set|remove] <arena_name>`  
+	1. (TD) set the two goals via `/bladmin goal [set|remove] <arena_name> <team_name>`
+	2. (TD) set the ball spawn point via `/bladmin ball [set|remove] <arena_name>
+3. enter the editor via `/arenas edit <arena_name>`
+	1. (DM) Go to Settings -> Arena properties -> set `mode` to 2 (1 is TD, 2 is DM)
+4. have fun customising it
 
-(one day™ these 3 last steps will be included in the editor... maybe)
+(one day™ the steps involving `/bladmin` commands will be included in the editor... maybe)
 
 ### Utility commands
-* `/bladmin list`: list all arenas
-* `/bladmin info <arena_name>`: list all the info about the specific arena
 * `/bladmin testkit`: gives you the bouncer and the in-game physics, to easily test your maps. The last object in the hotbar restores your inventory and physics
 
 ### Want to help?
