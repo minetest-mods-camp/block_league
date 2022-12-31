@@ -9,7 +9,7 @@ local row2_height_img = row2_height_txt -14
 local row3_height_img = row3_height_txt -14
 
 
-function block_league.hud_log_create(p_name)
+function block_league.HUD_log_create(p_name)
 
   local icon_scale = { x = 3, y = 3}
 
@@ -61,7 +61,7 @@ end
 
 
 
-function block_league.hud_log_update(arena, action_img, executor, receiver)
+function block_league.HUD_log_update(arena, action_img, executor, receiver)
 
   for psp_name, _ in pairs(arena.players_and_spectators) do
 
@@ -140,7 +140,7 @@ end
 
 
 
-function block_league.hud_log_clear(arena)
+function block_league.HUD_log_clear(arena)
 
   for pl_name, _ in pairs(arena.players_and_spectators) do
     local panel = panel_lib.get_panel(pl_name, "bl_log")

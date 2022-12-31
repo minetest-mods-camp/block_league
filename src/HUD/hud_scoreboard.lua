@@ -1,4 +1,4 @@
-function block_league.scoreboard_create(arena, p_name, is_spectator)
+function block_league.HUD_scoreboard_create(arena, p_name, is_spectator)
 
   local timer = arena.in_loading and arena.initial_time or arena.current_time
   local team_marker = ""
@@ -47,7 +47,7 @@ end
 
 
 
-function block_league.scoreboard_update_score(arena)
+function block_league.HUD_scoreboard_update_score(arena)
 
   local score_orange = 0
   local score_blue = 0
@@ -77,7 +77,7 @@ end
 
 
 
-function block_league.scoreboard_update_time(arena)
+function block_league.HUD_scoreboard_update_time(arena)
 
   for psp_name, _ in pairs(arena.players_and_spectators) do
     local panel = panel_lib.get_panel(psp_name, "bl_scoreboard")

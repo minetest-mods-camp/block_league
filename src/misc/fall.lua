@@ -9,7 +9,7 @@ function block_league.fall_check_loop(arena)
     if player:get_hp() > 0 and player:get_pos().y < arena.min_y then
       player:set_hp(0)
       player:get_meta():set_int("bl_has_ball", 0)
-      block_league.hud_log_update(arena, "bl_log_suicide.png", pl_name, "")
+      block_league.HUD_log_update(arena, "bl_log_suicide.png", pl_name, "")
     end
   end
 

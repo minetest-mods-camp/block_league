@@ -19,12 +19,12 @@ function block_league.refill_weapons(arena, p_name)
   --TODO avere una tabella  per giocatore che tenga traccia delle armi equipaggiate
   local default_weapons = {"block_league:smg", "block_league:sword", "block_league:pixelgun"}
 
-  for i, weapon_name in pairs(default_weapons) do
-    local magazine = minetest.registered_nodes[weapon_name].magazine
+  for i, w_name in pairs(default_weapons) do
+    local magazine = minetest.registered_nodes[w_name].magazine
 
     if magazine then
-      arena.players[p_name].weapons_magazine[weapon_name] = magazine
-      block_league.HUD_weapons_update(arena, p_name, weapon_name)
+      arena.players[p_name].weapons_magazine[w_name] = magazine
+      block_league.HUD_weapons_update(arena, p_name, w_name)
     end
 
   end
@@ -78,7 +78,7 @@ function round_start(arena)
     minetest.sound_play("bl_voice_fight", {to_player = psp_name})
   end
 
-  block_league.hud_log_clear(arena)
+  block_league.HUD_log_clear(arena)
 
   if arena.mode == 1 then
     load_ball(arena)

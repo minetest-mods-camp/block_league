@@ -241,7 +241,7 @@ function ball:announce_ball_possession_change(is_ball_lost)
 
   else
     local w_name = self.w_name
-    block_league.hud_log_update(arena, "bl_log_ball.png", w_name, "")
+    block_league.HUD_log_update(arena, "bl_log_ball.png", w_name, "")
 
     for _, pl_name in pairs(team) do
       minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
@@ -293,7 +293,7 @@ function check_for_touchdown(arena, ball, w_name, w_pos, goal)
 
     wielder:get_meta():set_int("bl_has_ball", 0)
 
-    block_league.hud_log_update(arena, "bl_log_TD.png", w_name, "")
+    block_league.HUD_log_update(arena, "bl_log_TD.png", w_name, "")
     block_league.HUD_spectate_update(arena, w_name, "ball")
 
     local teamID = arena.players[w_name].teamID
@@ -334,7 +334,7 @@ function add_point(w_name, teamID, arena)
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
   arena.players[w_name].TDs = arena.players[w_name].TDs + 1
   arena.players[w_name].points = arena.players[w_name].points + 10
-  block_league.scoreboard_update_score(arena)
+  block_league.HUD_scoreboard_update_score(arena)
   block_league.info_panel_update(arena, teamID)
   block_league.HUD_spectate_update(arena, w_name, "TD")
 end

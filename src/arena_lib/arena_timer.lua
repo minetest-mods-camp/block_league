@@ -1,7 +1,7 @@
 local S = minetest.get_translator("block_league")
 
 arena_lib.on_time_tick("block_league", function(arena)
-  block_league.scoreboard_update_time(arena)
+  block_league.HUD_scoreboard_update_time(arena)
 end)
 
 

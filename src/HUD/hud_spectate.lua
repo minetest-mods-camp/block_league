@@ -22,9 +22,12 @@ end
 
 
 
-function block_league.HUD_spectate_remove(arena_players, sp_name)
-  for pl_name, _ in pairs(arena_players) do
-    panel_lib.get_panel(sp_name, "bl_spectate_" .. pl_name):remove()
+function block_league.HUD_spectate_remove(a_players, sp_name)
+  for pl_name, _ in pairs(a_players) do
+    local panel = panel_lib.get_panel(sp_name, "bl_spectate_" .. pl_name)
+    if panel then                                                               -- il pannello potrebbe non esistere in caso di giocatori (uno o un gruppo) che entrano dalla spettatore
+      panel:remove()
+    end
   end
 end
 

@@ -1,7 +1,8 @@
 local function remove_message() end
 
-function block_league.HUD_broadcast_create(p_name)
 
+
+function block_league.HUD_broadcast_create(p_name)
   Panel:new("bl_broadcast", {
     player = p_name,
     position  = {x = 0.5, y = 0.33},
@@ -27,7 +28,6 @@ end
 
 
 function block_league.HUD_kill_update(p_name, msg)
-
   local panel = panel_lib.get_panel(p_name, "bl_broadcast")
 
   panel:update(nil, {
@@ -35,7 +35,6 @@ function block_league.HUD_kill_update(p_name, msg)
         text = msg
       }
   })
-
   remove_message(panel, "kills")
 end
 
@@ -61,5 +60,4 @@ function remove_message(panel, field)
       })
     end
   end)
-
 end

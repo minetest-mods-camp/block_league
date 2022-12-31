@@ -677,11 +677,11 @@ function kill(arena, weapon, player, target)
     block_league.info_panel_update(arena, team_id)
     block_league.HUD_spectate_update(arena, p_name, "points")
     block_league.HUD_spectate_update(arena, t_name, "alive")
-    block_league.hud_log_update(arena, weapon.inventory_image, p_name, t_name)
+    block_league.HUD_log_update(arena, weapon.inventory_image, p_name, t_name)
 
     -- se è DM e il cap è raggiunto, finisce partita
     if arena.mode == 2 then
-      block_league.scoreboard_update_score(arena)
+      block_league.HUD_scoreboard_update_score(arena)
       if team.kills == arena.score_cap then
         local mod = arena_lib.get_mod_by_player(p_name)
         arena_lib.load_celebration(mod, arena, team_id)
@@ -689,7 +689,7 @@ function kill(arena, weapon, player, target)
     end
   else
     block_league.HUD_kill_update(t_name, S("You've killed yourself"))
-    block_league.hud_log_update(arena, "bl_log_suicide.png", p_name, t_name)
+    block_league.HUD_log_update(arena, "bl_log_suicide.png", p_name, t_name)
   end
 
 end

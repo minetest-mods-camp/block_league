@@ -40,12 +40,12 @@ end)
 
 
 
-arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
+arena_lib.on_join("block_league", function(p_name, arena, as_spectator, was_spectator)
 
   if as_spectator then
     create_and_show_HUD(arena, p_name, true)
     minetest.after(0.1, function()
-      block_league.scoreboard_update_score(arena)
+      block_league.HUD_scoreboard_update_score(arena)
     end)
     return
   end
@@ -54,7 +54,7 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
 
   reset_meta(p_name)
   equip(arena, p_name)
-  create_and_show_HUD(arena, p_name)
+  create_and_show_HUD(arena, p_name, false, was_spectator)
   block_league.HUD_spectate_addplayer(arena, p_name)
   block_league.refill_weapons(arena, p_name)
 
@@ -62,7 +62,7 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator)
 
   minetest.after(0.1, function()
     block_league.info_panel_update_all(arena)
-    block_league.scoreboard_update_score(arena)
+    block_league.HUD_scoreboard_update_score(arena)
   end)
 end)
 
@@ -243,21 +243,31 @@ end
 
 
 
-function create_and_show_HUD(arena, p_name, is_spectator)
-  block_league.HUD_broadcast_create(p_name)
+function create_and_show_HUD(arena, p_name, is_spectator, was_spectator)
+  if was_spectator then
+    panel_lib.get_panel(p_name, "bl_weapons"):remove()
+    panel_lib.get_panel(p_name, "bl_skill"):remove()
+    block_league.HUD_spectate_remove(arena.players, p_name)
+
+    local team_marker = arena.players[p_name].teamID == 1 and "bl_hud_scoreboard_orangemark.png" or "bl_hud_scoreboard_bluemark.png"
+    panel_lib.get_panel(p_name, "bl_scoreboard"):update(nil, nil, {team_marker = {text = team_marker}})
+    block_league.HUD_stamina_update(arena, p_name)
+  else
+    block_league.HUD_broadcast_create(p_name)
+    block_league.HUD_stamina_create(arena, p_name)
+    block_league.HUD_scoreboard_create(arena, p_name, is_spectator)
+    block_league.HUD_log_create(p_name)
+  end
+
   block_league.HUD_critical_create(p_name)
-  block_league.HUD_stamina_create(arena, p_name)
   block_league.HUD_weapons_create(p_name)
   block_league.HUD_skill_create(p_name)
-  block_league.hud_log_create(p_name)
 
   if is_spectator then
     block_league.HUD_spectate_create(arena, p_name)
   else
     block_league.info_panel_create(arena, p_name)
   end
-
-  block_league.scoreboard_create(arena, p_name, is_spectator)
 end
 
 
