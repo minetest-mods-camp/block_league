@@ -11,6 +11,7 @@ block_league.register_weapon("block_league:smg", {
   tiles = {"bl_smg_texture.png"},
   wield_scale = {x=1.34, y=1.34, z=1.34},
   inventory_image = "bl_smg.png",
+  crosshair = "bl_smg_crosshair.png",
 
   weapon_type = 1,
 

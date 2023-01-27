@@ -12,6 +12,7 @@ block_league.register_weapon("block_league:pixelgun", {
   tiles = {"bl_pixelgun_texture.png"},
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_pixelgun.png",
+  crosshair = "bl_pixelgun_crosshair.png",
 
   weapon_type = 1,
 
