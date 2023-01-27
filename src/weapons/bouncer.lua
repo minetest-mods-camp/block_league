@@ -9,6 +9,7 @@ local function register_bouncer(name, desc, stamina)
     description = desc,
     wield_scale = {x=1.3, y=1.3, z=1.3},
     inventory_image = "bl_" .. name .. ".png",
+    crosshair = "bl_bouncer_crosshair.png",
     jump_height = 5,
     groups = {oddly_breakable_by_hand = "2"},
     on_drop = function() end,
@@ -86,7 +87,8 @@ function can_use(player, stamina)
   if meta:get_int("bl_bouncer_delay") == 1 or
      meta:get_int("bl_death_delay") == 1 or
      meta:get_int("bl_reloading") == 1 or
-     meta:get_int("bl_is_speed_locked") == 1 then return end
+     meta:get_int("bl_is_speed_locked") == 1 or
+     meta:get_int("bl_weap_delay") == 1 then return end
 
   meta:set_int("bl_bouncer_delay", 1)
 

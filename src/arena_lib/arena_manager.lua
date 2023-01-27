@@ -244,6 +244,7 @@ end
 
 
 function create_and_show_HUD(arena, p_name, is_spectator, was_spectator)
+  -- se stava già seguendo come spettatorə
   if was_spectator then
     panel_lib.get_panel(p_name, "bl_weapons"):remove()
     panel_lib.get_panel(p_name, "bl_skill"):remove()
@@ -252,14 +253,18 @@ function create_and_show_HUD(arena, p_name, is_spectator, was_spectator)
     local team_marker = arena.players[p_name].teamID == 1 and "bl_hud_scoreboard_orangemark.png" or "bl_hud_scoreboard_bluemark.png"
     panel_lib.get_panel(p_name, "bl_scoreboard"):update(nil, nil, {team_marker = {text = team_marker}})
     block_league.HUD_stamina_update(arena, p_name)
+
+  -- se entra per la prima volta
   else
     block_league.HUD_broadcast_create(p_name)
     block_league.HUD_stamina_create(arena, p_name)
     block_league.HUD_scoreboard_create(arena, p_name, is_spectator)
     block_league.HUD_log_create(p_name)
+
+    minetest.get_player_by_name(p_name):hud_set_flags({crosshair = false})
   end
 
-  block_league.HUD_critical_create(p_name)
+  block_league.HUD_critical_create(p_name) -- TODO: abbastanza sicuro che questo non debba essere generato ogni volta
   block_league.HUD_weapons_create(p_name)
   block_league.HUD_skill_create(p_name)
 
@@ -276,10 +281,13 @@ function remove_HUD(p_name, is_spectator)
   block_league.HUD_critical_remove(p_name)
   panel_lib.get_panel(p_name, "bl_stamina"):remove()
   panel_lib.get_panel(p_name, "bl_weapons"):remove()
+  panel_lib.get_panel(p_name, "bl_crosshair"):remove()
   panel_lib.get_panel(p_name, "bl_skill"):remove()
   panel_lib.get_panel(p_name, "bl_broadcast"):remove()
   panel_lib.get_panel(p_name, "bl_scoreboard"):remove()
   panel_lib.get_panel(p_name, "bl_log"):remove()
+
+  minetest.get_player_by_name(p_name):hud_set_flags({crosshair = true})
 
   if is_spectator then return end
 

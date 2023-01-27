@@ -13,6 +13,34 @@ local function shoot_bullet() end
 local function after_damage() end
 local function kill() end
 
+
+
+--v---------------- globalstep -------------------v--
+minetest.register_globalstep(function(dtime)
+  for _, p_name in pairs(arena_lib.get_players_in_minigame("block_league")) do
+    if not arena_lib.is_player_spectating(p_name) then
+      local p_data = arena_lib.get_arena_by_player(p_name).players[p_name]
+      local player = minetest.get_player_by_name(p_name)
+      local w_name = player:get_wielded_item():get_name()
+      local curr_weap = p_data.current_weapon
+
+      -- disattivo zoom
+      if player:get_fov() == 20 and (w_name ~= "block_league:pixelgun" or player:get_meta():get_int("bl_reloading") == 1) then
+        block_league.deactivate_zoom(player)
+      end
+
+      -- cambio mirino
+      if w_name ~= curr_weap then
+        p_data.current_weapon = w_name
+        block_league.HUD_crosshair_update(p_name, w_name)
+      end
+    end
+  end
+end)
+--^---------------- globalstep -------------------^--
+
+
+
 function block_league.register_weapon(name, def)
 
   -- usato per avere una dichiarazione pulita E al tempo stesso non dover
@@ -30,6 +58,7 @@ function block_league.register_weapon(name, def)
     wield_image = def.wield_image or nil,
     wield_scale = def.wield_scale,
     inventory_image = def.inventory_image,
+    crosshair = def.crosshair,
     use_texture_alpha = def.mesh and "clip" or nil,
 
     weapon_type = def.weapon_type,
@@ -54,7 +83,6 @@ function block_league.register_weapon(name, def)
     reload_time = def.reload_time,
 
     zoom = def.zoom,
-
     bullet = def.bullet and block_league.register_bullet(def.bullet, def.damage, def.bullet_trail) or nil,
 
     -- LMB = first fire
@@ -294,20 +322,6 @@ end
 
 
 
--- TEMP: gestione zoom al cambio d'arma. Servirebbe un on_wield_item/on_unwield_item su Minetest
-minetest.register_globalstep(function(dtime)
-
-  for _, player in pairs(arena_lib.get_players_in_minigame("block_league", true)) do
-
-    if player:get_fov() == 20 and (player:get_wielded_item():get_name() ~= "block_league:pixelgun" or player:get_meta():get_int("bl_reloading") == 1) then
-      block_league.deactivate_zoom(player)
-    end
-  end
-
-end)
-
-
-
 
 
 ----------------------------------------------
@@ -408,7 +422,6 @@ end
 
 
 function weapon_zoom(weapon, player)
-
   local p_meta = player:get_meta()
 
   if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_death_delay") == 1 then return end
@@ -424,7 +437,6 @@ end
 
 
 function weapon_reload(player, weapon)
-
   local w_name = weapon.name
   local p_name = player:get_player_name()
   local p_meta = player:get_meta()
@@ -450,6 +462,7 @@ function weapon_reload(player, weapon)
   end
 
   block_league.HUD_weapons_update(arena, p_name, w_name, true)
+  block_league.HUD_crosshair_update(p_name, w_name, true)
 
   minetest.after(weapon.reload_time, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
@@ -461,8 +474,12 @@ function weapon_reload(player, weapon)
       player:set_physics_override({ speed = vel })
     end
 
-    arena.players[p_name].weapons_magazine[w_name] = weapon.magazine
-    block_league.HUD_weapons_update(arena, p_name, w_name)
+    local p_data = arena.players[p_name]
+    local curr_weap = p_data.current_weapon
+
+    p_data.weapons_magazine[w_name] = weapon.magazine
+    block_league.HUD_weapons_update(arena, p_name, w_name, false)
+    block_league.HUD_crosshair_update(p_name, curr_weap, false)
   end)
 
 end
@@ -495,6 +512,7 @@ function can_shoot(player, weapon)
   -- per le armi bianche, aggiorno l'HUD qui che segnala che son state usate
   if not weapon.magazine then
     block_league.HUD_weapons_update(arena, p_name, w_name, true)
+    block_league.HUD_crosshair_update(p_name, w_name, true)
   end
 
   minetest.after(weapon.fire_delay, function()
@@ -502,7 +520,9 @@ function can_shoot(player, weapon)
     if weapon.magazine and p_meta:get_int("bl_reloading") == 0 then
       p_meta:set_int("bl_weap_delay", 0)
     elseif not weapon.magazine then
-      block_league.HUD_weapons_update(arena, p_name, w_name)
+      local curr_weap = arena.players[p_name].current_weapon
+      block_league.HUD_weapons_update(arena, p_name, w_name, false)
+      block_league.HUD_crosshair_update(p_name, curr_weap, false)
       p_meta:set_int("bl_weap_delay", 0)
     end
   end)
@@ -554,19 +574,14 @@ end
 
 
 function check_weapon_type_and_attack(player, weapon, pointed_thing)
-
-  if weapon.weapon_type ~= 3 then
-
-      if weapon.weapon_type == 1 then
-        shoot_hitscan(player, weapon, pointed_thing)
-      elseif weapon.weapon_type == 2 then
-        shoot_bullet(player, weapon.bullet, pointed_thing)
-      end
-
+  if weapon.weapon_type == 1 then
+    shoot_hitscan(player, weapon, pointed_thing)
+  elseif weapon.weapon_type == 2 then
+    shoot_bullet(player, weapon.bullet, pointed_thing)
   else
-      if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
-      local target = {{player = pointed_thing.ref, headshot = false}}
-      block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
+    if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
+    local target = {{player = pointed_thing.ref, headshot = false}}
+    block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
   end
 end
 
@@ -586,13 +601,10 @@ end
 
 
 function shoot_bullet(user, bullet, pointed_thing)
-
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y + user:get_properties().eye_height, z = pos.z}
   local bullet_name = bullet.name .. '_entity'
-
   local bullet = minetest.add_entity(pos_head, bullet_name, user:get_player_name())
-
   local speed = bullet.speed
   local dir = user:get_look_dir()
 
@@ -612,8 +624,7 @@ end
 
 
 function after_damage(arena, p_name, killed_players)
-
-  -- eventuale achievement doppia/tripla uccisione
+  -- eventuale prestigio doppia/tripla uccisione
   if killed_players > 1 then
 
     if killed_players == 2 then

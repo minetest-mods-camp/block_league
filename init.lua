@@ -65,8 +65,9 @@ arena_lib.register_minigame("block_league", {
     stamina_max = 100,
     TDs = 0,
     points = 0,
-    entering_time = 0,
-    weapons_magazine = {}
+    entering_time = 0,          -- inutilizzato, servirà prob in futuro per calcolare exp
+    weapons_magazine = {},
+    curr_weapon = ""
   }
 })
 

@@ -5,7 +5,6 @@ local function get_bullet_count() end
 
 
 function block_league.HUD_weapons_create(p_name)
-
   local inv = ""
   local sub_img_elems = {}
   local sub_txt_elems = {}
@@ -20,8 +19,17 @@ function block_league.HUD_weapons_create(p_name)
     offset_y = -125
   end
 
-  for i = 1, 3 do
+  -- mirino
+  Panel:new("bl_crosshair", {
+    player = p_name,
+    bg = "",
+    bg_scale = {x = 2, y = 2},
+    position = { x = 0.5, y = 0.5 },
+    alignment = {x = 0, y = 0}
+  })
 
+  -- armi
+  for i = 1, 3 do
     local stack = inv:get_stack("main", i)
     local item_name = stack:get_name()
     local weapon = minetest.registered_nodes[item_name]
@@ -50,7 +58,6 @@ function block_league.HUD_weapons_create(p_name)
       }
       offset_x = offset_x + 90
     end
-
   end
 
   -- creo pannello
@@ -64,13 +71,11 @@ function block_league.HUD_weapons_create(p_name)
     sub_img_elems = sub_img_elems,
     sub_txt_elems = sub_txt_elems
   })
-
 end
 
 
 
 function block_league.HUD_weapons_update(arena, p_name, w_name, is_reloading)
-
   local weapon = minetest.registered_nodes[w_name]
   local current_magazine = not weapon.magazine and "" or arena.players[p_name].weapons_magazine[w_name]
 
@@ -98,6 +103,20 @@ function block_league.HUD_weapons_update(arena, p_name, w_name, is_reloading)
       {[w_name .. "_bg"] = { text = bg_pic }}
     )
   end
+end
+
+
+
+function block_league.HUD_crosshair_update(p_name, w_name, is_reloading)
+  local panel = panel_lib.get_panel(p_name, "bl_crosshair")
+  local weap = minetest.registered_nodes[w_name] or minetest.registered_tools[w_name]
+  local col = ""
+
+  if is_reloading == true or (is_reloading == nil and string.find(panel.background_def.text, "multiply")) then
+    col = "^[multiply:#ff492c"
+  end
+
+  panel:update({bg = weap.crosshair .. col})
 end
 
 
