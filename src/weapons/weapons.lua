@@ -403,14 +403,14 @@ function weapon_right_click(weapon, player, pointed_thing)
   local p_meta = player:get_meta()
 
   ----- gestione delay dell'arma -----
-  if p_meta:get_int("bl_weap_secondary_delay") == 1 or p_meta:get_int("bl_death_delay") == 1 then
+  if p_meta:get_int("bl_weap_delay") == 1 or p_meta:get_int("bl_death_delay") == 1 then
     return end
 
-  p_meta:set_int("bl_weap_secondary_delay", 1)
+  p_meta:set_int("bl_weap_delay", 1)
 
   minetest.after(weapon.weap_secondary_delay, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    p_meta:set_int("bl_weap_secondary_delay", 0)
+    p_meta:set_int("bl_weap_delay", 0)
   end)
   ----- fine gestione delay -----
 

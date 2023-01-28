@@ -234,7 +234,6 @@ function reset_meta(p_name)
 
   p_meta:set_int("bl_has_ball", 0)
   p_meta:set_int("bl_weap_delay", 0)
-  p_meta:set_int("bl_weap_secondary_delay", 0)
   p_meta:set_int("bl_bouncer_delay", 0)
   p_meta:set_int("bl_death_delay", 0)
   p_meta:set_int("bl_immunity", 0)

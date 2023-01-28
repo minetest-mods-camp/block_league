@@ -88,6 +88,5 @@ block_league.register_weapon("block_league:sword", {
 
     if not pointed_players then return end
     block_league.apply_damage(user, pointed_players, weapon, false)
-
   end
 })
