@@ -68,6 +68,9 @@ arena_lib.register_minigame("block_league", {
     entering_time = 0,          -- inutilizzato, servirà prob in futuro per calcolare exp
     weapons_magazine = {},
     curr_weapon = ""
+  },
+  spectator_properties = {
+    was_following_ball = false
   }
 })
 
