@@ -161,6 +161,11 @@ function ball:attach(player)
   ball_obj:set_properties({textures={team_texture}})
   ball_obj:set_animation({x=120,y=160}, 20, 0, true)   -- smette di oscillare quando presa
 
+  local ball_spectators = arena_lib.get_target_spectators("block_league", arena.name, "entity", "Ball")
+
+  for sp_name, sp_data in pairs(ball_spectators) do
+    arena_lib.spectate_target("block_league", arena, sp_name, "player", p_name)
+  end
 end
 
 

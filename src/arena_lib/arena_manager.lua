@@ -138,6 +138,13 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
         else
           ball:detach()
         end
+
+        -- reindirizza sulla palla gli spettatori
+        for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
+          if arena.spectators[sp_name].was_following_ball then
+            arena_lib.spectate_target("block_league", arena, sp_name, "entity", "Ball")
+          end
+        end
         break
       end
     end
@@ -184,16 +191,41 @@ end)
 
 
 
-arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_type, t_name, prev_type, prev_spectated)
-  if t_type ~= "player" then return end
-  -- ritardo di 0.1 perché on_join non è ancora stato chiamato, quindi non hanno ancora la HUD
-  minetest.after(0.1, function()
-    for _, weap_name in pairs(block_league.get_player_weapons(t_name)) do
-      block_league.HUD_weapons_update(arena, t_name, weap_name)
+arena_lib.on_change_spectated_target("block_league", function(arena, sp_name, t_type, t_name, prev_type, prev_spectated, is_forced)
+  local sp_data = arena.spectators[sp_name]
+
+  if t_type == "player" then
+    if is_forced and prev_type == "entity" then
+        sp_data.was_following_ball = true
+    elseif not is_forced and sp_data.was_following_ball then
+        sp_data.was_following_ball = false
     end
-    block_league.HUD_skill_update(sp_name)
-    block_league.HUD_stamina_update(arena, t_name)
-  end)
+
+    -- ritardo di 0.1 perché on_join non è ancora stato chiamato, quindi non hanno ancora la HUD
+    minetest.after(0.1, function()
+      for _, weap_name in pairs(block_league.get_player_weapons(t_name)) do
+        block_league.HUD_weapons_update(arena, t_name, weap_name)
+      end
+      block_league.HUD_skill_update(sp_name)
+      block_league.HUD_stamina_update(arena, t_name)
+    end)
+
+  elseif t_type == "entity" then
+    -- se al seguire la palla questa è in testa a qualcunə, segui quel qualcunə
+    local parent = arena_lib.get_spectate_entities("block_league", arena.name)[t_name].object:get_attach()
+
+    if not is_forced and not sp_data.was_following_ball and parent then
+      arena_lib.spectate_target("block_league", arena, sp_name, "player", parent:get_player_name())
+      sp_data.was_following_ball = true
+    end
+
+  elseif t_type == "area" then
+    if is_forced and prev_type == "entity" then
+        sp_data.was_following_ball = true
+    elseif not is_forced and sp_data.was_following_ball then
+        sp_data.was_following_ball = false
+    end
+  end
 end)
 
 

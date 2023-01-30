@@ -92,4 +92,10 @@ end
 function load_ball(arena)
   minetest.forceload_block(arena.ball_spawn, true)
   minetest.add_entity(arena.ball_spawn,"block_league:ball",arena.name)
+
+  for sp_name, sp_data in pairs(arena.spectators) do
+    if sp_data.was_following_ball then
+      arena_lib.spectate_target("block_league", arena, sp_name, "entity", "Ball")
+    end
+  end
 end
