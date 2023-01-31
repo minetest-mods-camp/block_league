@@ -1,11 +1,9 @@
-local function get_dist() end
-local function draw_particles() end
 local function weapon_left_click() end
 local function weapon_right_click() end
 local function weapon_zoom() end
 local function weapon_reload() end
 local function can_shoot() end
-local function check_immunity() end
+local function remove_immunity() end
 local function update_magazine() end
 local function check_weapon_type_and_attack() end
 local function shoot_hitscan() end
@@ -105,15 +103,13 @@ function block_league.register_weapon(name, def)
     end
 
   })
-
 end
 
 
 function block_league.shoot(weapon, player, pointed_thing)
-
   if not can_shoot(player, weapon) then return end
 
-  check_immunity(player)
+  remove_immunity(player)
   update_magazine(player, weapon)
 
   local p_name = player:get_player_name()
@@ -129,7 +125,6 @@ end
 
 
 function block_league.shoot_end(player, weapon)
-
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
   local p_meta = player:get_meta()
@@ -150,101 +145,10 @@ end
 
 
 
--- ritorna un array di giocatori con il numero di giocatori trovati a indice 1.
--- Se non trova giocatori diversi da se stesso ritorna nil
-function block_league.get_pointed_players(head_pos, dir, range, user, particle, has_piercing)
-
-	local p1 = vector.add(head_pos, vector.multiply(dir, 0))
-	local p2 = vector.add(head_pos, vector.multiply(dir, range))
-
-	local ray = minetest.raycast(p1, p2, true, false)
-	local players = {}
-
-  -- check su ogni cosa attraversata dal raycast (p1 a p2)
-	for hit in ray do
-    -- se è un oggetto
-		if hit.type == "object" then
-      -- se è un giocatore
-			if hit.ref and hit.ref:is_player() then
-        -- e non è colui che spara
-				if hit.ref ~= user then
-          if (hit.intersection_point.y - hit.ref:get_pos().y) > 1.275 then
-            table.insert(players, {player=hit.ref, headshot=true})
-          else
-            table.insert(players, {player=hit.ref, headshot=false})
-          end
-				end
-			elseif hit.ref:get_luaentity() then
-        local entity = hit.ref:get_luaentity()
-        if entity.initial_properties ~= nil then
-
-          if entity.initial_properties.is_bullet or entity.initial_properties.is_grenade then
-            --distrugge sia il proiettile con cui collide che se stesso
-            entity.old_p_name = entity.p_name
-            entity.p_name = user:get_player_name()
-
-            entity:_destroy()
-          end
-        end
-      end
-		else
-      -- se è un nodo mi fermo, e ritorno l'array se > 0 (ovvero ha trovato giocatori)
-			if hit.type == "node" then
-				if #players > 0 then
-          if has_piercing then
-            if particle ~= nil then
-              local impact_dist = get_dist(head_pos, hit.intersection_point)
-              draw_particles(particle, dir, p1, range, impact_dist)
-            end
-            return players
-          else
-            if particle ~= nil then
-              local impact_dist = get_dist(head_pos, players[1].player:get_pos())
-              draw_particles(particle, dir, p1, range, impact_dist)
-            end
-            return {players[1]}
-          end
-				else
-          if particle ~= nil then
-            local impact_dist = get_dist(head_pos, hit.intersection_point)
-          	draw_particles(particle, dir, p1, range, impact_dist)
-          end
-					return nil
-				end
-      end
-		end
-	end
-
-  -- se ho sparato a qualcuno senza incrociare blocchi
-  if #players > 0 then
-      if has_piercing then
-        if particle ~= nil then
-          draw_particles(particle, dir, p1, range, 120)
-        end
-        return players
-      else
-        if particle ~= nil then
-          local impact_dist = get_dist(head_pos, players[1].player:get_pos())
-          draw_particles(particle, dir, p1, range, impact_dist)
-        end
-        return {players[1]}
-      end
-  else
-    if particle ~= nil then
-      draw_particles(particle, dir, p1, range, 120)
-    end
-    return nil
-  end
-end
-
-
-
--- può avere uno o più target: formato ObjectRef
+-- può avere uno o più obiettivi: formato ObjectRef
 function block_league.apply_damage(user, targets, weapon, decrease_damage_with_distance, knockback_dir)
-
   local damage = weapon.damage
   local knockback = weapon.knockback
-
   local p_name = user:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
   local killed_players = 0
@@ -259,7 +163,6 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
   -- per ogni giocatore colpito
   for _, target in pairs(targets) do
-
     local headshot = target.headshot
     local target = target.player
 
@@ -268,16 +171,16 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
     local t_name = target:get_player_name()
 
-    -- se giocatore e target sono nella stessa squadra, annullo
+    -- se giocatore e obiettivo sono nella stessa squadra, annullo
     if arena_lib.is_player_in_same_team(arena, p_name, t_name) then return end
 
-    -- eventuale knockback
+    -- eventuale spinta
     if knockback > 0 and knockback_dir then
       local knk= vector.multiply(knockback_dir,knockback)
       target:add_velocity(knk)
     end
 
-    -- eventuale headshot
+    -- eventuale colpo in testa
     if headshot and weapon.weapon_type ~= 3 then
       damage = damage * 1.5
       block_league.HUD_critical_show(p_name)
@@ -286,7 +189,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
     -- eventuale danno decrementato a seconda della distanza
     if weapon.weapon_type == 1 and decrease_damage_with_distance then
-      local dist = get_dist(user:get_pos(), target:get_pos())
+      local dist = vector.distance(user:get_pos(), target:get_pos())
       local damage = damage - (damage * dist / weapon.weapon_range)
       remaining_HP = target:get_hp() - damage
     else
@@ -306,7 +209,6 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
         killed_players = killed_players +1
       end
     end
-
   end
 
   -- calcoli post-danno
@@ -328,38 +230,7 @@ end
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
-function get_dist(pos1, pos2)
-  local lenx = math.abs(pos1.x - pos2.x)
-  local leny = math.abs(pos1.y - pos2.y)
-  local lenz = math.abs(pos1.z - pos2.z)
-  local hypot = math.sqrt((lenx * lenx) + (lenz * lenz))
-  local dist = math.sqrt((hypot * hypot) + (leny * leny))
-  return dist
-end
-
-
-
-function draw_particles(particle, dir, origin, range, impact_dist)
-  minetest.add_particlespawner({
-    amount = particle.amount,
-    time = 0.3,
-    minpos = origin,
-    maxpos = origin,
-    minvel = vector.multiply(dir, range),
-    maxvel = vector.multiply(dir, range),
-    minexptime = impact_dist/(range * 1.5),
-    maxexptime = impact_dist/(range * 1.5),
-    size = 2,
-    collisiondetection = false,
-    vertical = false,
-    texture = particle.image
-  })
-end
-
-
-
 function weapon_left_click(weapon, player, pointed_thing)
-
   if not block_league.shoot(weapon, player, pointed_thing) then return end
 
   if player:get_meta():get_int("bl_is_speed_locked") == 0 then
@@ -386,7 +257,6 @@ end
 
 
 function weapon_right_click(weapon, player, pointed_thing)
-
   if not weapon.on_right_click and not weapon.zoom then return end
 
   local p_name = player:get_player_name()
@@ -396,7 +266,7 @@ function weapon_right_click(weapon, player, pointed_thing)
 
   if weapon.zoom then
     weapon_zoom(weapon, player)
-  return end
+    return end
 
   if arena.weapons_disabled then return end
 
@@ -414,8 +284,7 @@ function weapon_right_click(weapon, player, pointed_thing)
   end)
   ----- fine gestione delay -----
 
-  check_immunity(player)
-
+  remove_immunity(player)
   weapon.on_right_click(arena, weapon, player, pointed_thing)
 end
 
@@ -543,7 +412,7 @@ end
 
 
 
-function check_immunity(player)
+function remove_immunity(player)
   if player:get_meta():get_int("bl_immunity") == 1 then
     player:get_meta():set_int("bl_immunity", 0)
   end
