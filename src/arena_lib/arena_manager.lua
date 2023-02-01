@@ -236,9 +236,12 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
   -- palla non si sgancia da qua per chi si sconnette, prob get_player_name ritorna nullo
   if reason ~= 0 then
     if not is_spectator and arena.mode == 1 then
-      if minetest.get_player_by_name(p_name):get_children()[1] then
-        local ball = minetest.get_player_by_name(p_name):get_children()[1]:get_luaentity()
-        ball:detach()
+      local children = minetest.get_player_by_name(p_name):get_children()
+      for _, child in pairs(children) do
+        -- potrebbe essere essere un* spettator*, controllo che sia effettivamente la palla
+        if not child:is_player() then
+          child:get_luaentity():detach()
+        end
       end
     end
 
