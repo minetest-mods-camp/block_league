@@ -64,10 +64,12 @@ arena_lib.register_minigame("block_league", {
     stamina = 100,
     stamina_max = 100,
     TDs = 0,
+    kills = 0,
     points = 0,
     entering_time = 0,          -- inutilizzato, servirà prob in futuro per calcolare exp
     weapons_magazine = {},
-    curr_weapon = ""
+    curr_weapon = "",
+    --TODO: dmg_received = {}           -- KEY: p_name, VALUE: {timestamp, dmg}
   },
   spectator_properties = {
     was_following_ball = false
