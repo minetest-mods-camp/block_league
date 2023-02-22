@@ -4,10 +4,10 @@ local function weapon_zoom() end
 local function weapon_reload() end
 local function can_shoot() end
 local function remove_immunity() end
-local function update_magazine() end
-local function check_weapon_type_and_attack() end
+local function decrease_magazine() end
 local function shoot_hitscan() end
 local function shoot_bullet() end
+local function shoot_melee() end
 local function after_damage() end
 
 
@@ -104,24 +104,30 @@ function block_league.register_weapon(name, def)
 end
 
 
+
 function block_league.shoot(weapon, player, pointed_thing)
   if not can_shoot(player, weapon) then return end
 
-  remove_immunity(player)
-  update_magazine(player, weapon)
+  block_league.sound_play(weapon.sound_shoot, player:get_player_name())
 
-  local p_name = player:get_player_name()
-
-  if weapon.sound_shoot then
-    block_league.sound_play(weapon.sound_shoot, p_name)
+  if weapon.weapon_type == 1 then
+    shoot_hitscan(player, weapon, pointed_thing)
+  elseif weapon.weapon_type == 2 then
+    shoot_bullet(player, weapon.bullet, pointed_thing)
+  else
+    if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
+    shoot_melee(player, weapon, pointed_thing)
   end
 
-  check_weapon_type_and_attack(player, weapon, pointed_thing)
+  remove_immunity(player)
+  decrease_magazine(player, weapon)
+
   return true
 end
 
 
 
+-- TODO: fai fuori la funzione globale, vedi se si può usare un segnale con after che controlla dentro shoot
 function block_league.shoot_end(player, weapon)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
@@ -429,7 +435,6 @@ end
 
 
 function can_shoot(player, weapon)
-
   local p_name = player:get_player_name()
 
   if not arena_lib.is_player_in_arena(p_name) then return end
@@ -493,8 +498,7 @@ end
 
 
 
-function update_magazine(player, weapon)
-
+function decrease_magazine(player, weapon)
   if not weapon.magazine or weapon.magazine <= 0 then return end
 
   local w_name = weapon.name
@@ -509,21 +513,6 @@ function update_magazine(player, weapon)
     weapon_reload(player, weapon)
   else
     block_league.HUD_weapons_update(arena, p_name, w_name)
-  end
-
-end
-
-
-
-function check_weapon_type_and_attack(player, weapon, pointed_thing)
-  if weapon.weapon_type == 1 then
-    shoot_hitscan(player, weapon, pointed_thing)
-  elseif weapon.weapon_type == 2 then
-    shoot_bullet(player, weapon.bullet, pointed_thing)
-  else
-    if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
-    local target = {{player = pointed_thing.ref, headshot = false}}
-    block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
   end
 end
 
@@ -561,6 +550,13 @@ function shoot_bullet(user, bullet, pointed_thing)
   local rotation = ({x = -pitch, y = yaw, z = 0})
 
   bullet:set_rotation(rotation)
+end
+
+
+
+function shoot_melee(player, weapon, pointed_thing)
+  local target = {{player = pointed_thing.ref, headshot = false}}
+  block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
 end
 
 
