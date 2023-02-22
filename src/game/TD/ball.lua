@@ -7,6 +7,7 @@ local function add_point() end
 local function after_point() end
 
 
+
 -- entità
 local ball = {
   initial_properties = {
@@ -22,7 +23,7 @@ local ball = {
     timer_limit = 10,
   },
 
-  w_name = nil,
+  p_name = nil,
   team_id = nil,
   timer_bool = false,
   timer = 0,
@@ -41,7 +42,7 @@ end
 
 function ball:get_staticdata()
   if self == nil or self.arena == nil then return end
-  return self.w_name
+  return self.p_name
 end
 
 
@@ -60,7 +61,7 @@ function ball:on_activate(staticdata, d_time)
 
     local ball_obj = self.object
 
-    self.w_name = nil
+    self.p_name = nil
     self.timer_bool = false
     self.team_id = nil
     self.timer = 0
@@ -89,7 +90,7 @@ function ball:on_step(d_time, moveresult)
   end
 
   --se nessuno la sta portando a spasso...
-  if self.w_name == nil then
+  if self.p_name == nil then
 
     -- se il timer per il reset è attivo, controllo a che punto sta
     if self.timer_bool then
@@ -115,8 +116,8 @@ function ball:on_step(d_time, moveresult)
   -- se ce l'ha qualcuno
   -- NB: se quel qualcuno è appena morto, al posto di controllarlo qui su ogni step, viene controllato sul callback della morte in player_manager.lua
   else
-    local w_name = self.w_name
-    local wielder = minetest.get_player_by_name(w_name)
+    local p_name = self.p_name
+    local wielder = minetest.get_player_by_name(p_name)
 
     -- se si è disconnesso
     if not wielder then
@@ -124,10 +125,10 @@ function ball:on_step(d_time, moveresult)
       return
     end
 
-    local w_pos = wielder:get_pos()
+    local p_pos = wielder:get_pos()
     local goal = arena.teams[self.team_id].name == S("orange") and arena.goal_orange or arena.goal_blue
 
-    check_for_touchdown(arena, self, w_name, w_pos, goal)
+    check_for_touchdown(arena, self, p_name, p_pos, goal)
   end
 end
 
@@ -138,7 +139,7 @@ function ball:attach(player)
   local arena = self.arena
   local p_name = player:get_player_name()
 
-  self.w_name = p_name
+  self.p_name = p_name
   self.team_id = arena.players[p_name].teamID
 
   self:announce_ball_possession_change()
@@ -172,7 +173,7 @@ end
 
 function ball:detach()
 
-  local p_name = self.w_name
+  local p_name = self.p_name
   local player = minetest.get_player_by_name(p_name)
   local arena = self.arena
 
@@ -187,7 +188,7 @@ function ball:detach()
 
   ball_obj:set_detach()
 
-  self.w_name = nil
+  self.p_name = nil
   self.timer_bool = true
   self.timer = 0
 
@@ -209,10 +210,10 @@ function ball:reset()
   end
 
   --if the player dies because of falling in the void wielder_name is nil
-  if self.w_name then
+  if self.p_name then
     self:detach()
   end
-  self.w_name = nil
+  self.p_name = nil
   self.team_id = nil
   self.timer_bool = false
   self.timer = 0
@@ -245,14 +246,14 @@ function ball:announce_ball_possession_change(is_ball_lost)
     end
 
   else
-    local w_name = self.w_name
-    block_league.HUD_log_update(arena, "bl_log_ball.png", w_name, "")
+    local p_name = self.p_name
+    block_league.HUD_log_update(arena, "bl_log_ball.png", p_name, "")
 
     for _, pl_name in pairs(team) do
       minetest.sound_play("bl_crowd_cheer", {to_player = pl_name})
       block_league.HUD_ball_update(pl_name, S("Your team got the ball!"), "0xabf877")
     end
-    block_league.HUD_ball_update(w_name, S("You got the ball!"), "0xabf877")
+    block_league.HUD_ball_update(p_name, S("You got the ball!"), "0xabf877")
 
     for _, pl_name in pairs(enemy_team) do
       minetest.sound_play("bl_crowd_ohno", {to_player = pl_name})
@@ -285,26 +286,26 @@ end
 
 
 
-function check_for_touchdown(arena, ball, w_name, w_pos, goal)
+function check_for_touchdown(arena, ball, p_name, p_pos, goal)
 
   if
-  math.abs(w_pos.x - goal.x) <= 1.5 and
-  math.abs(w_pos.z - goal.z) <= 1.5 and
-  w_pos.y >= goal.y - 1 and
-  w_pos.y <= goal.y + 3 and
+  math.abs(p_pos.x - goal.x) <= 1.5 and
+  math.abs(p_pos.z - goal.z) <= 1.5 and
+  p_pos.y >= goal.y - 1 and
+  p_pos.y <= goal.y + 3 and
   not arena.in_celebration then
 
-    local wielder = minetest.get_player_by_name(w_name)
+    local wielder = minetest.get_player_by_name(p_name)
 
     wielder:get_meta():set_int("bl_has_ball", 0)
 
-    block_league.HUD_log_update(arena, "bl_log_TD.png", w_name, "")
-    block_league.HUD_spectate_update(arena, w_name, "ball")
+    block_league.HUD_log_update(arena, "bl_log_TD.png", p_name, "")
+    block_league.HUD_spectate_update(arena, p_name, "ball")
 
-    local teamID = arena.players[w_name].teamID
+    local teamID = arena.players[p_name].teamID
 
-    add_point(w_name, teamID, arena)
-    after_point(w_name, teamID, arena)
+    add_point(p_name, teamID, arena)
+    after_point(teamID, arena)
 
     ball:_destroy()
   end
@@ -313,7 +314,7 @@ end
 
 
 
-function add_point(w_name, teamID, arena)
+function add_point(p_name, teamID, arena)
 
   local enemy_teamID = teamID == 1 and 2 or 1
   local team = arena_lib.get_players_in_team(arena, teamID)
@@ -337,23 +338,23 @@ function add_point(w_name, teamID, arena)
   end
 
   arena.teams[teamID].TDs = arena.teams[teamID].TDs + 1
-  arena.players[w_name].TDs = arena.players[w_name].TDs + 1
-  arena.players[w_name].points = arena.players[w_name].points + 10
+  arena.players[p_name].TDs = arena.players[p_name].TDs + 1
+  arena.players[p_name].points = arena.players[p_name].points + 10
+
   block_league.HUD_scoreboard_update_score(arena)
   block_league.info_panel_update(arena, teamID)
-  block_league.HUD_spectate_update(arena, w_name, "TD")
+  block_league.HUD_spectate_update(arena, p_name, "TD")
 end
 
 
 
-function after_point(w_name, teamID, arena)
-
+function after_point(teamID, arena)
   arena.weapons_disabled = true
 
   -- se rimane troppo poco tempo, aspetta la fine del match
   if arena.current_time <= 6 then return end
 
-  -- se i TD della squadra raggiungono il cap, vince
+  -- se i TD della squadra raggiungono il tetto, vince
   if arena.teams[teamID].TDs == arena.score_cap then
     arena_lib.load_celebration("block_league", arena, teamID)
 
