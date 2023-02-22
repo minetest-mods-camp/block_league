@@ -1,7 +1,8 @@
-local S = minetest.get_translator("block_league")
+local version = "0.7.0-dev"
 local modpath = minetest.get_modpath("block_league")
 local srcpath = modpath .. "/src"
-local version = "0.7.0-dev"
+
+local S = minetest.get_translator("block_league")
 
 block_league = {}
 dofile(modpath .. "/GLOBALS.lua")
@@ -81,7 +82,6 @@ arena_lib.register_minigame("block_league", {
 -- general
 dofile(srcpath .. "/commands.lua")
 dofile(srcpath .. "/database_manager.lua")
-dofile(srcpath .. "/input_manager.lua")
 dofile(srcpath .. "/player_manager.lua")
 dofile(srcpath .. "/privs.lua")
 dofile(srcpath .. "/utils.lua")
@@ -105,13 +105,13 @@ dofile(srcpath .. "/HUD/hud_scoreboard.lua")
 dofile(srcpath .. "/HUD/hud_skill.lua")
 dofile(srcpath .. "/HUD/hud_spectate.lua")
 dofile(srcpath .. "/HUD/hud_weapons.lua")
--- misc
-dofile(srcpath .. "/misc/stamina.lua")
-dofile(srcpath .. "/misc/fall.lua")
-dofile(srcpath .. "/misc/immunity.lua")
--- modes
-dofile(srcpath .. "/modes/game_main.lua")
-dofile(srcpath .. "/modes/TD/ball.lua")
+-- game
+dofile(srcpath .. "/game/game_main.lua")
+dofile(srcpath .. "/game/input_manager.lua")
+dofile(srcpath .. "/game/misc/fall.lua")
+dofile(srcpath .. "/game/misc/immunity.lua")
+dofile(srcpath .. "/game/misc/stamina.lua")
+dofile(srcpath .. "/game/TD/ball.lua")
 -- player
 dofile(srcpath .. "/player/achievements.lua")
 dofile(srcpath .. "/player/equip.lua")

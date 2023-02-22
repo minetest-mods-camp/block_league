@@ -46,7 +46,7 @@ Deaths=
 Points=
 Team=
 
-# modes/TD/ball.lua
+# game/TD/ball.lua
 Ball reset=
 NICE POINT!=
 ENEMY TEAM SCORED...=

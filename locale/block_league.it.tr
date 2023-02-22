@@ -46,8 +46,8 @@ Deaths=Morti
 Points=Punti
 Team=Squadra
 
-# modes/TD/ball.lua
-Ball reset=Palla resettata
+# game/TD/ball.lua
+Ball reset=Palla ripristinata
 NICE POINT!=BEL PUNTO!
 ENEMY TEAM SCORED...=PUNTO PER LA SQUADRA AVVERSARIA...
 Your team lost the ball!=La tua squadra ha perso la palla!

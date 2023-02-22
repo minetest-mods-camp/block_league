@@ -1,9 +1,7 @@
 function block_league.fall_check_loop(arena)
-
   if not arena.in_game then return end
 
   for pl_name, stats in pairs(arena.players) do
-
     local player = minetest.get_player_by_name(pl_name)
 
     if player:get_hp() > 0 and player:get_pos().y < arena.min_y then

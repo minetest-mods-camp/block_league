@@ -6,7 +6,6 @@ local function remove_weapons() end
 
 
 minetest.register_on_joinplayer(function(player)
-
   local p_name = player:get_player_name()
 
   block_league.init_equip(p_name)
@@ -38,12 +37,10 @@ end)
 ----------------------------------------------
 
 function remove_weapons(inv)
-
   inv:remove_item("main", ItemStack("block_league:smg"))
   inv:remove_item("main", ItemStack("block_league:sword"))
   inv:remove_item("main", ItemStack("block_league:pixelgun"))
   inv:remove_item("main", ItemStack("block_league:rocket_launcher"))
   inv:remove_item("main", ItemStack("block_league:bouncer"))
   inv:remove_item("main", ItemStack("block_league:testkit_quit"))
-
 end

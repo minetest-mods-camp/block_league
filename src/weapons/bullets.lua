@@ -1,5 +1,9 @@
- function block_league.register_bullet(bullet, damage, bullet_trail)
+local function bullet_set_entity() end
+local function spawn_particles_sphere() end
 
+
+
+function block_league.register_bullet(bullet, damage, bullet_trail)
    local bullet_entity = bullet_set_entity(bullet.name, bullet, damage, bullet_trail)
 
    minetest.register_entity("block_league:" .. bullet.name .. "_entity", bullet_entity)
@@ -8,6 +12,12 @@
 end
 
 
+
+
+
+----------------------------------------------
+---------------FUNZIONI LOCALI----------------
+----------------------------------------------
 
 function bullet_set_entity(name, def, dmg, trail)
   local bullet = {
@@ -50,11 +60,15 @@ function bullet_set_entity(name, def, dmg, trail)
     self.object:remove()
   end
 
+
+
   -- Ottiene gli staticdata ogni 18 secondi circa
   function bullet:get_staticdata(self)
     if self == nil or self.p_name == nil then return end
     return self.p_name
   end
+
+
 
   -- L'entità esplode quando colpita
   function bullet:on_punch()
@@ -62,6 +76,8 @@ function bullet_set_entity(name, def, dmg, trail)
        self.initial_properties.on_right_click(self)
     end
   end
+
+
 
   -- quando si istanzia un'entità
   function bullet:on_activate(staticdata)
@@ -77,6 +93,8 @@ function bullet_set_entity(name, def, dmg, trail)
       return
     end
   end
+
+
 
   function bullet:on_step(dtime, moveresult)
     self.lifetime = self.lifetime  + dtime
@@ -222,12 +240,10 @@ function bullet_set_entity(name, def, dmg, trail)
       end
     end
 
-
   end
 
   -- Restituisce la definizione dell'entità
   return bullet
-
 end
 
 
@@ -251,5 +267,4 @@ function spawn_particles_sphere(pos, particle_texture)
   	vertical = false,
   	texture = particle_texture,
   })
-
 end

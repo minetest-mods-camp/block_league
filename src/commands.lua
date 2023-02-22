@@ -2,16 +2,12 @@ S = minetest.get_translator("block_league")
 
 local mod = "block_league"
 
-ChatCmdBuilder.new("bladmin", function(cmd)
 
+
+ChatCmdBuilder.new("bladmin", function(cmd)
     -- rinominazione arene
     cmd:sub("rename :arena :newname", function(sender, arena_name, new_name)
         arena_lib.rename_arena(sender, mod, arena_name, new_name)
-    end)
-
-    -- cartello arena
-    cmd:sub("setsign :arena", function(sender, arena)
-        arena_lib.set_sign(sender, nil, nil, mod, arena)
     end)
 
     -- aggiunta/rimozione TD. `option` può essere "set" o "remove"

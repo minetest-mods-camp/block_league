@@ -3,7 +3,6 @@ local recursive_time = 0.1
 
 
 function block_league.stamina_refill_loop(arena)
-
   if not arena.in_game then return end
 
   for pl_name, stats in pairs(arena.players) do
@@ -26,7 +25,6 @@ end
 
 
 function block_league.stamina_drain(arena, w_name)
-
   -- per vedere se è online devo per forza fare minetest.ecc, dacché è inutile passare l'intero giocatore come parametro (dato che mi serve il nome)
   local wielder = minetest.get_player_by_name(w_name)
 
