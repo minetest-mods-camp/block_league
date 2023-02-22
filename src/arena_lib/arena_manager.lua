@@ -1,6 +1,7 @@
 local S = minetest.get_translator("block_league")
 
 local function reset_meta() end
+local function init_dmg_table() end
 local function create_and_show_HUD() end
 local function remove_HUD() end
 local function remove_spectate_HUD() end
@@ -10,9 +11,11 @@ local function wait_for_respawn() end
 
 
 arena_lib.on_load("block_league", function(arena)
+  local players = arena.players
 
-  for pl_name, stats in pairs(arena.players) do
+  for pl_name, stats in pairs(players) do
     reset_meta(pl_name)
+    init_dmg_table(pl_name, players)
     equip(arena, pl_name)
     create_and_show_HUD(arena, pl_name)
     block_league.refill_weapons(arena, pl_name)
@@ -50,9 +53,12 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator, was_spec
     return
   end
 
-  arena.players[p_name].entering_time = arena.current_time
+  local players = arena.players
+
+  players[p_name].entering_time = arena.current_time
 
   reset_meta(p_name)
+  init_dmg_table(p_name, players)
   equip(arena, p_name)
   create_and_show_HUD(arena, p_name, false, was_spectator)
   block_league.HUD_spectate_addplayer(arena, p_name)
@@ -277,6 +283,16 @@ end
 
 
 
+function init_dmg_table(p_name, players)
+  local dmg_table = players[p_name].dmg_received
+  -- potrebbero esserci armi con fuoco amico, metti qualsiasi giocatorə
+  for pl_name, _ in pairs(players) do
+    dmg_table[pl_name] = {timestamp = 99999, dmg = 0}
+  end
+end
+
+
+
 function create_and_show_HUD(arena, p_name, is_spectator, was_spectator)
   -- se stava già seguendo come spettatorə
   if was_spectator then
@@ -343,7 +359,6 @@ end
 
 
 function equip(arena, p_name)
-
   local weapons = block_league.get_player_weapons(p_name)
   local bouncer = arena.mode == 1 and "block_league:bouncer" or "block_league:bouncer_dm"
   local inv = minetest.get_player_by_name(p_name):get_inventory()

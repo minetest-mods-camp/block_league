@@ -9,7 +9,6 @@ local function check_weapon_type_and_attack() end
 local function shoot_hitscan() end
 local function shoot_bullet() end
 local function after_damage() end
-local function kill() end
 
 
 
@@ -40,9 +39,8 @@ end)
 
 
 function block_league.register_weapon(name, def)
-
-  -- usato per avere una dichiarazione pulita E al tempo stesso non dover
-  -- passare anche il nome in on_use (che lo richiede)
+  -- usato per avere una dichiarazione pulita E al tempo stesso non dover passare
+  -- anche il nome in on_use (che lo richiede)
   def.name = name
 
   minetest.register_node(name, {
@@ -171,7 +169,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
     local t_name = target:get_player_name()
 
-    -- se giocatore e obiettivo sono nella stessa squadra, annullo
+    -- se giocatorə e obiettivo sono nella stessa squadra, annullo
     if arena_lib.is_player_in_same_team(arena, p_name, t_name) then return end
 
     -- eventuale spinta
@@ -190,11 +188,20 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
     -- eventuale danno decrementato a seconda della distanza
     if weapon.weapon_type == 1 and decrease_damage_with_distance then
       local dist = vector.distance(user:get_pos(), target:get_pos())
-      local damage = damage - (damage * dist / weapon.weapon_range)
+      damage = damage - (damage * dist / weapon.weapon_range)
       remaining_HP = target:get_hp() - damage
     else
       remaining_HP = target:get_hp() - damage
     end
+
+    local dmg_table = arena.players[t_name].dmg_received
+
+    -- aggiorno la tabella danni
+    dmg_table[p_name] = {
+      timestamp = arena.current_time,
+      dmg = arena.current_time > dmg_table[p_name].timestamp - 5 and dmg_table[p_name].dmg + damage or damage,
+      weapon = weapon.name
+    }
 
     -- applico il danno
     target:set_hp(remaining_HP, {type = "set_hp", player_name = p_name})
@@ -204,7 +211,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
       block_league.sound_play("bl_hit", p_name)
     -- sennò kaputt
     else
-      kill(arena, weapon, user, target)
+      block_league.kill(arena, weapon, user, target)
       if t_name ~= p_name then
         killed_players = killed_players +1
       end
@@ -213,6 +220,72 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
   -- calcoli post-danno
   after_damage(arena, p_name, killed_players)
+end
+
+
+
+function block_league.kill(arena, weapon, player, target)
+  local p_name = player:get_player_name()
+  local t_name = target:get_player_name()
+
+  -- riproduco suono morte
+  block_league.sound_play("bl_kill", p_name)
+
+  if t_name ~= p_name then
+    -- informo dell'uccisione
+    block_league.HUD_kill_update(p_name, S("YOU'VE KILLED @1", t_name))
+    minetest.chat_send_player(t_name, minetest.colorize("#d7ded7", S("You've been killed by @1", minetest.colorize("#eea160", p_name))))
+
+    if arena_lib.is_player_spectated(p_name) then
+      for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
+        block_league.HUD_kill_update(sp_name, S("@1 HAS KILLED @2", p_name, t_name))
+      end
+    end
+
+    if arena_lib.is_player_spectated(t_name) then
+      for sp_name, _ in pairs(arena_lib.get_player_spectators(t_name)) do
+        minetest.chat_send_player(sp_name, minetest.colorize("#d7ded7", S("@1 has been killed by @2", minetest.colorize("#eea160", t_name), minetest.colorize("#eea160", p_name))))
+      end
+    end
+
+    local p_stats = arena.players[p_name]
+    local team_id = p_stats.teamID
+    local team = arena.teams[team_id]
+
+    -- aggiungo l'uccisione
+    team.kills = team.kills + 1
+    p_stats.kills = p_stats.kills + 1
+
+    -- calcolo i punti
+    if arena.mode == 1 then
+      if player:get_meta():get_int("bl_has_ball") == 1 or target:get_meta():get_int("bl_has_ball") == 1 then
+        p_stats.points = p_stats.points + 4
+      else
+        p_stats.points = p_stats.points + 2
+      end
+    else
+      p_stats.points = p_stats.points + 2
+    end
+
+    -- aggiorno HUD
+    block_league.info_panel_update(arena, team_id)
+    block_league.HUD_spectate_update(arena, p_name, "points")
+    block_league.HUD_spectate_update(arena, t_name, "alive")
+    block_league.HUD_log_update(arena, weapon.inventory_image, p_name, t_name)
+
+    -- se è DM e il limite è raggiunto, finisce partita
+    if arena.mode == 2 then
+      block_league.HUD_scoreboard_update_score(arena)
+      if team.kills == arena.score_cap then
+        local mod = arena_lib.get_mod_by_player(p_name)
+        arena_lib.load_celebration(mod, arena, team_id)
+      end
+    end
+
+  else
+    block_league.HUD_kill_update(t_name, S("You've killed yourself"))
+    block_league.HUD_log_update(arena, "bl_log_suicide.png", p_name, t_name)
+  end
 end
 
 
@@ -504,72 +577,4 @@ function after_damage(arena, p_name, killed_players)
 
     arena_lib.send_message_in_arena(arena, minetest.colorize("#eea160", p_name .. " ") .. minetest.colorize("#d7ded7", S("has killed @1 players in a row!", killed_players)))
   end
-end
-
-
-
-function kill(arena, weapon, player, target)
-
-  local p_name = player:get_player_name()
-  local t_name = target:get_player_name()
-
-  -- riproduco suono morte
-  block_league.sound_play("bl_kill", p_name)
-
-  if t_name ~= p_name then
-
-    -- informo dell'uccisione
-    block_league.HUD_kill_update(p_name, S("YOU'VE KILLED @1", t_name))
-    minetest.chat_send_player(t_name, minetest.colorize("#d7ded7", S("You've been killed by @1", minetest.colorize("#eea160", p_name))))
-
-    if arena_lib.is_player_spectated(p_name) then
-      for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
-        block_league.HUD_kill_update(sp_name, S("@1 HAS KILLED @2", p_name, t_name))
-      end
-    end
-
-    if arena_lib.is_player_spectated(t_name) then
-      for sp_name, _ in pairs(arena_lib.get_player_spectators(t_name)) do
-        minetest.chat_send_player(sp_name, minetest.colorize("#d7ded7", S("@1 has been killed by @2", minetest.colorize("#eea160", t_name), minetest.colorize("#eea160", p_name))))
-      end
-    end
-
-    local p_stats = arena.players[p_name]
-    local team_id = p_stats.teamID
-    local team = arena.teams[team_id]
-
-    -- aggiungo l'uccisione
-    team.kills = team.kills + 1
-    p_stats.kills = p_stats.kills + 1
-
-    -- calcolo i punti
-    if arena.mode == 1 then
-      if player:get_meta():get_int("bl_has_ball") == 1 or target:get_meta():get_int("bl_has_ball") == 1 then
-        p_stats.points = p_stats.points + 4
-      else
-        p_stats.points = p_stats.points + 2
-      end
-    else
-      p_stats.points = p_stats.points + 2
-    end
-
-    -- aggiorno HUD
-    block_league.info_panel_update(arena, team_id)
-    block_league.HUD_spectate_update(arena, p_name, "points")
-    block_league.HUD_spectate_update(arena, t_name, "alive")
-    block_league.HUD_log_update(arena, weapon.inventory_image, p_name, t_name)
-
-    -- se è DM e il cap è raggiunto, finisce partita
-    if arena.mode == 2 then
-      block_league.HUD_scoreboard_update_score(arena)
-      if team.kills == arena.score_cap then
-        local mod = arena_lib.get_mod_by_player(p_name)
-        arena_lib.load_celebration(mod, arena, team_id)
-      end
-    end
-  else
-    block_league.HUD_kill_update(t_name, S("You've killed yourself"))
-    block_league.HUD_log_update(arena, "bl_log_suicide.png", p_name, t_name)
-  end
-
 end
