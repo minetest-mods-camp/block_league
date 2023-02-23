@@ -58,7 +58,7 @@ arena_lib.on_join("block_league", function(p_name, arena, as_spectator, was_spec
   players[p_name].entering_time = arena.current_time
 
   reset_meta(p_name)
-  init_dmg_table(p_name, players)
+  init_dmg_table(p_name, players, true)
   equip(arena, p_name)
   create_and_show_HUD(arena, p_name, false, was_spectator)
   block_league.HUD_spectate_addplayer(arena, p_name)
@@ -283,11 +283,18 @@ end
 
 
 
-function init_dmg_table(p_name, players)
+function init_dmg_table(p_name, players, in_progress)
   local dmg_table = players[p_name].dmg_received
   -- potrebbero esserci armi con fuoco amico, metti qualsiasi giocatorə
   for pl_name, _ in pairs(players) do
     dmg_table[pl_name] = {timestamp = 99999, dmg = 0}
+  end
+
+  -- se in corso, aggiungo nuovə giocatorə per chi era già dentro
+  if in_progress then
+    for pl_name, pl_data in pairs(players) do
+      pl_data.dmg_received[p_name] = {timestamp = 99999, dmg = 0}
+    end
   end
 end
 
