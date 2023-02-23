@@ -2,13 +2,25 @@ local function weapon_left_click() end
 local function weapon_right_click() end
 local function weapon_zoom() end
 local function weapon_reload() end
-local function can_shoot() end
+local function can_use_weapon() end
+local function shoot() end
+local function shoot_loop() end
 local function remove_immunity() end
 local function decrease_magazine() end
 local function shoot_hitscan() end
 local function shoot_bullet() end
 local function shoot_melee() end
+local function shoot_end() end
 local function after_damage() end
+
+-- TODO: la struttura va ripensata in generale, per supportare funzioni principali
+-- e secondarie (pensa alle armi di Synthetic Stars). Studiarla prima su carta
+-- sapendo come saranno le armi, e solo dopo mettere le mani qui - perché è già
+-- abbastanza un macello
+
+-- Appunti: per comunicare a un'arma a fuoco continuo o caricato di smettere di
+-- sparare, basta impostare il metadato "bl_is_shooting" a 0, come se fosse un
+-- segnale. Questo evita di dichiarare shoot_end() come funzione globale
 
 
 
@@ -69,6 +81,7 @@ function block_league.register_weapon(name, def)
     pierce = def.pierce,
     decrease_damage_with_distance = def.decrease_damage_with_distance,
     continuos_fire = def.continuos_fire,
+    --charged_shot = def.charged_shot, TODO: per le armi caricate come la pixelgun
 
     sound_shoot = def.sound_shoot,
     sound_reload = def.sound_reload,
@@ -101,50 +114,6 @@ function block_league.register_weapon(name, def)
     end
 
   })
-end
-
-
-
-function block_league.shoot(weapon, player, pointed_thing)
-  if not can_shoot(player, weapon) then return end
-
-  block_league.sound_play(weapon.sound_shoot, player:get_player_name())
-
-  if weapon.weapon_type == 1 then
-    shoot_hitscan(player, weapon, pointed_thing)
-  elseif weapon.weapon_type == 2 then
-    shoot_bullet(player, weapon.bullet, pointed_thing)
-  else
-    if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
-    shoot_melee(player, weapon, pointed_thing)
-  end
-
-  remove_immunity(player)
-  decrease_magazine(player, weapon)
-
-  return true
-end
-
-
-
--- TODO: fai fuori la funzione globale, vedi se si può usare un segnale con after che controlla dentro shoot
-function block_league.shoot_end(player, weapon)
-  local p_name = player:get_player_name()
-  local arena = arena_lib.get_arena_by_player(p_name)
-  local p_meta = player:get_meta()
-
-  p_meta:set_int("bl_is_shooting", 0)
-
-  minetest.after(0.5, function()
-    if not arena_lib.is_player_in_arena(p_name, "block_league")
-      or arena.players[p_name].stamina == 0
-      or p_meta:get_int("bl_reloading") == 1
-      or p_meta:get_int("bl_is_shooting") == 1
-      or p_meta:get_int("bl_is_speed_locked") == 1
-      then return end
-
-    player:set_physics_override({ speed = block_league.SPEED })
-  end)
 end
 
 
@@ -310,13 +279,11 @@ end
 ----------------------------------------------
 
 function weapon_left_click(weapon, player, pointed_thing)
-  if not block_league.shoot(weapon, player, pointed_thing) then return end
+  if not can_use_weapon(player, weapon) then return end
 
-  if player:get_meta():get_int("bl_is_speed_locked") == 0 then
-    player:set_physics_override({ speed = block_league.SPEED_LOW })
-  end
+  --TODO: prob inserire funzione per armi caricate
 
-  player:get_meta():set_int("bl_is_shooting", 1)
+  shoot(weapon, player, pointed_thing)
 
   -- controls.register_on_release non funziona se un tasto viene premuto E rilasciato
   -- sullo stesso step. Quindi, quando questo fallisce (perché il giocatore è stato
@@ -328,7 +295,7 @@ function weapon_left_click(weapon, player, pointed_thing)
   -- di rilascio
   minetest.after(0.1, function()
     if not player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
-      block_league.shoot_end(player, weapon)
+      player:get_meta():set_int("bl_is_shooting", 0)
     end
   end)
 end
@@ -398,6 +365,7 @@ function weapon_reload(player, weapon)
 
   block_league.sound_play(weapon.sound_reload, p_name)
 
+  p_meta:set_int("bl_is_shooting", 0)
   p_meta:set_int("bl_reloading", 1)
 
   -- rimuovo eventuale zoom
@@ -414,7 +382,7 @@ function weapon_reload(player, weapon)
 
   minetest.after(weapon.reload_time, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    p_meta:set_int("bl_weap_delay", 0)
+    p_meta:set_int("bl_weap_delay", 0) --TODO: perché viene azzerato qui?
     p_meta:set_int("bl_reloading", 0)
 
     if p_meta:get_int("bl_is_speed_locked") == 0 then
@@ -434,7 +402,7 @@ end
 
 
 
-function can_shoot(player, weapon)
+function can_use_weapon(player, weapon)
   local p_name = player:get_player_name()
 
   if not arena_lib.is_player_in_arena(p_name) then return end
@@ -473,19 +441,49 @@ function can_shoot(player, weapon)
       p_meta:set_int("bl_weap_delay", 0)
     end
   end)
-  ----- fine gestione delay -----
-
-  --[[  Per quando si avranno caricatori limitati
-  if weapon.consume_bullets then
-    if inv:contains_item("main", weapon.bullet) then
-      inv:remove_item("main", weapon.bullet)
-      block_league.HUD_weapons_update(arena, p_name, w_name)
-    else
-      return false
-    end
-  end]]
 
   return true
+end
+
+
+
+function shoot(weapon, player, pointed_thing)
+  if player:get_meta():get_int("bl_is_speed_locked") == 0 then
+    player:set_physics_override({ speed = block_league.SPEED_LOW })
+  end
+
+  player:get_meta():set_int("bl_is_shooting", 1)
+
+  shoot_loop(weapon, player, pointed_thing)
+end
+
+
+
+function shoot_loop(weapon, player, pointed_thing)
+  local p_name = player:get_player_name()
+
+  block_league.sound_play(weapon.sound_shoot, p_name)
+
+  remove_immunity(player)
+  decrease_magazine(player, weapon)
+
+  if weapon.weapon_type == 1 then
+    shoot_hitscan(player, weapon, pointed_thing)
+  elseif weapon.weapon_type == 2 then
+    shoot_bullet(player, weapon.bullet, pointed_thing)
+  else
+    shoot_melee(player, weapon, pointed_thing)
+  end
+
+  -- interrompo lo sparo, se non è un'arma a fuoco continuo
+  minetest.after(0.1, function()
+    if not player or not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+    if weapon.continuos_fire and player:get_meta():get_int("bl_is_shooting") == 1 then
+      shoot_loop(weapon, player, pointed_thing)
+    else
+      shoot_end(player, weapon)
+    end
+  end)
 end
 
 
@@ -555,8 +553,28 @@ end
 
 
 function shoot_melee(player, weapon, pointed_thing)
+  if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
   local target = {{player = pointed_thing.ref, headshot = false}}
   block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
+end
+
+
+
+function shoot_end(player, weapon)
+  local p_name = player:get_player_name()
+  local arena = arena_lib.get_arena_by_player(p_name)
+  local p_meta = player:get_meta()
+
+  minetest.after(0.5, function()
+    if not arena_lib.is_player_in_arena(p_name, "block_league")
+      or arena.players[p_name].stamina == 0
+      or p_meta:get_int("bl_reloading") == 1
+      or p_meta:get_int("bl_is_shooting") == 1
+      or p_meta:get_int("bl_is_speed_locked") == 1
+      then return end
+
+    player:set_physics_override({ speed = block_league.SPEED })
+  end)
 end
 
 

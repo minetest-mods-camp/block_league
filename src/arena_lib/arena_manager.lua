@@ -44,7 +44,6 @@ end)
 
 
 arena_lib.on_join("block_league", function(p_name, arena, as_spectator, was_spectator)
-
   if as_spectator then
     create_and_show_HUD(arena, p_name, true)
     minetest.after(0.1, function()
@@ -75,7 +74,6 @@ end)
 
 
 arena_lib.on_celebration("block_league", function(arena, winners)
-
   arena.weapons_disabled = true
 
   for pl_name, pl_stats in pairs(arena.players) do
@@ -109,7 +107,6 @@ end)
 
 
 arena_lib.on_end("block_league", function(arena, players, winners, spectators)
-
   for sp_name, _ in pairs(spectators) do
     block_league.HUD_spectate_remove(players, sp_name)
     remove_HUD(sp_name, true)
@@ -129,7 +126,6 @@ end)
 
 
 arena_lib.on_death("block_league", function(arena, p_name, reason)
-
   local player = minetest.get_player_by_name(p_name)
 
   -- TD: se il giocatore è morto con la palla, questa si sgancia e torna a oscillare
@@ -175,7 +171,6 @@ end)
 
 
 arena_lib.on_respawn("block_league", function(arena, p_name)
-
   local player = minetest.get_player_by_name(p_name)
 
   -- se resuscita mentre non può ancora rientrare in partita, lo porto nella sala d'attesa
@@ -279,6 +274,7 @@ function reset_meta(p_name)
   p_meta:set_int("bl_death_delay", 0)
   p_meta:set_int("bl_immunity", 0)
   p_meta:set_int("bl_reloading", 0)
+  p_meta:set_int("bl_is_shooting", 0)
 end
 
 
