@@ -1,4 +1,4 @@
-local version = "0.7.0-dev"
+local version = "0.7.0"
 local modpath = minetest.get_modpath("block_league")
 local srcpath = modpath .. "/src"
 
