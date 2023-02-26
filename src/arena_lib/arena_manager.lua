@@ -162,9 +162,12 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
     block_league.info_panel_update(arena, team_id)
   end
 
-  block_league.deactivate_zoom(player)
-  player:get_meta():set_int("bl_death_delay", 1)
+  local p_meta = player:get_meta()
 
+  p_meta:set_int("bl_is_shooting", 0)
+  p_meta:set_int("bl_death_delay", 1)
+
+  block_league.deactivate_zoom(player)
   wait_for_respawn(arena, p_name, 6)
 end)
 

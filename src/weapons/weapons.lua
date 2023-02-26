@@ -40,6 +40,7 @@ minetest.register_globalstep(function(dtime)
 
       -- cambio mirino
       if w_name ~= curr_weap and w_name:find("block_league") then     -- TEMP: il secondo controllo è da togliere con la 5.7, perché al momento non reimposta lo slot a massimo 4
+        player:get_meta():set_int("bl_is_shooting", 0)
         p_data.current_weapon = w_name
         block_league.HUD_crosshair_update(p_name, w_name)
       end
@@ -284,20 +285,6 @@ function weapon_left_click(weapon, player, pointed_thing)
   --TODO: prob inserire funzione per armi caricate
 
   shoot(weapon, player, pointed_thing)
-
-  -- controls.register_on_release non funziona se un tasto viene premuto E rilasciato
-  -- sullo stesso step. Quindi, quando questo fallisce (perché il giocatore è stato
-  -- troppo veloce), interviene l'after seguente che ricontrolla lo stato del tasto sx
-  -- sullo step subito successivo. Il metadato bl_is_shooting è usato come sistema di
-  -- verifica (attivato quando si spara con successo e disattivato quando si rilascia).
-  -- Se il tasto sx è stato rilasciato ma bl_is_shooting è ancora 1, vuol dire che
-  -- register_on_release ha fallito e c'è bisogno di intervenire chiamando la funzione
-  -- di rilascio
-  minetest.after(0.1, function()
-    if not player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
-      player:get_meta():set_int("bl_is_shooting", 0)
-    end
-  end)
 end
 
 
@@ -477,8 +464,8 @@ function shoot_loop(weapon, player, pointed_thing)
 
   -- interrompo lo sparo, se non è un'arma a fuoco continuo
   minetest.after(0.1, function()
-    if not player or not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    if weapon.continuos_fire and player:get_meta():get_int("bl_is_shooting") == 1 then
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+    if weapon.continuos_fire and player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
       shoot_loop(weapon, player, pointed_thing)
     else
       shoot_end(player, weapon)
@@ -564,6 +551,8 @@ function shoot_end(player, weapon)
   local p_name = player:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
   local p_meta = player:get_meta()
+
+  p_meta:set_int("bl_is_shooting", 0)
 
   minetest.after(0.5, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league")

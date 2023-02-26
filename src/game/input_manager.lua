@@ -18,14 +18,5 @@ controls.register_on_release(function(player, key)
   -- AUX1
   if key == "aux1"  and not arena_lib.get_arena_by_player(p_name).in_celebration then
     panel_lib.get_panel(p_name, "bl_info_panel"):hide()
-
-  -- LMB
-  elseif key == "LMB" then
-    local weapon_name = player:get_wielded_item():get_name()
-    local weapon = minetest.registered_nodes[weapon_name]
-
-    if not weapon or player:get_meta():get_int("bl_is_shooting") == 0 then return end
-
-    player:get_meta():set_int("bl_is_shooting", 0)
   end
 end)
