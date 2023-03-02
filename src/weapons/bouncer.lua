@@ -11,7 +11,7 @@ local function register_bouncer(name, desc, stamina)
     inventory_image = "bl_" .. name .. ".png",
     crosshair = "bl_bouncer_crosshair.png",
     jump_height = 5,
-    groups = {oddly_breakable_by_hand = "2"},
+    groups = {oddly_breakable_by_hand = "2", bouncer = 1},
     on_drop = function() end,
 
     on_use = function(itemstack, user, pointed_thing)
