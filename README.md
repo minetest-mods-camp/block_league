@@ -8,9 +8,10 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 * [achievements_lib](https://gitlab.com/zughy-friends-minetest/achievements_lib) by me
 * [arena_lib](https://gitlab.com/zughy-friends-minetest/arena_lib/) by me
 * (bundled by arena_lib) [ChatCMDBuilder](https://github.com/rubenwardy/ChatCmdBuilder/) by rubenwardy
-* [controls](https://github.com/Arcelmi/minetest-controls) by Arcelmi
+* [controls](https://github.com/mt-mods/controls) by Arcelmi/BuckarooBanzay
 * [panel_lib](https://gitlab.com/zughy-friends-minetest/panel_lib) by me
 * [skills](https://gitlab.com/zughy-friends-minetest/skills) by Giov4
+* (optional) [Visible Wielditem](https://github.com/appgurueu/visible_wielditem) by appguru
 
 ### Set up an arena
 1. run `/arenas create block_league <arena_name>`
