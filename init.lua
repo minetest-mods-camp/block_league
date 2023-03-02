@@ -86,6 +86,8 @@ dofile(srcpath .. "/player_manager.lua")
 dofile(srcpath .. "/privs.lua")
 dofile(srcpath .. "/utils.lua")
 
+-- visible_wielditem
+dofile(srcpath .. "/deps/visible_wielditem.lua")
 -- arena_lib
 dofile(srcpath .. "/arena_lib/arena_manager.lua")
 dofile(srcpath .. "/arena_lib/arena_timer.lua")

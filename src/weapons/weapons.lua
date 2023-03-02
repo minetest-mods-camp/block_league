@@ -56,8 +56,20 @@ function block_league.register_weapon(name, def)
   -- anche il nome in on_use (che lo richiede)
   def.name = name
 
+  local groups
+
+  -- specifica il gruppo per capire come renderizzare l'arma in 3D
+  if def.mesh then
+    groups = {bl_weapon_mesh = 1}
+  elseif def.weapon_type == 3 then
+    groups = {bl_sword = 1}
+  else
+    groups = {bl_weapon = 1}
+  end
+  
   minetest.register_node(name, {
     name = def.name,
+    groups = def.groups,
 
     description = def.description,
     profile_description = def.profile_description or "",
