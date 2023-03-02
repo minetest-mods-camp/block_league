@@ -5,13 +5,13 @@ S4 League inspired shooter minigame for Minetest.
 Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2PxjP.png" alt="Support Zughy"/></a> | Zaizen <a href="https://liberapay.com/_Zaizen_/"><img src="https://i.imgur.com/4B2PxjP.png" alt="Support Zaizen"/></a>  
 
 ### Dependencies
-* [achievements_lib](https://gitlab.com/zughy-friends-minetest/achievements_lib) by me
-* [arena_lib](https://gitlab.com/zughy-friends-minetest/arena_lib/) by me
-* (bundled by arena_lib) [ChatCMDBuilder](https://github.com/rubenwardy/ChatCmdBuilder/) by rubenwardy
-* [controls](https://github.com/mt-mods/controls) by Arcelmi/BuckarooBanzay
-* [panel_lib](https://gitlab.com/zughy-friends-minetest/panel_lib) by me
-* [skills](https://gitlab.com/zughy-friends-minetest/skills) by Giov4
-* (optional) [Visible Wielditem](https://github.com/appgurueu/visible_wielditem) by appguru
+* [achievements_lib](https://content.minetest.net/packages/Zughy/achievements_lib/) by me
+* [arena_lib](https://content.minetest.net/packages/Zughy/arena_lib/) by me
+* (bundled by arena_lib) [Chat Command Builder](https://content.minetest.net/packages/rubenwardy/lib_chatcmdbuilder/) by rubenwardy
+* [controls](https://content.minetest.net/packages/BuckarooBanzay/controls/) by Arcelmi/BuckarooBanzay
+* [panel_lib](https://content.minetest.net/packages/Zughy/panel_lib/) by me
+* [skills](https://content.minetest.net/packages/giov4/skills/) by Giov4
+* (optional) [Visible Wielditem](https://content.minetest.net/packages/LMD/visible_wielditem/) by appguru
 
 ### Set up an arena
 1. run `/arenas create block_league <arena_name>`
