@@ -69,7 +69,7 @@ function block_league.register_weapon(name, def)
   
   minetest.register_node(name, {
     name = def.name,
-    groups = def.groups,
+    groups = groups,
 
     description = def.description,
     profile_description = def.profile_description or "",
