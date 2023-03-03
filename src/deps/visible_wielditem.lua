@@ -13,7 +13,7 @@ if visible_wielditem then
 	visible_wielditem.item_tweaks["groups"]["bl_weapon_mesh"] = {
 		rotation = {x=0, y=0, z=-100},
 		position = {x=0, y=-0.15, z=0.2},
-		scale = 1.25
+		scale = 1.4
 	}
 
 	visible_wielditem.item_tweaks["groups"]["bouncer"] = {
