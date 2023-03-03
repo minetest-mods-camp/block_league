@@ -235,7 +235,6 @@ end)
 
 
 arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
-
   -- se non si è disconnesso, sgancia la palla e togli lo zoom. A quanto pare la
   -- palla non si sgancia da qua per chi si sconnette, prob get_player_name ritorna nullo
   if reason ~= 0 then
@@ -243,7 +242,11 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
       local children = minetest.get_player_by_name(p_name):get_children()
       for _, child in pairs(children) do
         -- potrebbe essere essere un* spettator*, controllo che sia effettivamente la palla
-        if not child:is_player() then
+        -- TEMP: get_luaentity() is needed for the moment, as entities on MT are
+        -- half broken: they sometimes remain as an empty shell that can't be
+        -- removed. If someone enters with a broken entity, we want to avoid the
+        -- server go to kaboom (as their get_luaentity() returns nil)
+        if not child:is_player() and child:get_luaentity() then
           child:get_luaentity():detach()
         end
       end
