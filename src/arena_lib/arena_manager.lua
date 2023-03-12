@@ -247,7 +247,7 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
         -- removed. If someone enters with a broken entity, we want to avoid the
         -- server go to kaboom (as their get_luaentity() returns nil)
         if not child:is_player() and child:get_luaentity() then
-          child:get_luaentity():detach()
+          child:detach()
         end
       end
     end
