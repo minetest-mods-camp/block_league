@@ -245,9 +245,10 @@ arena_lib.on_quit("block_league", function(arena, p_name, is_spectator, reason)
         -- TEMP: get_luaentity() is needed for the moment, as entities on MT are
         -- half broken: they sometimes remain as an empty shell that can't be
         -- removed. If someone enters with a broken entity, we want to avoid the
-        -- server go to kaboom (as their get_luaentity() returns nil)
+        -- server go to kaboom (as their get_luaentity() returns nil).
+        -- See https://github.com/minetest/minetest/issues/13297
         if not child:is_player() and child:get_luaentity() then
-          child:detach()
+          child:set_detach()
         end
       end
     end
