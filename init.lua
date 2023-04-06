@@ -32,6 +32,7 @@ arena_lib.register_minigame("block_league", {
   join_while_in_progress = true,
   time_mode = "decremental",
 
+  can_drop = false,
   disable_inventory = true,
   disabled_damage_types = {"fall", "punch"},
   in_game_physics = {
