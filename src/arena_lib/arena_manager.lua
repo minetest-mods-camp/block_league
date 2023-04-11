@@ -351,7 +351,6 @@ function remove_HUD(p_name, is_spectator)
 
   if is_spectator then return end
 
-  arena_lib.HUD_hide("all", p_name)
   panel_lib.get_panel(p_name, "bl_info_panel"):remove()
   block_league.HUD_remove_inputs(p_name)
 end
