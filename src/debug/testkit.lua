@@ -1,3 +1,5 @@
+local S = minetest.get_translator("block_league")
+
 local function exit_test_mode() end
 
 local players_in_test_mode = {}
