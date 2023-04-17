@@ -191,6 +191,23 @@ minetest.register_tool("block_league:editor_ball", {
 
 
 
+minetest.register_tool("block_league:editor_death", {
+
+    description = S("Set minimum Y (death below)"),
+    inventory_image = "bl_editor_death.png",
+    groups = {not_in_creative_inventory = 1},
+    on_place = function() end,
+    on_drop = function() end,
+
+    on_use = function(itemstack, user, pointed_thing)
+      local mod         = user:get_meta():get_string("arena_lib_editor.mod")
+      local arena_name  = user:get_meta():get_string("arena_lib_editor.arena")
+
+      arena_lib.change_arena_property(user:get_player_name(), mod, arena_name, "min_y", user:get_pos().y, true)
+    end
+})
+
+
 
 
 ----------------------------------------------
@@ -283,12 +300,15 @@ end
 function give_items(user, arena)
   local items = {
     "block_league:editor_mode",
-    "block_league:editor_wroom"
+    "block_league:editor_wroom",
+    "",
+    "",
+    "block_league:editor_death"
   }
 
   if arena.mode == 1 then
-    table.insert(items, 3, "block_league:editor_goal")
-    table.insert(items, 4, "block_league:editor_ball")
+    items[3] = "block_league:editor_goal"
+    items[4] = "block_league:editor_ball"
   end
 
   return items

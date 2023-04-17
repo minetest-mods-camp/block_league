@@ -23,6 +23,7 @@ Change mode (LMB TD, RMB DM)=Cambia modalità (sx TD, dx DM)
 Set waiting room (LMB orange, RMB blue)=Imposta sala d'attesa (sx arancione, dx blu)
 Set team goal (LMB orange, RMB blue)=Imposta porta (sx arancione, dx blu)
 Set ball spawn point=Imposta punto di rinascita della palla
+Set minimum Y (death below)=Imposta Y minima (morte al di sotto)
 
 # arena_lib/arena_manager.lua
 The game will start soon=La partita comincerà a breve

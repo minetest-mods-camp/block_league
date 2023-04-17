@@ -23,6 +23,7 @@ Change mode (LMB TD, RMB DM)=
 Set waiting room (LMB orange, RMB blue)=
 Set team goal (LMB orange, RMB blue)=
 Set ball spawn point=
+Set minimum Y (death below)=
 
 # arena_lib/arena_manager.lua
 The game will start soon=
