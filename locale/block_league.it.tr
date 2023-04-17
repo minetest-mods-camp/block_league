@@ -1,4 +1,4 @@
-# version 0.7.0
+# version 0.8.0-dev
 # author(s): Zughy
 # reviewer(s):
 # textdomain: block_league
@@ -16,6 +16,13 @@ Back in the game in @1=Di nuovo in partita tra @1
 
 # privs.lua
 It allows to use the /bladmin command=Permette di usare il comando /bladmin
+
+# arena_lib/arena_editor.lua
+Mode, waiting rooms and more=Modalità, sale d'attesa e altro
+Change mode (LMB TD, RMB DM)=Cambia modalità (sx TD, dx DM)
+Set waiting room (LMB orange, RMB blue)=Imposta sala d'attesa (sx arancione, dx blu)
+Set team goal (LMB orange, RMB blue)=Imposta porta (sx arancione, dx blu)
+Set ball spawn point=Imposta punto di rinascita della palla
 
 # arena_lib/arena_manager.lua
 The game will start soon=La partita comincerà a breve

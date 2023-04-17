@@ -15,14 +15,8 @@ Zughy <a href="https://liberapay.com/Zughy/"><img src="https://i.imgur.com/4B2Px
 
 ### Set up an arena
 1. run `/arenas create block_league <arena_name>`
-2. set the two waiting rooms via `/bladmin wroom [set|remove] <arena_name> <team_name>`
-	1. (TD) set the two goals via `/bladmin goal [set|remove] <arena_name> <team_name>`
-	2. (TD) set the ball spawn point via `/bladmin ball [set|remove] <arena_name>`
-3. enter the editor via `/arenas edit <arena_name>`
-	1. (DM) Go to Settings -> Arena properties -> set `mode` to 2 (1 is TD, 2 is DM)
-4. have fun customising it
-
-(one day™ the steps involving `/bladmin` commands will be included in the editor... maybe)
+2. enter the editor via `/arenas edit <arena_name>`
+3. have fun customising
 
 ### Utility commands
 * `/bladmin testkit`: gives you the bouncer and the in-game physics, to easily test your maps. The last object in the hotbar restores your inventory and physics

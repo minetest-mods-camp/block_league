@@ -1,4 +1,4 @@
-# version 0.7.0
+# version 0.8.0-dev
 # author(s):
 # reviewer(s):
 # textdomain: block_league
@@ -16,6 +16,13 @@ Back in the game in @1=
 
 # privs.lua
 It allows to use the /bladmin command=
+
+# arena_lib/arena_editor.lua
+Mode, waiting rooms and more=
+Change mode (LMB TD, RMB DM)=
+Set waiting room (LMB orange, RMB blue)=
+Set team goal (LMB orange, RMB blue)=
+Set ball spawn point=
 
 # arena_lib/arena_manager.lua
 The game will start soon=
