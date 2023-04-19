@@ -66,7 +66,7 @@ function block_league.register_weapon(name, def)
   else
     groups = {bl_weapon = 1}
   end
-  
+
   minetest.register_node(name, {
     name = def.name,
     groups = groups,
@@ -475,9 +475,11 @@ function shoot_loop(weapon, player, pointed_thing)
   end
 
   -- interrompo lo sparo, se non è un'arma a fuoco continuo
+  if not weapon.continuos_fire then return end
+
   minetest.after(0.1, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    if weapon.continuos_fire and player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
+    if player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
       shoot_loop(weapon, player, pointed_thing)
     else
       shoot_end(player, weapon)
