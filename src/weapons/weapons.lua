@@ -39,7 +39,7 @@ minetest.register_globalstep(function(dtime)
       end
 
       -- cambio mirino
-      if w_name ~= curr_weap and w_name:find("block_league") then     -- TEMP: il secondo controllo è da togliere con la 5.7, perché al momento non reimposta lo slot a massimo 4
+      if w_name ~= curr_weap then
         player:get_meta():set_int("bl_is_shooting", 0)
         p_data.current_weapon = w_name
         block_league.HUD_crosshair_update(p_name, w_name)
