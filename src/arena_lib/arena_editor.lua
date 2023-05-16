@@ -4,7 +4,7 @@ local function show_waypoints() end
 local function remove_waypoints() end
 local function give_items() end
 
-local waypoints = {} -- KEY: player name; VALUE: {Waypoints IDs}
+local waypoints = {} -- KEY: player name; VALUE: {waypoints IDs}
 
 
 arena_lib.on_join_editor("block_league", function(p_name, arena)
@@ -184,7 +184,7 @@ minetest.register_tool("block_league:editor_ball", {
       local _, arena    = arena_lib.get_arena_by_name(mod, arena_name)
       local p_name      = user:get_player_name()
 
-      arena_lib.change_arena_property(user:get_player_name(), mod, arena_name, "ball_spawn", user:get_pos(), true)
+      arena_lib.change_arena_property(p_name, mod, arena_name, "ball_spawn", user:get_pos(), true)
       show_waypoints(p_name, arena)
     end
 })

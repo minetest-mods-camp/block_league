@@ -476,17 +476,20 @@ function shoot_loop(weapon, player, pointed_thing)
     shoot_melee(player, weapon, pointed_thing)
   end
 
-  -- interrompo lo sparo, se non è un'arma a fuoco continuo
-  if not weapon.continuos_fire then return end
+  -- interrompo lo sparo se non è un'arma a fuoco continuo
+  if not weapon.continuos_fire then
+    shoot_end(player, weapon)
 
-  minetest.after(0.1, function()
-    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    if player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
-      shoot_loop(weapon, player, pointed_thing)
-    else
-      shoot_end(player, weapon)
-    end
-  end)
+  else
+    minetest.after(0.1, function()
+      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+      if player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
+        shoot_loop(weapon, player, pointed_thing)
+      else
+        shoot_end(player, weapon)
+      end
+    end)
+  end
 end
 
 
