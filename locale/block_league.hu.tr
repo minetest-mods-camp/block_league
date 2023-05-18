@@ -1,0 +1,102 @@
+# version 0.7.0
+# author(s): nyomi
+# reviewer(s):
+# textdomain: block_league
+
+# init.lua
+orange=narancs
+blue=kék
+
+# commands.lua
+mod management=mod menedzsment
+[!] You can't perform this action right now!=[!] Nem tudod most végrehajtani ezt az akciot!
+
+# player_manager.lua
+Back in the game in @1=Visza a játékba @1-ben
+
+# privs.lua
+It allows to use the /bladmin command=Engedi, hogy használd a /bladmin parancsot
+
+# arena_lib/arena_manager.lua
+The game will start soon=A játék hamarosan kezdődik
+
+# arena_lib/arena_timer.lua
+No one=Senki
+
+# debug/testkit.lua
+Leave test mode=Test mode elhagyása
+You already are in test mode!=Már a test mode-ban vagy!
+You've entered test mode=Beléptél a test mode-ba
+You've left test mode=Elhagytad a test mode-ot
+
+# GUI/gui_profile.lua
+Welcome to your Block League profile!=Üdvözlet a te blockleague profilodban 
+Here you can learn about weapons and change your passive skill: select one from the panel on the left to know more about it=Itt megismerkedhet a fegyverekkel és megváltoztathatod passzív készségeidet: válassz egyet a bal oldali panelről, hogy többet megtudj róla
+More customisations will be possible in the future@1 (donations help)=A jövőben további testreszabások lehetségesek@1 (adományozási segítség)
+Decrease damage with distance=Csökkentse a sérülést a távolsággal
+Pierce through=Szúrja át
+EQUIP=VEDDFEL
+
+# HUD/hud_critical.lua
+CRITICAL!=KRITIKAL!
+
+# HUD/hud_info_panel.lua
+TDs=TDs
+Deaths=Halál
+Points=Pontok
+Team=Csapat
+
+# game/TD/ball.lua
+Ball reset=Labda viszaállítása
+NICE POINT!=JÓ PONT
+NICE POINT!=JÓ PONT!
+ENEMY TEAM SCORED...=ELLENFÉL CSAPAT PONTOTT SZERZETT…
+Your team lost the ball!=A csapatod elvesztette a labdát!
+Enemy team lost the ball!=Az ellenség csapata elvesztette a labdát!
+Your team got the ball!=A csapatod megszerezte a labdát!
+You got the ball!=Nálad van a labda!
+Enemy team got the ball!=Az ellenség csapata megszerezte a labdát!
+
+# player/achievements.lua
+two in one=Kettő az egyben
+three in one=Három az egyben
+[!] This player doesn't exist!=[!] Ez a Játékos nem létezik!
+@1 ACHIEVEMENTS=@1 TELJESITMÉNYEK 
+
+# skills/hp.lua
+Increases your health points by 5 @1(20>25)=Öttel megnöveli a max hp-d @1(20>25)
+Great for remaining in action longer, providing firepower to sustain your team. Get tanky!=Kiválóan alkalmas arra, hogy hosszabb ideig maradjon akcióban, tűzerőt biztosítva csapata fenntartásához. Legyen tankos!
+
+# skills/sp.lua
+Increases your stamina points by 25 @1(100>125)=Hozzáad az állóképességed 25-tel @1(100>125)
+Great choice for strikers, as it allows players to run more and perform tricks more often.=Nagyszerű választás csatároknak, mivel így a játékosok többet futhatnak és gyakrabban hajthatnak végre trükköket.
+
+# weapons/pixelgun.lua
+Pixelgun=Pixel pisztoly
+Sniping weapon: you'll never be too far away=Lesipuskás fegyver: soha nem leszel túl messze
+LMB: shoot @1♥=LMB: lő @1♥
+RMB: zoom=RMB: zoom
+
+# weapons/rocket_launcher.lua
+Rocket Launcher=Rakéta vető
+
+# weapons/smg.lua
+Submachine Gun=Sorozatlövő
+Your go-to weapon for close combat=A legjobb fegyvered a közelharchoz
+LMB: shoot @1♥, hold down for a barrage of shots=LMB: lődd le az @1♥-et, tartsd lenyomva egy lövöldözéshez
+
+# weapons/sword.lua
+2H Sword=2H kard
+Keep your friends close and your enemies further -Sun Zhu=Tartsd közel barátaidat és távolabb ellenségeidet -Sun Zhu
+LMB: push @1♥=LMT: tolni: @1♥
+RMB: dash @1♥=RMT: törni: @1♥
+
+# weapons/weapons.lua
+has killed @1 players in a row!=megölt @1 Játékost egyszerre!
+YOU'VE KILLED @1=MEGÖLTED @1-ET
+You've been killed by @1=Megölt @1
+@1 HAS KILLED @2=@1 MEGÖLTE @2 
+@1 has been killed by @2=@1 meghalt @2 által
+You've killed yourself=Megölted saját magd
+
+
