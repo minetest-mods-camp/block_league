@@ -68,10 +68,11 @@ arena_lib.register_minigame("block_league", {
     TDs = 0,
     kills = 0,
     points = 0,
-    entering_time = 0,          -- inutilizzato, servirà prob in futuro per calcolare exp
-    weapons_magazine = {},
+    --entering_time = 0,            -- inutilizzato, servirà prob in futuro per calcolare exp
+    weapons_magazine = {},          -- KEY: w_name, VALUE: curr_ammo
     current_weapon = "",
-    dmg_received = {}           -- KEY: p_name, VALUE: {timestamp, dmg, weapon}
+    dmg_received = {},              -- KEY: p_name, VALUE: {timestamp, dmg, weapon}
+    dmg_dealt = 0
   },
   spectator_properties = {
     was_following_ball = false

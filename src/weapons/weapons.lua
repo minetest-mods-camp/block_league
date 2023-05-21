@@ -135,11 +135,11 @@ end
 
 -- può avere uno o più obiettivi: formato ObjectRef
 function block_league.apply_damage(user, targets, weapon, decrease_damage_with_distance, knockback_dir)
-  local damage = weapon.damage
   local knockback = weapon.knockback
+  local killed_players = 0
+  local tot_damage = 0      -- in caso di più obiettivi colpiti, sommo tutto il danno per poi fare i calcoli alla fine
   local p_name = user:get_player_name()
   local arena = arena_lib.get_arena_by_player(p_name)
-  local killed_players = 0
 
   if not arena or arena.in_queue or arena.in_loading or arena.in_celebration then return end
 
@@ -151,6 +151,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
   -- per ogni giocatore colpito
   for _, target in pairs(targets) do
+    local damage = weapon.damage
     local headshot = target.headshot
     local target = target.player
 
@@ -206,10 +207,12 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
         killed_players = killed_players +1
       end
     end
+
+    tot_damage = tot_damage + damage
   end
 
   -- calcoli post-danno
-  after_damage(arena, p_name, killed_players)
+  after_damage(arena, p_name, tot_damage, killed_players)
 end
 
 
@@ -587,7 +590,21 @@ end
 
 
 
-function after_damage(arena, p_name, killed_players)
+function after_damage(arena, p_name, damage, killed_players)
+  -- aggiorno danno totale inflitto ed eventualmente aumento i punti
+  local p_data = arena.players[p_name]
+  local prev_dmg_dealt = p_data.dmg_dealt
+  local dmg_dealt = prev_dmg_dealt + damage
+  local dmg_points = math.floor(dmg_dealt/10) - math.floor(prev_dmg_dealt/10)
+
+  if dmg_points > 0 then
+    p_data.points = p_data.points + dmg_points
+    block_league.info_panel_update(arena, p_data.teamID)
+    block_league.HUD_spectate_update(arena, p_name, "points")
+  end
+
+  p_data.dmg_dealt = dmg_dealt
+
   -- eventuale prestigio doppia/tripla uccisione
   if killed_players > 1 then
 
