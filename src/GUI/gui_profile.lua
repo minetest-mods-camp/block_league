@@ -11,9 +11,10 @@ end
 
 
 function get_formspec(p_name)
-  local p_props = minetest.get_player_by_name(p_name):get_properties()
-  local p_weaps = block_league.get_player_weapons(p_name)
-  local p_skill = block_league.get_player_skill(p_name)
+  local p_props   = minetest.get_player_by_name(p_name):get_properties()
+  local p_weaps   = block_league.get_player_weapons(p_name)
+  local p_skill   = block_league.get_player_skill(p_name)
+  local skill_def = skills.get_skill_def(p_skill)
 
   -- parte sinistra
   local formspec = {
@@ -37,8 +38,8 @@ function get_formspec(p_name)
     "item_image_button[0.1,0.08;0.82,0.82;" .. p_weaps[1] .. ";weap1;]",
     "item_image_button[1.15,0.08;0.82,0.82;" .. p_weaps[2] .. ";weap2;]",
     "item_image_button[2.2,0.08;0.82,0.82;" .. p_weaps[3] .. ";weap3;]",
-    "image_button[3.25,0.08;0.82,0.82;" .. skills.get_skill_def(p_skill).icon .. ";skill;]",
-    "tooltip[skill;" .. p_skill .. "]",
+    "image_button[3.25,0.08;0.82,0.82;" .. skill_def.icon .. ";skill;]",
+    "tooltip[skill;" .. skill_def.name .. "]",
     "container_end[]",
     "container[0.85,5.66]",
     "image[0,0;1.53,1.53;bl_gui_profile_button_skillpick.png]",
