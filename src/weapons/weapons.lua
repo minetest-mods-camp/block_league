@@ -102,7 +102,6 @@ function block_league.register_weapon(name, def)
     sound_reload = def.sound_reload,
     bullet_trail = def.bullet_trail,
 
-    consume_bullets = def.consume_bullets,
     magazine = def.magazine,
     reload_time = def.reload_time,
 
@@ -484,7 +483,7 @@ function shoot_loop(weapon, player, pointed_thing)
     shoot_end(player, weapon)
 
   else
-    minetest.after(0.1, function()
+    minetest.after(weapon.fire_delay, function()
       if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
       if player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
         shoot_loop(weapon, player, pointed_thing)

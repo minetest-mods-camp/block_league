@@ -28,8 +28,6 @@ block_league.register_weapon("block_league:grenade_launcher", {
     amount = 20,
   },
 
-  consume_bullets = false,
-
 
   bullet = {
     name = "grenade",

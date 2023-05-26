@@ -32,7 +32,6 @@ block_league.register_weapon("block_league:pixelgun", {
     amount = 20,
   },
 
-  consume_bullets = false,
   magazine = 4,
   reload_time = 4,
 

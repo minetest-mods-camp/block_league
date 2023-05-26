@@ -14,6 +14,9 @@ block_league.register_weapon("block_league:smg", {
   crosshair = "bl_smg_crosshair.png",
 
   weapon_type = 1,
+  magazine = 30,
+  reload_time = 2,
+  sound_reload = "bl_smg_reload",
 
   damage = dmg,
   knockback = 0,
@@ -29,10 +32,5 @@ block_league.register_weapon("block_league:smg", {
   bullet_trail = {
     image = "bl_smg_trail.png",
     amount = 5
-  },
-
-  consume_bullets = false,
-  magazine = 30,
-  reload_time = 2
-
+  }
 })
