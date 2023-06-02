@@ -54,6 +54,9 @@ Deaths=
 Points=
 Team=
 
+# game/misc/rays.lua
+Rays=
+
 # game/TD/ball.lua
 Ball reset=
 NICE POINT!=

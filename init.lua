@@ -115,6 +115,7 @@ dofile(srcpath .. "/game/game_main.lua")
 dofile(srcpath .. "/game/input_manager.lua")
 dofile(srcpath .. "/game/misc/fall.lua")
 dofile(srcpath .. "/game/misc/immunity.lua")
+dofile(srcpath .. "/game/misc/rays.lua")
 dofile(srcpath .. "/game/misc/stamina.lua")
 dofile(srcpath .. "/game/TD/ball.lua")
 -- player

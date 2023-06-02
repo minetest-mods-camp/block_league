@@ -53,9 +53,7 @@ end
 
 
 function round_start(arena)
-
   for pl_name, stats in pairs(arena.players) do
-
     local player = minetest.get_player_by_name(pl_name)
 
     if player:get_hp() > 0 then

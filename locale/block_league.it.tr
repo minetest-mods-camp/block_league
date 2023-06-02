@@ -54,6 +54,9 @@ Deaths=Morti
 Points=Punti
 Team=Squadra
 
+# game/misc/rays.lua
+Rays=Raggi
+
 # game/TD/ball.lua
 Ball reset=Palla ripristinata
 NICE POINT!=BEL PUNTO!
