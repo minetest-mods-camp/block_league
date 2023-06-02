@@ -130,24 +130,20 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
 
   -- TD: se il giocatore è morto con la palla, questa si sgancia e torna a oscillare
   if arena.mode == 1 then
-    for _, child in pairs (player:get_children()) do
-      if child:get_luaentity() and child:get_luaentity().timer then
-        local arena = arena_lib.get_arena_by_player(p_name)
-        local ball = child:get_luaentity()
+    local ball = block_league.get_ball(player)
 
-        if player:get_pos().y < arena.min_y then
-          ball:reset()
-        else
-          ball:detach()
-        end
+    if ball then
+      if player:get_pos().y < arena.min_y then
+        ball:reset()
+      else
+        ball:detach()
+      end
 
-        -- reindirizza sulla palla gli spettatori
-        for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
-          if arena.spectators[sp_name].was_following_ball then
-            arena_lib.spectate_target("block_league", arena, sp_name, "entity", "Ball")
-          end
+      -- reindirizza sulla palla gli spettatori
+      for sp_name, _ in pairs(arena_lib.get_player_spectators(p_name)) do
+        if arena.spectators[sp_name].was_following_ball then
+          arena_lib.spectate_target("block_league", arena, sp_name, "entity", "Ball")
         end
-        break
       end
     end
 
@@ -279,6 +275,7 @@ function reset_meta(p_name)
   p_meta:set_int("bl_weap_delay", 0)
   p_meta:set_int("bl_bouncer_delay", 0)
   p_meta:set_int("bl_death_delay", 0)
+  p_meta:set_int("bl_is_speed_locked", 0)
   p_meta:set_int("bl_immunity", 0)
   p_meta:set_int("bl_reloading", 0)
   p_meta:set_int("bl_is_shooting", 0)

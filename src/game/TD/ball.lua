@@ -222,7 +222,6 @@ function ball:reset()
 
   ball_obj:set_pos(arena.ball_spawn)
   ball_obj:set_properties({textures={"bl_ball_unclaimed.png"}})
-
 end
 
 
@@ -372,3 +371,13 @@ end
 
 
 minetest.register_entity("block_league:ball", ball)
+
+
+
+function block_league.get_ball(player)
+  for _, child in pairs (player:get_children()) do
+    if child:get_luaentity() and child:get_luaentity().timer then
+      return child:get_luaentity()
+    end
+  end
+end
