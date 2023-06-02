@@ -194,13 +194,12 @@ function ball:detach()
 
   ball_obj:set_properties({textures={"bl_ball_unclaimed.png"}})
   ball_obj:set_animation({x=0,y=40}, 20, 0, true)
-
 end
 
 
-
+-- TODO: la struttura attuale non fa quasi mai inviare il messaggio di reset, bensì
+-- quello di "la tua squadra ha perso/preso la palla". Sistema
 function ball:reset()
-
   local arena = self.arena
 
   -- annuncio
@@ -209,10 +208,17 @@ function ball:reset()
     block_league.HUD_ball_update(psp_name, S("Ball reset"))
   end
 
-  --if the player dies because of falling in the void wielder_name is nil
+  -- se è agganciata a qualcunə...
   if self.p_name then
+    local wielder = minetest.get_player_by_name(self.p_name)
+
+    if wielder:get_hp() > 0 and wielder:get_meta():get_int("bl_is_speed_locked") == 0 then
+      wielder:set_physics_override({speed = block_league.SPEED})
+    end
+
     self:detach()
   end
+
   self.p_name = nil
   self.team_id = nil
   self.timer_bool = false
