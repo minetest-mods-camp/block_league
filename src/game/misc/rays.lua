@@ -41,7 +41,7 @@ minetest.register_globalstep(function(dtime)
 
       if p_nodename == "block_league:rays_blue" or p_nodename == "block_league:rays_orange" then
         local p_data = arena.players[pl_name]
-        local p_team = p_team.teamID
+        local p_team = p_data.teamID
 
         if player:get_meta():get_int("bl_has_ball") == 1 then
           block_league.get_ball(player):reset()  -- TODO non parla di reset ma di palla persa, sistema
