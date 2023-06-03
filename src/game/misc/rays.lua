@@ -47,7 +47,7 @@ minetest.register_globalstep(function(dtime)
 
         if player:get_hp() > 0 and ((p_team == 1 and p_nodename == "block_league:rays_blue") or (p_team == 2 and p_nodename == "block_league:rays_orange")) then
           player:set_hp(0)
-          block_league.HUD_log_update(arena, "bl_log_suicide.png", pl_name, "")
+          block_league.HUD_log_update(arena, "bl_log_rays.png", pl_name, "")
         end
       end
     end
