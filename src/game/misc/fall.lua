@@ -6,24 +6,7 @@ function block_league.fall_check_loop(arena)
 
     if player:get_hp() > 0 and player:get_pos().y < arena.min_y then
       player:set_hp(0)
-
-      -- TODO: trasforma codice sottostante in funzione (da usare anche per raggi)
-
-      local last_hitter = ""
-      local last_hitter_timestamp = 99999
-
-      for pla_name, dmg_data in pairs(stats.dmg_received) do
-        if arena.current_time > dmg_data.timestamp - 5 and last_hitter_timestamp > dmg_data.timestamp then
-          last_hitter = pla_name
-          last_hitter_timestamp = dmg_data.timestamp
-        end
-      end
-
-      if last_hitter ~= "" then
-        block_league.kill(arena, minetest.registered_nodes[stats.dmg_received[last_hitter].weapon], minetest.get_player_by_name(last_hitter), player)
-      else
-        block_league.HUD_log_update(arena, "bl_log_suicide.png", pl_name, "")
-      end
+      block_league.hitter_or_suicide(arena, player, stats.dmg_received, "bl_log_suicide.png")
     end
   end
 

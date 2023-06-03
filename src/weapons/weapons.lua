@@ -289,6 +289,23 @@ end
 
 
 
+function block_league.hitter_or_suicide(arena, player, dmg_rcvd_table, no_hitter_img)
+  local last_hitter = ""
+  local last_hitter_timestamp = 99999
+
+  for pla_name, dmg_data in pairs(dmg_rcvd_table) do
+    if arena.current_time > dmg_data.timestamp - 5 and last_hitter_timestamp > dmg_data.timestamp then
+      last_hitter = pla_name
+      last_hitter_timestamp = dmg_data.timestamp
+    end
+  end
+
+  if last_hitter ~= "" then
+    block_league.kill(arena, minetest.registered_nodes[dmg_rcvd_table[last_hitter].weapon], minetest.get_player_by_name(last_hitter), player)
+  else
+    block_league.HUD_log_update(arena, no_hitter_img, player:get_player_name(), "")
+  end
+end
 
 
 ----------------------------------------------

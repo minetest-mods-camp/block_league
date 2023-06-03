@@ -38,16 +38,18 @@ minetest.register_globalstep(function(dtime)
       local player = minetest.get_player_by_name(pl_name)
       local p_nodename = minetest.get_node(player:get_pos()).name
       local arena = arena_lib.get_arena_by_player(pl_name)
-      local p_team = arena.players[pl_name].teamID
 
       if p_nodename == "block_league:rays_blue" or p_nodename == "block_league:rays_orange" then
+        local p_data = arena.players[pl_name]
+        local p_team = p_team.teamID
+
         if player:get_meta():get_int("bl_has_ball") == 1 then
           block_league.get_ball(player):reset()  -- TODO non parla di reset ma di palla persa, sistema
         end
 
         if player:get_hp() > 0 and ((p_team == 1 and p_nodename == "block_league:rays_blue") or (p_team == 2 and p_nodename == "block_league:rays_orange")) then
           player:set_hp(0)
-          block_league.HUD_log_update(arena, "bl_log_rays.png", pl_name, "")
+          block_league.hitter_or_suicide(arena, player, p_data.dmg_received, "bl_log_rays.png")
         end
       end
     end
