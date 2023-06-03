@@ -171,13 +171,15 @@ end
 
 
 
-function ball:detach()
+function ball:detach(skip_announcement)
 
   local p_name = self.p_name
   local player = minetest.get_player_by_name(p_name)
   local arena = self.arena
 
-  self:announce_ball_possession_change(true)
+  if not skip_announcement then
+    self:announce_ball_possession_change(true)
+  end
 
   if arena.players[p_name] then
     player:get_meta():set_int("bl_has_ball", 0)
@@ -197,8 +199,7 @@ function ball:detach()
 end
 
 
--- TODO: la struttura attuale non fa quasi mai inviare il messaggio di reset, bensì
--- quello di "la tua squadra ha perso/preso la palla". Sistema
+
 function ball:reset()
   local arena = self.arena
 
@@ -216,7 +217,7 @@ function ball:reset()
       wielder:set_physics_override({speed = block_league.SPEED})
     end
 
-    self:detach()
+    self:detach(true)
   end
 
   self.p_name = nil

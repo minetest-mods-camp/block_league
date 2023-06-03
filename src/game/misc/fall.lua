@@ -6,7 +6,8 @@ function block_league.fall_check_loop(arena)
 
     if player:get_hp() > 0 and player:get_pos().y < arena.min_y then
       player:set_hp(0)
-      player:get_meta():set_int("bl_has_ball", 0)
+
+      -- TODO: trasforma codice sottostante in funzione (da usare anche per raggi)
 
       local last_hitter = ""
       local last_hitter_timestamp = 99999
