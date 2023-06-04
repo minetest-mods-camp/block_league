@@ -16,7 +16,7 @@ ChatCmdBuilder.new("bladmin", function(cmd)
 
     -- need it to allow command blocks to run /bladmin @nearest, or I don't know how to open players' profiles through pressure plates and the like
     cmd:sub("profile :playername", function(sender, p_name)
-      if arena_lib.is_player_in_arena(sender) then
+      if arena_lib.is_player_in_arena(sender) or not minetest.get_player_by_name(p_name) then
         minetest.chat_send_player(sender, minetest.colorize("#e6482e", S("[!] You can't perform this action right now!")))
         return end
 
@@ -47,5 +47,4 @@ ChatCmdBuilder.new("bleague", function(cmd)
 
     block_league.show_profile(sender)
   end)
-
 end,{})

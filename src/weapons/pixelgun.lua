@@ -4,9 +4,9 @@ local dmg = 18
 block_league.register_weapon("block_league:pixelgun", {
 
   description = S("Pixelgun"),
-  profile_description = S("Sniping weapon: you'll never be too far away") .. "\n\n"
-    .. S("LMB: shoot @1♥", "<style color=#7a9090>" .. dmg) .. "</style>\n"
-    .. S("RMB: zoom"),
+  profile_description = S("Sniping weapon: you'll never be too far away"),
+  action1 = S("shoot, @1♥", "<style color=#f66c77>" .. dmg),
+  action2 = S("zoom"),
 
   mesh = "bl_pixelgun.obj",
   tiles = {"bl_pixelgun_texture.png"},

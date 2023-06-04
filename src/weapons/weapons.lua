@@ -75,6 +75,9 @@ function block_league.register_weapon(name, def)
 
     description = def.description,
     profile_description = def.profile_description or "",
+    --TEMP
+    action1 = def.action1 or "",
+    action2 = def.action2 or "",
     drawtype = def.mesh and "mesh" or "item",
     mesh = def.mesh or nil,
     tiles = def.tiles or nil,

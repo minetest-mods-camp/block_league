@@ -44,6 +44,9 @@ More customisations will be possible in the future@1 (donations help)=In futuro 
 Decrease damage with distance=Il danno diminuisce con la distanza
 Pierce through=Penetrazione
 EQUIP=EQUIPAGGIA
+Weapons=Armi
+Skills=Abilità
+Soon=Un dì
 
 # HUD/hud_critical.lua
 CRITICAL!=CRITICO!
@@ -84,8 +87,8 @@ Great choice for strikers, as it allows players to run more and perform tricks m
 # weapons/pixelgun.lua
 Pixelgun=Pixelgun
 Sniping weapon: you'll never be too far away=Fucile da cecchino: non si è mai troppo distanti
-LMB: shoot @1♥=Tasto sx: sparo @1♥
-RMB: zoom=Tasto dx: zoom
+shoot, @1♥=sparo, @1♥
+zoom=zoom
 
 # weapons/rocket_launcher.lua
 Rocket Launcher=Lanciarazzi
@@ -93,13 +96,13 @@ Rocket Launcher=Lanciarazzi
 # weapons/smg.lua
 Submachine Gun=Mitraglietta
 Your go-to weapon for close combat=La tua arma di fiducia per il combattimento ravvicinato
-LMB: shoot @1♥, hold down for a barrage of shots=Tasto sx: sparo @1♥, tieni premuto per raffica
+shoot, decrease damage with distance, @1♥=Tasto sx: sparo, danno diminuisce con la distanza, @1♥
 
 # weapons/sword.lua
 2H Sword=Spada 2H
 Keep your friends close and your enemies further -Sun Zhu=Tieni i tuoi amici vicini e i tuoi nemici lontanissimo -Sun Zhu
-LMB: push @1♥=Tasto sx: spinta @1♥
-RMB: dash @1♥=Tasto dx: scatto @1♥
+push, @1♥=spinta, @1♥
+dash forward, @1♥=scatto in avanti, @1♥
 
 # weapons/weapons.lua
 has killed @1 players in a row!=ha ucciso @1 giocatori in un colpo!

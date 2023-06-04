@@ -4,8 +4,9 @@ local dmg = 3
 block_league.register_weapon("block_league:smg", {
 
   description = S("Submachine Gun"),
-  profile_description = S("Your go-to weapon for close combat") .. "\n\n"
-    .. S("LMB: shoot @1♥, hold down for a barrage of shots", "<style color=#7a9090>" .. dmg) .. "</style>",
+  profile_description = S("Your go-to weapon for close combat"),
+  action1 = S("shoot, decrease damage with distance, @1♥", "<style color=#f66c77>" .. dmg),
+  action2 = S("---"),
 
   mesh = "bl_smg.obj",
   tiles = {"bl_smg_texture.png"},

@@ -15,65 +15,28 @@ function get_formspec(p_name)
   local p_weaps   = block_league.get_player_weapons(p_name)
   local p_skill   = block_league.get_player_skill(p_name)
   local skill_def = skills.get_skill_def(p_skill)
-
-  -- parte sinistra
-  local formspec = {
-    "formspec_version[4]",
-    "size[10,7.6]",
-    "no_prepend[]",
-    "background[0,0;10,7.6;bl_gui_profile_bg.png]",
-    "bgcolor[;true]",
-    "style_type[item_image_button;border=false]",
-    "style_type[image_button;border=false]",
-    "listcolors[#ffffff;#ffffff;#ffffff;#3153b7;#ffffff]",
-    "style[hp;padding=15]",
-    "style[sp;padding=15]",
-    "model[0,0.35;5,3.6;chara;" .. p_props.mesh .. ";" .. table.concat(p_props.textures, ",") .. ";0,-150;false;true]",
-    -- caselle equipaggiamento
-    "container[0.42,4.25]",
-    "image[0,0;1,1;bl_gui_profile_button_weap.png]",
-    "image[1.05,0;1,1;bl_gui_profile_button_weap.png]",
-    "image[2.1,0;1,1;bl_gui_profile_button_weap.png]",
-    "image[3.15,0;1,1;bl_gui_profile_button_skill.png]",
-    "item_image_button[0.1,0.08;0.82,0.82;" .. p_weaps[1] .. ";weap1;]",
-    "item_image_button[1.15,0.08;0.82,0.82;" .. p_weaps[2] .. ";weap2;]",
-    "item_image_button[2.2,0.08;0.82,0.82;" .. p_weaps[3] .. ";weap3;]",
-    "image_button[3.25,0.08;0.82,0.82;" .. skill_def.icon .. ";skill;]",
-    "tooltip[skill;" .. skill_def.name .. "]",
-    "container_end[]",
-    "container[0.85,5.66]",
-    "image[0,0;1.53,1.53;bl_gui_profile_button_skillpick.png]",
-    "image[1.7,0;1.53,1.53;bl_gui_profile_button_skillpick.png]",
-    "image_button[0,0;1.53,1.53;bl_skill_hp.png;hp;]",
-    "image_button[1.7,0;1.53,1.53;bl_skill_sp.png;sp;]",
-    "container_end[]"
-  }
-
-  -- parte destra
   local info_section = {}
   local elem = minetest.get_player_by_name(p_name):get_meta():get_string("bl_profile_elem_active")
 
+  -- calcolo contenuto da metter sulla destra
   if elem == "" then
-    info_section = { "hypertext[5.5,1.7;4,6;item_desc;<global size=16 color=#abc0c0><i>" .. S("Welcome to your Block League profile!") .. "\n"
+    info_section = { "hypertext[0.3,1;4.48,7;elem_desc;<global size=15 halign=center valign=middle><i>" .. S("Welcome to your Block League profile!") .. "\n"
       .. S("Here you can learn about weapons and change your passive skill: select one from the panel on the left to know more about it") .. "\n\n"
-      .. S("More customisations will be possible in the future@1 (donations help)", "<style color=#7a9090>") .. "</style></i>"
+      .. S("More customisations will be possible in the future@1 (donations help)", "<style color=#7a9090>") .. "</style></i>]"
     }
 
   else
-    local item, elem_name, elem_desc, properties, button
+    local item, elem_name, body, button
     local weap = minetest.registered_items["block_league:" .. elem]
     local skill = skills.get_skill_def("block_league:" .. elem)
 
     -- se è un'arma..
     if weap then
-
-      item = weap.mesh and "model[6.5,1;2,2;weap_model;" .. weap.mesh .. ";" .. table.concat(weap.tiles, ",") .. ";0,140;false;true]"
-                       or "image[6.75,1.2;1.5,1.5;" .. weap.wield_image .. "]"
-
+      item = weap.mesh and "model[0,1.5;5.08,2.2;weap_model;" .. weap.mesh .. ";" .. table.concat(weap.tiles, ",") .. ";0,140;false;true]"
+                       or "image[2,1.7;1.5,1.5;" .. weap.wield_image .. "]"
       elem_name = weap.description
-      elem_desc = weap.profile_description
 
-      properties = {}
+      local properties = {}
       local prop = ""
       local prop_y = 1
 
@@ -90,37 +53,119 @@ function get_formspec(p_name)
         table.insert(properties, prop)
       end
 
-      if next(properties) then
-        properties = table.concat(properties, "")
-      else
-        properties = nil
+      properties = next(properties) and table.concat(properties, "") or ""
+
+      local ammo = ""
+      if weap.weapon_type ~= 3 then
+        ammo = table.concat({
+          "image[0,1.6;0.4,0.4;bl_gui_profile_weapon_magazine.png]",
+          "image[3,1.6;0.4,0.4;bl_gui_profile_weapon_reload.png]",
+          "hypertext[0.6,1.53;1,0.6;elem_desc;<global size=16 valign=middle><i>" .. weap.magazine .. "  / --</i>]",
+          "hypertext[3.6,1.53;1,0.6;elem_desc;<global size=16 valign=middle><i>" .. weap.reload_time .. "</i>]"
+        })
       end
 
+      local attributes = table.concat({
+        "container[0.4,5.1]",
+        "image[0,0;0.4,0.55;bl_gui_profile_action_lmb.png]",
+        "image[0,0.8;0.4,0.55;bl_gui_profile_action_rmb.png]",
+        "hypertext[0.6,-0.12;3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action1 .. "</i>]",
+        "hypertext[0.6,0.68;3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action2 .. "</i>]",
+        ammo,
+        "container_end[]",
+      }, "")
+
+      body = table.concat({
+        properties,
+        "hypertext[0.3,4.2;4.48,0.7;elem_desc;<global size=15 halign=center valign=middle><style color=#abc0c0><i>" .. weap.profile_description .. "</i>]",
+        attributes
+      }, "")
       --TODO: inserire il pulsante "rimuovi" per quando si potrà cambiare equipaggiamento
 
     -- se è un'abilità..
     elseif skill then
-
-      item = "image[7,1.7;1,1;bl_skill_" .. elem .. ".png]"
+      item = "image[2,1.7;1.5,1.5;bl_skill_" .. elem .. ".png]"
       elem_name = skill.name
-      elem_desc = skill.profile_description
-
+      body = "hypertext[0.3,4.2;4.48,4.3;elem_desc;<global size=15 halign=center><style color=#abc0c0><i>" .. skill.profile_description .. "</i>]"
 
       if "block_league:" .. elem ~= p_skill then
-        button = "image_button[6.4,6.2;2.2,0.8;bl_gui_profile_button_confirm.png;equip;" .. S("EQUIP") .. "]"
+        button = "image_button[1.45,7.9;2.2,0.8;bl_gui_profile_button_confirm.png;equip;" .. S("EQUIP") .. "]"
       end
     end
 
     info_section = {
       item,
-      "hypertext[5.5,2.85;4,2;elem_name;<global size=24><b>" .. elem_name .. "</b>]",
-      "hypertext[5.5,3.5;4,2.6;elem_desc;<global size=16><i>" .. elem_desc .. "</i>]",
-      properties,
+      "hypertext[0,0.35;5.08,0.8;elem_name;<global size=24 valign=middle halign=center><b>" .. elem_name .. "</b>]",
+      body,
       button
     }
   end
 
-  table.insert_all(formspec, info_section)
+  local right_elem = table.concat(info_section, "")
+
+  -- corpo
+  local formspec = {
+    "formspec_version[4]",
+    "size[19,9]",
+    "no_prepend[]",
+    "background[0,0;19,9;bl_gui_profile_bg.png]",
+    "bgcolor[;true]",
+    "style_type[item_image_button;border=false]",
+    "style_type[image_button;border=false]",
+    "style[weap,wslot,sslot;font=mono;textcolor=#00000000]",
+    "listcolors[#ffffff;#ffffff;#ffffff;#3153b7;#ffffff]",
+
+    -- parte sinistra
+    "model[0.08,0.8;5.08,3.6;chara;" .. p_props.mesh .. ";" .. table.concat(p_props.textures, ",") .. ";0,-150;false;true]",
+    "container[0.49,5]",
+    "image[0,0;1.05,1.05;bl_gui_profile_button_weap.png]]",
+    "image[1.1,0;1.05,1.05;bl_gui_profile_button_weap.png]",
+    "image[2.2,0;1.05,1.05;bl_gui_profile_button_weap.png]",
+    "image[3.3,0;1.05,1.05;bl_gui_profile_button_skill.png]",
+    "image_button[0.1,0.11;0.85,0.85;" .. minetest.registered_nodes[p_weaps[1]].inventory_image .. ";weap;1]",
+    "image_button[1.2,0.11;0.85,0.85;" .. minetest.registered_nodes[p_weaps[2]].inventory_image .. ";weap;2]",
+    "image_button[2.3,0.11;0.85,0.85;" .. minetest.registered_nodes[p_weaps[3]].inventory_image .. ";weap;3]",
+    "image_button[3.4,0.11;0.85,0.85;" .. skill_def.icon .. ";skill;]",
+    "tooltip[skill;" .. skill_def.name .. "]",
+    "container[0.05,1.55]",
+    "image[0,0;0.8,0.8;bl_rank_beginner.png]",
+    "hypertext[0.9,0;3.25,0.8;pname_txt;<global size=24 valign=middle><b>" .. p_name .. "</b>]",
+    "image[0.05,1;0.22,0.22;bl_gui_profile_infobox_trophies.png]",
+    "image[0.05,1.8;0.22,0.3;bl_gui_profile_infobox_money.png]",
+    "hypertext[0.4,0.94;3.35,0.4;pname_txt;<global size=14 valign=middle><b>---</b>]",
+    "hypertext[0.4,1.78;3.35,0.4;pname_txt;<global size=14 valign=middle><b>---</b>]",
+    "container_end[]",
+    "container_end[]",
+
+    -- parte centrale
+    "container[5.85,0.35]",
+    "hypertext[0,0;3.35,0.9;weap_txt;<global size=24 valign=middle><style color=#5be7b1><b>" .. S("Weapons") .. "</b>]",
+    "image[0,1;1.05,1.05;bl_gui_profile_inv_weapon_unlocked.png]",
+    "image[1.25,1;1.05,1.05;bl_gui_profile_inv_weapon_unlocked.png]",
+    "image[2.5,1;1.05,1.05;bl_gui_profile_inv_weapon_unlocked.png]",
+    "image[3.75,1;1.05,1.05;bl_gui_profile_inv_weapon_locked.png]",
+    "image_button[0.1,1.11;0.85,0.85;bl_smg.png;wslot;smg]",
+    "image_button[1.35,1.11;0.85,0.85;bl_sword.png;wslot;sword]",
+    "image_button[2.6,1.11;0.85,0.85;bl_pixelgun.png;wslot;pixelgun]",
+    "image[3.85,1.11;0.85,0.85;bl_rocketlauncher_icon.png^[multiply:#777777]",
+    "hypertext[3.78,1.05;0.95,0.95;soon_tm;<global size=14 halign=center valign=middle><style color=#abc0c0><b>" .. S("Soon") .. "</b>]",
+    "container[0,4.5]",
+    "hypertext[0,0;3.35,0.9;weap_txt;<global size=24 valign=middle><style color=#5be7b1><b>" .. S("Skills") .. "</b>]",
+    "image[0,1;1.05,1.05;bl_gui_profile_inv_skill_unlocked.png]",
+    "image[1.25,1;1.05,1.05;bl_gui_profile_inv_skill_unlocked.png]",
+    "image[2.5,1;1.05,1.05;bl_gui_profile_inv_skill_locked.png]",
+    "image_button[0.1,1.11;0.85,0.85;bl_skill_hp.png;sslot;hp]",
+    "image_button[1.35,1.11;0.85,0.85;bl_skill_sp.png;sslot;sp]",
+    "image[2.6,1.11;0.85,0.85;bl_skill_shield.png^[multiply:#777777]",
+    "hypertext[2.53,1.05;0.95,0.95;soon_tm;<global size=14 halign=center valign=middle><style color=#abc0c0><b>" .. S("Soon") .. "</b>]",
+    "container_end[]",
+    "container_end[]",
+
+    -- parte destra
+    "container[13.88,0]",
+    right_elem,
+    "container_end[]"
+  }
 
   return table.concat(formspec, "")
 end
@@ -134,7 +179,6 @@ end
 ----------------------------------------------
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-
   if formname ~= "block_league:profile" then return end
 
   if fields.quit then
@@ -143,16 +187,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
   local p_name = player:get_player_name()
 
-  if fields.hp then
-    player:get_meta():set_string("bl_profile_elem_active", "hp")
-  elseif fields.sp then
-    player:get_meta():set_string("bl_profile_elem_active", "sp")
-  elseif fields.weap1 then
-    player:get_meta():set_string("bl_profile_elem_active", string.sub(block_league.get_player_weapons(p_name)[1], 14, -1))
-  elseif fields.weap2 then
-    player:get_meta():set_string("bl_profile_elem_active", string.sub(block_league.get_player_weapons(p_name)[2], 14, -1))
-  elseif fields.weap3 then
-    player:get_meta():set_string("bl_profile_elem_active", string.sub(block_league.get_player_weapons(p_name)[3], 14, -1))
+  if fields.weap then
+    player:get_meta():set_string("bl_profile_elem_active", string.sub(block_league.get_player_weapons(p_name)[tonumber(fields.weap)], 14, -1))
+  elseif fields.skill then
+    player:get_meta():set_string("bl_profile_elem_active", string.sub(block_league.get_player_skill(p_name), 14, -1))
+  elseif fields.wslot then
+    player:get_meta():set_string("bl_profile_elem_active", fields.wslot)
+  elseif fields.sslot then
+    player:get_meta():set_string("bl_profile_elem_active", fields.sslot)
   elseif fields.equip then
     local skill = "block_league:" .. player:get_meta():get_string("bl_profile_elem_active")
 

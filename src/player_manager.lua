@@ -6,6 +6,8 @@ local function remove_weapons() end
 
 
 minetest.register_on_joinplayer(function(player)
+  player:get_meta():set_string("bl_profile_elem_active", "")
+
   local p_name = player:get_player_name()
 
   block_league.init_equip(p_name)
