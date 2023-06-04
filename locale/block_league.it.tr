@@ -94,7 +94,7 @@ Rocket Launcher=Lanciarazzi
 # weapons/smg.lua
 Submachine Gun=Mitraglietta
 Your go-to weapon for close combat=La tua arma di fiducia per il combattimento ravvicinato
-shoot, decrease damage with distance, @1♥=Tasto sx: sparo, danno diminuisce con la distanza, @1♥
+shoot, decrease damage with distance, @1♥=sparo, danno diminuisce con la distanza, @1♥
 
 # weapons/sword.lua
 2H Sword=Spada 2H
