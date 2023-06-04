@@ -5,7 +5,7 @@ block_league.register_weapon("block_league:pixelgun", {
 
   description = S("Pixelgun"),
   profile_description = S("Sniping weapon: you'll never be too far away"),
-  action1 = S("shoot, @1♥", "<style color=#f66c77>" .. dmg),
+  action1 = S("piercing shot, @1♥", "<style color=#f66c77>" .. dmg),
   action2 = S("zoom"),
 
   mesh = "bl_pixelgun.obj",

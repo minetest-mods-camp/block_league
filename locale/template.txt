@@ -41,8 +41,6 @@ You've left test mode=
 Welcome to your Block League profile!=
 Here you can learn about weapons and change your passive skill: select one from the panel on the left to know more about it=
 More customisations will be possible in the future@1 (donations help)=
-Decrease damage with distance=
-Pierce through=
 EQUIP=
 Weapons=
 Skills=
@@ -87,7 +85,7 @@ Great choice for strikers, as it allows players to run more and perform tricks m
 # weapons/pixelgun.lua
 Pixelgun=
 Sniping weapon: you'll never be too far away=
-shoot, @1♥=
+piercing shot, @1♥=
 zoom=
 
 # weapons/rocket_launcher.lua

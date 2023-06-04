@@ -36,25 +36,6 @@ function get_formspec(p_name)
                        or "image[2,1.7;1.5,1.5;" .. weap.wield_image .. "]"
       elem_name = weap.description
 
-      local properties = {}
-      local prop = ""
-      local prop_y = 1
-
-      -- calcolo le varie proprietà
-      if weap.decrease_damage_with_distance then
-        prop = "image[5.5," .. prop_y .. ";0.5,0.5;bl_gui_profile_prop_distance.png]tooltip[5.5," .. prop_y .. ";0.5,0.5;" .. S("Decrease damage with distance") .."]"
-        prop_y = prop_y + 1
-        table.insert(properties, prop)
-      end
-
-      if weap.pierce then
-        prop = "image[5.5," .. prop_y .. ";0.5,0.5;bl_gui_profile_prop_pierce.png]tooltip[5.5," .. prop_y .. ";0.5,0.5;" .. S("Pierce through") .. "]"
-        prop_y = prop_y + 1
-        table.insert(properties, prop)
-      end
-
-      properties = next(properties) and table.concat(properties, "") or ""
-
       local ammo = ""
       if weap.weapon_type ~= 3 then
         ammo = table.concat({
@@ -76,7 +57,6 @@ function get_formspec(p_name)
       }, "")
 
       body = table.concat({
-        properties,
         "hypertext[0.3,4.2;4.48,0.7;elem_desc;<global size=15 halign=center valign=middle><style color=#abc0c0><i>" .. weap.profile_description .. "</i>]",
         attributes
       }, "")
