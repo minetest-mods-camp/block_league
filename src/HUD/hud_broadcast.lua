@@ -22,7 +22,7 @@ end
 
 
 function block_league.HUD_ball_update(p_name, msg, hex_color)
-  arena_lib.HUD_send_msg("title", p_name, msg, 3, _, hex_color)
+  arena_lib.HUD_send_msg("title", p_name, msg, 3, nil, hex_color)
 end
 
 
