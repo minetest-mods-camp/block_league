@@ -720,7 +720,7 @@ function weapon_reload(player, weapon)
   p_meta:set_int("bl_weapon_state", 4)
 
   -- rimuovo eventuale zoom
-  if weapon.action2.type == "zoom" and player:get_fov() == weapon.action2.fov then
+  if weapon.action2 and weapon.action2.type == "zoom" and player:get_fov() == weapon.action2.fov then
     block_league.deactivate_zoom(player)
   end
 
