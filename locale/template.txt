@@ -98,7 +98,7 @@ shoot, decrease damage with distance, @1♥=
 
 # weapons/sword.lua
 2H Sword=
-Keep your friends close and your enemies further -Sun Zhu=
+Keep your friends close and your enemies further -Sun Tzu=
 push, @1♥=
 dash forward, @1♥=
 

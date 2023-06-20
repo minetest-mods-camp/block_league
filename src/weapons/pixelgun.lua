@@ -5,8 +5,6 @@ block_league.register_weapon("block_league:pixelgun", {
 
   description = S("Pixelgun"),
   profile_description = S("Sniping weapon: you'll never be too far away"),
-  action1 = S("piercing shot, @1♥", "<style color=#f66c77>" .. dmg),
-  action2 = S("zoom"),
 
   mesh = "bl_pixelgun.obj",
   tiles = {"bl_pixelgun_texture.png"},
@@ -14,31 +12,36 @@ block_league.register_weapon("block_league:pixelgun", {
   inventory_image = "bl_pixelgun.png",
   crosshair = "bl_pixelgun_crosshair.png",
 
-  weapon_type = 1,
-
-  damage = dmg,
-  knockback = 0,
-  weapon_range = 150,
-  fire_delay = 0.9,
-
-  pierce = true,
-  decrease_damage_with_distance = false,
-  continuos_fire = false,
-
-  sound_shoot = "bl_pixelgun_shoot",
-  sound_reload = "bl_pixelgun_reload",
-  bullet_trail = {
-    image = "bl_pixelgun_trail.png",
-    amount = 20,
-  },
-
+  weapon_type = "snipe",
   magazine = 4,
   reload_time = 4,
+  sound_reload = "bl_pixelgun_reload",
 
-  zoom = {
+  action1 = {
+    type = "raycast",
+    description = S("piercing shot, @1♥", "<style color=#f66c77>" .. dmg),
+    damage = dmg,
+    range = 150,
+    delay = 0.9,
+    --load_time = 2,
+
+    --attack_on_release = true, -- TODO: da implementare. Usa loading_time. Serve anche https://github.com/minetest/minetest/issues/13581
+    pierce = true,
+
+    sound = "bl_pixelgun_shoot",
+    trail = {
+      image = "bl_pixelgun_trail.png",
+      amount = 20,
+    },
+  },
+
+  action2 = {
+    type = "zoom",
+    description = S("zoom"),
     fov = 20,
     -- TODO
     --HUD = "",
-    --sound = ""
+    --sound_in = "",
+    --sound_out = "" (facoltativo)
   }
 })

@@ -98,7 +98,7 @@ shoot, decrease damage with distance, @1♥=sparo, danno diminuisce con la dista
 
 # weapons/sword.lua
 2H Sword=Spada 2H
-Keep your friends close and your enemies further -Sun Zhu=Tieni i tuoi amici vicini e i tuoi nemici lontanissimo -Sun Zhu
+Keep your friends close and your enemies further -Sun Tzu=Tieni i tuoi amici vicini e i tuoi nemici lontanissimo -Sun Tzu
 push, @1♥=spinta, @1♥
 dash forward, @1♥=scatto in avanti, @1♥
 

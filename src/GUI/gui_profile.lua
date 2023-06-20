@@ -36,8 +36,48 @@ function get_formspec(p_name)
                        or "image[2,1.7;1.5,1.5;" .. weap.wield_image .. "]"
       elem_name = weap.description
 
+      local action_y = 0
+      local action1, action1_hold, action1_air, action2, action2_hold, action2_air
+
+      -- azioni varie
+      if weap.action1 then
+        action1 = "image[0," .. action_y .. ";0.4,0.55;bl_gui_profile_action_lmb.png]" ..
+                  "hypertext[0.6," .. action_y - 0.12 .. ";3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action1.description .. "</i>]"
+        action_y = action_y + 0.8
+      end
+
+      if weap.action1_hold then
+        action1_hold = "image[0," .. action_y .. ";0.4,0.55;bl_gui_profile_action_lmb_hold.png]" ..
+                  "hypertext[0.6," .. action_y - 0.12 .. ";3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action1_hold.description .. "</i>]"
+        action_y = action_y + 0.8
+      end
+
+      if weap.action1_air then
+        action1_air = "image[0," .. action_y .. ";0.4,0.55;bl_gui_profile_action_lmb_air.png]" ..
+                  "hypertext[0.6," .. action_y - 0.12 .. ";3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action1_air.description .. "</i>]"
+        action_y = action_y + 0.8
+      end
+
+      if weap.action2 then
+        action2 = "image[0," .. action_y .. ";0.4,0.55;bl_gui_profile_action_rmb.png]" ..
+                  "hypertext[0.6," .. action_y - 0.12 .. ";3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action2.description .. "</i>]"
+        action_y = action_y + 0.8
+      end
+
+      if weap.action2_hold then
+        action2_hold = "image[0," .. action_y .. ";0.4,0.55;bl_gui_profile_action_rmb_hold.png]" ..
+                  "hypertext[0.6," .. action_y - 0.12 .. ";3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action2_hold.description .. "</i>]"
+        action_y = action_y + 0.8
+      end
+
+      if weap.action2_air then
+        action1_air = "image[0," .. action_y .. ";0.4,0.55;bl_gui_profile_action_rmb_air.png]" ..
+                  "hypertext[0.6," .. action_y - 0.12 .. ";3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action2_air.description .. "</i>]"
+        action_y = action_y + 0.8
+      end
+
       local ammo = ""
-      if weap.weapon_type ~= 3 then
+      if weap.weapon_type ~= "melee" then
         ammo = table.concat({
           "image[0,1.6;0.4,0.4;bl_gui_profile_weapon_magazine.png]",
           "image[3,1.6;0.4,0.4;bl_gui_profile_weapon_reload.png]",
@@ -48,10 +88,12 @@ function get_formspec(p_name)
 
       local attributes = table.concat({
         "container[0.4,5.1]",
-        "image[0,0;0.4,0.55;bl_gui_profile_action_lmb.png]",
-        "image[0,0.8;0.4,0.55;bl_gui_profile_action_rmb.png]",
-        "hypertext[0.6,-0.12;3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action1 .. "</i>]",
-        "hypertext[0.6,0.68;3.8,0.8;elem_desc;<global size=15 valign=middle><i>" .. weap.action2 .. "</i>]",
+        action1       or "",
+        action1_hold  or "",
+        action1_air   or "",
+        action2       or "",
+        action2_hold  or "",
+        action2_air   or "",
         ammo,
         "container_end[]",
       }, "")
@@ -86,7 +128,7 @@ function get_formspec(p_name)
   -- corpo
   local formspec = {
     "formspec_version[4]",
-    "size[19,9]",
+    "size[19,9,true]",
     "no_prepend[]",
     "background[0,0;19,9;bl_gui_profile_bg.png]",
     "bgcolor[;true]",

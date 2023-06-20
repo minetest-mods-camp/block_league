@@ -1,28 +1,28 @@
 local S = minetest.get_translator("block_league")
 
-local function weapon_left_click() end
-local function weapon_right_click() end
+local function register_action() end
+local function calc_action() end
+local function wait_for_held_action() end
+local function wait_for_charged_action() end
+local function can_use_weapon() end
+local function set_attack_stance() end
+local function run_action() end
+local function attack_loop() end
+local function decrease_magazine() end
+local function attack_hitscan() end
+local function attack_bullet() end
+local function attack_end() end
+local function after_damage() end
 local function weapon_zoom() end
 local function weapon_reload() end
-local function can_use_weapon() end
-local function shoot() end
-local function shoot_loop() end
-local function remove_immunity() end
-local function decrease_magazine() end
-local function shoot_hitscan() end
-local function shoot_bullet() end
-local function shoot_melee() end
-local function shoot_end() end
-local function after_damage() end
+local function draw_particles() end
 
--- TODO: la struttura va ripensata in generale, per supportare funzioni principali
--- e secondarie (pensa alle armi di Synthetic Stars). Studiarla prima su carta
--- sapendo come saranno le armi, e solo dopo mettere le mani qui - perché è già
--- abbastanza un macello
-
--- Appunti: per comunicare a un'arma a fuoco continuo o caricato di smettere di
--- sparare, basta impostare il metadato "bl_is_shooting" a 0, come se fosse un
--- segnale. Questo evita di dichiarare shoot_end() come funzione globale
+-- ogni volta che un'arma spara, se il suo ritardo è minore di 0.5s, viene eseguita
+-- una funzione dopo 0.5s. Tuttavia, se si spara con un arma con ritardo minore e
+-- subito dopo con un'altra (prima dei fatidici 0.5s), quella funzione da 0.5s va
+-- annullata. Ne tengo traccia qui
+local slow_down_func = {} -- KEY: p_name; VALUE: timer func
+local melee_range = block_league.MELEE_RANGE
 
 
 
@@ -36,13 +36,15 @@ minetest.register_globalstep(function(dtime)
       local curr_weap = p_data.current_weapon
 
       -- disattivo zoom
-      if player:get_fov() == 20 and (w_name ~= "block_league:pixelgun" or player:get_meta():get_int("bl_reloading") == 1) then
+      if player:get_fov() == 20 and (w_name ~= "block_league:pixelgun" or player:get_meta():get_int("bl_weapon_state") == 4) then
         block_league.deactivate_zoom(player)
       end
 
       -- cambio mirino
       if w_name ~= curr_weap and curr_weap then             -- non so perché ma fa circa 2 step con curr_weap `nil` nonostante non ci siano ritardi
-        player:get_meta():set_int("bl_is_shooting", 0)
+        if player:get_meta():get_int("bl_weapon_state") == 2 then
+          player:get_meta():set_int("bl_weapon_state", 0)
+        end
         p_data.current_weapon = w_name
         block_league.HUD_crosshair_update(p_name, w_name)
       end
@@ -63,7 +65,7 @@ function block_league.register_weapon(name, def)
   -- specifica il gruppo per capire come renderizzare l'arma in 3D
   if def.mesh then
     groups = {bl_weapon_mesh = 1}
-  elseif def.weapon_type == 3 then
+  elseif def.weapon_type == "melee" then
     groups = {bl_sword = 1}
   else
     groups = {bl_weapon = 1}
@@ -88,56 +90,46 @@ function block_league.register_weapon(name, def)
     use_texture_alpha = def.mesh and "clip" or nil,
 
     weapon_type = def.weapon_type,
-
-    damage = def.damage,
-    weapon_range = def.weapon_range,
-    knockback = def.knockback,
-    fire_delay = def.fire_delay,
-    range = def.range and def.range or 0,
-    node_placement_prediction = "", -- disable prediction
-
-    pierce = def.pierce,
-    decrease_damage_with_distance = def.decrease_damage_with_distance,
-    continuos_fire = def.continuos_fire,
-    --charged_shot = def.charged_shot, TODO: per le armi caricate come la pixelgun
-
-    sound_shoot = def.sound_shoot,
-    sound_reload = def.sound_reload,
-    bullet_trail = def.bullet_trail,
+    action1       = register_action(def.action1, "LMB"),
+    action1_hold  = register_action(def.action1_hold, "LMB"),
+    action1_air   = register_action(def.action1_air, "LMB"),
+    action2       = register_action(def.action2, "RMB"),
+    action2_hold  = register_action(def.action2_hold, "RMB"),
+    action2_air   = register_action(def.action2_air, "RMB"),
 
     magazine = def.magazine,
     reload_time = def.reload_time,
+    sound_reload = def.sound_reload,
 
-    zoom = def.zoom,
-    bullet = def.bullet and block_league.register_bullet(def.bullet, def.damage, def.bullet_trail) or nil,
+    range = def.weapon_type == "melee" and melee_range or 0,
+    node_placement_prediction = "", -- disable prediction
 
     -- LMB = first fire
     on_use = function(itemstack, user, pointed_thing)
-      weapon_left_click(def, user, pointed_thing)
+      calc_action(def, 1, user)
     end,
 
-    -- RMB = secondary use
+    -- RMB = secondary fire
     on_secondary_use = function(itemstack, user, pointed_thing)
-      weapon_right_click(def, user, pointed_thing)
+      calc_action(def, 2, user)
     end,
 
     on_place = function(itemstack, user, pointed_thing)
-      weapon_right_click(def, user, pointed_thing)
+      calc_action(def, 2, user)
     end,
 
     -- Q = reload
     on_drop = function(itemstack, user, pointed_thing)
       weapon_reload(user, def)
     end
-
   })
 end
 
 
 
 -- può avere uno o più obiettivi: formato ObjectRef
-function block_league.apply_damage(user, targets, weapon, decrease_damage_with_distance, knockback_dir)
-  local knockback = weapon.knockback
+function block_league.apply_damage(user, targets, weapon, action)
+  local knockback = action.knockback
   local killed_players = 0
   local tot_damage = 0      -- in caso di più obiettivi colpiti, sommo tutto il danno per poi fare i calcoli alla fine
   local p_name = user:get_player_name()
@@ -153,7 +145,7 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
 
   -- per ogni giocatore colpito
   for _, target in pairs(targets) do
-    local damage = weapon.damage
+    local damage = action.damage
     local headshot = target.headshot
     local target = target.player
 
@@ -166,22 +158,22 @@ function block_league.apply_damage(user, targets, weapon, decrease_damage_with_d
     if arena_lib.is_player_in_same_team(arena, p_name, t_name) then return end
 
     -- eventuale spinta
-    if knockback > 0 and knockback_dir then
-      local knk= vector.multiply(knockback_dir,knockback)
+    if knockback then
+      local knk = vector.multiply(user:get_look_dir(), knockback)
       target:add_velocity(knk)
     end
 
     -- eventuale colpo in testa
-    if headshot and weapon.weapon_type ~= 3 then
+    if headshot and action.type ~= "melee" then
       damage = damage * 1.5
       block_league.HUD_critical_show(p_name)
       block_league.sound_play("bl_hit_critical", p_name, "not_overlappable")
     end
 
     -- eventuale danno decrementato a seconda della distanza
-    if weapon.weapon_type == 1 and decrease_damage_with_distance then
+    if action.decrease_damage_with_distance then
       local dist = vector.distance(user:get_pos(), target:get_pos())
-      damage = damage - (damage * dist / weapon.weapon_range)
+      damage = damage - (damage * dist / action.range)
       remaining_HP = target:get_hp() - damage
     else
       remaining_HP = target:get_hp() - damage
@@ -288,6 +280,17 @@ end
 function block_league.deactivate_zoom(player)
   --TODO: rimuovere HUD zoom armi
   player:set_fov(0, nil, 0.1)
+
+  -- TODO: mettere FOV personalizzato così da evitare questo controllo; essendo un
+  -- FPS, è più che sensato
+  if not arena_lib.is_player_in_arena(player:get_player_name()) then return end
+
+  local p_meta = player:get_meta()
+
+  if p_meta:get_int("bl_weapon_state") == 0 and
+     p_meta:get_int("bl_is_speed_locked") == 0 then
+    player:set_physics_override({speed = block_league.SPEED})
+  end
 end
 
 
@@ -297,7 +300,7 @@ function block_league.hitter_or_suicide(arena, player, dmg_rcvd_table, no_hitter
   local last_hitter_timestamp = 99999
 
   for pla_name, dmg_data in pairs(dmg_rcvd_table) do
-    if arena.current_time > dmg_data.timestamp - 5 and last_hitter_timestamp > dmg_data.timestamp then
+    if arena.current_time > dmg_data.timestamp - 5 and last_hitter_timestamp > dmg_data.timestamp then --TODO crasha se toccano raggi avversari prima di on_start
       last_hitter = pla_name
       last_hitter_timestamp = dmg_data.timestamp
     end
@@ -315,200 +318,209 @@ end
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
 
-function weapon_left_click(weapon, player, pointed_thing)
-  if not can_use_weapon(player, weapon) then return end
+function register_action(action, key)
+  if not action then return end
 
-  --TODO: prob inserire funzione per armi caricate
+  action.key = key
 
-  shoot(weapon, player, pointed_thing)
+  if action.type == "raycast" then
+    action.ammo_per_use = action.ammo_per_use or 1
+    action.delay = action.delay or 0.5
+    action.fire_spread = action.fire_spread or 0
+    action.loading_time = action.loading_time or 0
+  elseif action.type == "bullet" then
+    assert(action.bullet, "Missing bullet in bullet action type")
+    block_league.register_bullet(action.bullet, action.damage, action.trail)
+  elseif action.type == "punch" then
+    assert(action.continuous_fire == nil, "Punch actions can't have continuous fire")
+  end
+
+  return action
 end
 
 
 
-function weapon_right_click(weapon, player, pointed_thing)
-  if not weapon.on_right_click and not weapon.zoom then return end
+function calc_action(weapon, action_id, player)
+  local is_holdable = ((action_id == 1 and weapon.action1_hold) or (action_id == 2 and weapon.action2_hold)) and true
+  local in_the_air = weapon.weapon_type == "melee" and block_league.is_in_the_air(player)
+  local action
 
-  local p_name = player:get_player_name()
-  local arena = arena_lib.get_arena_by_player(p_name)
+  if not in_the_air and is_holdable then
+    local held_key = action_id == 1 and "LMB" or "RMB"
+    wait_for_held_action(weapon, held_key, player, 0.3)
+    return
 
-  if not arena or not arena.in_game or player:get_hp() <= 0 then return end
-
-  if weapon.zoom then
-    weapon_zoom(weapon, player)
-    return end
-
-  if arena.weapons_disabled then return end
-
-  local p_meta = player:get_meta()
-
-  ----- gestione delay dell'arma -----
-  if p_meta:get_int("bl_weap_delay") == 1 or p_meta:get_int("bl_death_delay") == 1 then
-    return end
-
-  p_meta:set_int("bl_weap_delay", 1)
-
-  minetest.after(weapon.weap_secondary_delay, function()
-    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    p_meta:set_int("bl_weap_delay", 0)
-  end)
-  ----- fine gestione delay -----
-
-  remove_immunity(player)
-  weapon.on_right_click(arena, weapon, player, pointed_thing)
-end
-
-
-
-function weapon_zoom(weapon, player)
-  local p_meta = player:get_meta()
-
-  if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_death_delay") == 1 then return end
-
-  if player:get_fov() ~= weapon.zoom.fov then
-    player:set_fov(weapon.zoom.fov, nil, 0.1)
-    -- TODO: applica texture, riproduci suono
   else
-    block_league.deactivate_zoom(player)
-  end
-end
-
-
-
-function weapon_reload(player, weapon)
-  local w_name = weapon.name
-  local p_name = player:get_player_name()
-  local p_meta = player:get_meta()
-  local arena = arena_lib.get_arena_by_player(p_name)
-
-  if not arena or not arena.in_game or player:get_hp() <= 0
-     or arena.weapons_disabled or weapon.weapon_type == 3 or not weapon.magazine
-     or weapon.magazine == 0 or p_meta:get_int("bl_reloading") == 1
-     or arena.players[p_name].weapons_magazine[w_name] == weapon.magazine
-    then return end
-
-  block_league.sound_play(weapon.sound_reload, p_name)
-
-  p_meta:set_int("bl_is_shooting", 0)
-  p_meta:set_int("bl_reloading", 1)
-
-  -- rimuovo eventuale zoom
-  if weapon.zoom and player:get_fov() == weapon.zoom.fov then
-    block_league.deactivate_zoom(player)
-  end
-
-  if p_meta:get_int("bl_is_speed_locked") == 0 then
-    player:set_physics_override({ speed = block_league.SPEED_LOW })
-  end
-
-  block_league.HUD_weapons_update(arena, p_name, w_name, true)
-  block_league.HUD_crosshair_update(p_name, w_name, true)
-
-  minetest.after(weapon.reload_time, function()
-    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    p_meta:set_int("bl_weap_delay", 0) --TODO: perché viene azzerato qui?
-    p_meta:set_int("bl_reloading", 0)
-
-    if p_meta:get_int("bl_is_speed_locked") == 0 then
-      local vel = arena.players[p_name].stamina > 0 and block_league.SPEED or block_league.SPEED_LOW
-      player:set_physics_override({ speed = vel })
+    if action_id == 1 then
+      action = (in_the_air and weapon.action1_air) and weapon.action1_air or weapon.action1
+    else
+      action = (in_the_air and weapon.action2_air) and weapon.action2_air or weapon.action2
     end
+  end
 
-    local p_data = arena.players[p_name]
-    local curr_weap = p_data.current_weapon
+  if not action or not can_use_weapon(player, weapon, action) then return end
 
-    p_data.weapons_magazine[w_name] = weapon.magazine
-    block_league.HUD_weapons_update(arena, p_name, w_name, false)
-    block_league.HUD_crosshair_update(p_name, curr_weap, false)
-  end)
+  set_attack_stance(player, action)
 
+  if action.attack_on_release then
+    local held_key = action_id == 1 and "LMB" or "RMB"
+    wait_for_charged_action(weapon, action, held_key, player, action.load_time, 0)
+  --elseif -- TODO: fare separata wait_for_load_action
+  else
+    run_action(weapon, action, player)
+  end
 end
 
 
 
-function can_use_weapon(player, weapon)
+function wait_for_held_action(weapon, held_key, player, countdown)
+  minetest.after(0.1, function()
+    if not can_use_weapon(player, weapon, {}) then return end
+
+    if player:get_player_control()[held_key] then
+      if countdown <= 0 then
+        local action = held_key == "LMB" and weapon.action1_hold or weapon.action2_hold
+        run_action(weapon, action, player)
+      else
+        countdown = countdown - 0.1
+        wait_for_held_action(weapon, held_key, player, countdown)
+      end
+    else
+      local action = held_key == "LMB" and weapon.action1 or weapon.action2
+      run_action(weapon, action, player)
+    end
+  end)
+end
+
+
+
+function wait_for_charged_action(weapon, action, held_key, player, load_time, time)
+  minetest.after(0.1, function()
+    if not can_use_weapon(player, weapon, action) then return end
+
+    if player:get_player_control()[held_key] then
+      if load_time > time then
+        time = time + 0.1
+      end
+
+      wait_for_charged_action(weapon, action, held_key, player, load_time, time)
+    else
+      run_action(weapon, action, player)
+    end
+  end)
+end
+
+
+
+function can_use_weapon(player, weapon, action)
   local p_name = player:get_player_name()
 
-  if not arena_lib.is_player_in_arena(p_name) then return end
+  if not arena_lib.is_player_in_arena(p_name) or player:get_hp() <= 0 then return end
 
-  local p_meta = player:get_meta()
+  if action.type == "zoom" then return true end
+
   local arena = arena_lib.get_arena_by_player(p_name)
-  local w_name = weapon.name
+  local p_meta = player:get_meta()
+  local w_magazine = arena.players[p_name].weapons_magazine[weapon.name]
 
-  if player:get_hp() <= 0 or
-     arena.weapons_disabled or
-     (weapon.magazine and weapon.magazine <= 0) then
-    return end
-
-  ----- gestione delay dell'arma -----
-  if p_meta:get_int("bl_weap_delay") == 1 or
+  if p_meta:get_int("bl_weapon_state") ~= 0 or
      p_meta:get_int("bl_death_delay") == 1 or
-     p_meta:get_int("bl_reloading") == 1 then
+     arena.weapons_disabled or
+     (weapon.magazine and (w_magazine <= 0 or action.ammo_per_use > w_magazine)) then
     return end
-
-  p_meta:set_int("bl_weap_delay", 1)
-
-  -- per le armi bianche, aggiorno l'HUD qui che segnala che son state usate
-  if not weapon.magazine then
-    block_league.HUD_weapons_update(arena, p_name, w_name, true)
-    block_league.HUD_crosshair_update(p_name, w_name, true)
-  end
-
-  minetest.after(weapon.fire_delay, function()
-    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-    if weapon.magazine and p_meta:get_int("bl_reloading") == 0 then
-      p_meta:set_int("bl_weap_delay", 0)
-    elseif not weapon.magazine then
-      local curr_weap = arena.players[p_name].current_weapon
-      block_league.HUD_weapons_update(arena, p_name, w_name, false)
-      block_league.HUD_crosshair_update(p_name, curr_weap, false)
-      p_meta:set_int("bl_weap_delay", 0)
-    end
-  end)
 
   return true
 end
 
 
 
-function shoot(weapon, player, pointed_thing)
-  if player:get_meta():get_int("bl_is_speed_locked") == 0 then
-    player:set_physics_override({ speed = block_league.SPEED_LOW })
+function set_attack_stance(player, action)
+  local p_meta = player:get_meta()
+  local p_name = player:get_player_name()
+
+  if p_meta:get_int("bl_immunity") == 1 then
+    p_meta:set_int("bl_immunity", 0)
   end
 
-  player:get_meta():set_int("bl_is_shooting", 1)
+  if slow_down_func[p_name] then
+    slow_down_func[p_name]:cancel()
+  end
 
-  shoot_loop(weapon, player, pointed_thing)
+  if p_meta:get_int("bl_is_speed_locked") == 0 then
+    if action.physics_override then
+      if action.physics_override == "FREEZE" then
+        local p_pos = player:get_pos()
+        local p_y = player:get_look_horizontal()
+        local dummy = minetest.add_entity(p_pos, "block_league:dummy")
+        player:set_attach(dummy, "", {x=0,y=-5,z=0}, {x=0, y=-math.deg(p_y), z=0})
+      else
+        player:set_physics_override(action.physics_override)
+      end
+
+      p_meta:set_int("bl_is_speed_locked", 1)
+    else
+      player:set_physics_override({ speed = block_league.SPEED_LOW })
+    end
+  end
 end
 
 
 
-function shoot_loop(weapon, player, pointed_thing)
+function run_action(weapon, action, player)
+  if action.type == "raycast" or action.type == "bullet" or action.type == "punch" or action.type == "custom" then
+    player:get_meta():set_int("bl_weapon_state", 2)
+    attack_loop(weapon, action, player)
+
+  elseif action.type == "zoom" then
+    weapon_zoom(action, player)
+
+  elseif action.type == "install" then
+    player:get_meta():set_int("bl_weapon_state", 2)
+    -- TODO
+
+  elseif action.type == "parry" then
+    -- player:get_meta():set_int("bl_weapon_state", 5)
+  end
+end
+
+
+function attack_loop(weapon, action, player)
   local p_name = player:get_player_name()
 
-  block_league.sound_play(weapon.sound_shoot, p_name)
+  block_league.sound_play(action.sound, p_name)
 
-  remove_immunity(player)
-  decrease_magazine(player, weapon)
-
-  if weapon.weapon_type == 1 then
-    shoot_hitscan(player, weapon, pointed_thing)
-  elseif weapon.weapon_type == 2 then
-    shoot_bullet(player, weapon.bullet, pointed_thing)
+  if action.type == "punch" then
+    attack_hitscan(player, weapon, action)
+  elseif action.type == "custom" then
+    action.on_use(player, weapon, action)
   else
-    shoot_melee(player, weapon, pointed_thing)
+    decrease_magazine(player, weapon, action.ammo_per_use)
+
+    if action.type == "raycast" then
+      attack_hitscan(player, weapon, action)
+    elseif action.type == "bullet" then
+      attack_bullet(player, weapon.bullet)
+    end
+
   end
 
-  -- interrompo lo sparo se non è un'arma a fuoco continuo
-  if not weapon.continuos_fire then
-    shoot_end(player, weapon)
+  -- interrompo lo sparo se non è un'arma a colpo continuo
+  if not action.continuous_fire then
+    attack_end(player, weapon, action.delay)
 
   else
-    minetest.after(weapon.fire_delay, function()
+    minetest.after(action.delay, function()
       if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
-      if player:get_player_control().LMB and player:get_meta():get_int("bl_is_shooting") == 1 then
-        shoot_loop(weapon, player, pointed_thing)
+
+      local arena = arena_lib.get_arena_by_player(p_name)
+      local w_magazine = arena.players[p_name].weapons_magazine[weapon.name]
+
+      if player:get_player_control()[action.key]
+        and player:get_meta():get_int("bl_weapon_state") == 2
+        and (weapon.magazine and (w_magazine > 0 and action.ammo_per_use <= w_magazine)) then
+        attack_loop(weapon, action, player)
       else
-        shoot_end(player, weapon)
+        attack_end(player, weapon, action.delay)
       end
     end)
   end
@@ -516,48 +528,44 @@ end
 
 
 
-function remove_immunity(player)
-  if player:get_meta():get_int("bl_immunity") == 1 then
-    player:get_meta():set_int("bl_immunity", 0)
-  end
-end
-
-
-
-function decrease_magazine(player, weapon)
-  if not weapon.magazine or weapon.magazine <= 0 then return end
-
-  local w_name = weapon.name
+function decrease_magazine(player, weapon, amount)
   local p_name = player:get_player_name()
-  local p_meta = player:get_meta()
+  local w_name = weapon.name
   local arena = arena_lib.get_arena_by_player(p_name)
+  local p_data = arena.players[p_name]
 
-  arena.players[p_name].weapons_magazine[w_name] = arena.players[p_name].weapons_magazine[w_name] - 1
+  p_data.weapons_magazine[w_name] = p_data.weapons_magazine[w_name] - amount
 
   -- automatically reload if the magazine is now empty
-  if arena.players[p_name].weapons_magazine[w_name] == 0 and p_meta:get_int("bl_reloading") == 0 then
+  if p_data.weapons_magazine[w_name] == 0 then
     weapon_reload(player, weapon)
   else
+
     block_league.HUD_weapons_update(arena, p_name, w_name)
+    return true
   end
 end
 
 
 
-function shoot_hitscan(user, weapon, pointed_thing)
+function attack_hitscan(user, weapon, action)
   local dir = user:get_look_dir()
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-  local pointed_players = block_league.get_pointed_players(pos_head, dir, weapon.weapon_range, user, weapon.bullet_trail, weapon.pierce)
+  local pointed_players = block_league.get_pointed_players(user, pos_head, dir, action.range or melee_range, action.pierce)
+
+  if action.trail then
+    draw_particles(action.trail, dir, pos_head, action.range, action.pierce)
+  end
 
   if pointed_players then
-    block_league.apply_damage(user, pointed_players, weapon, weapon.decrease_damage_with_distance)
+    block_league.apply_damage(user, pointed_players, weapon, action)
   end
 end
 
 
 
-function shoot_bullet(user, bullet, pointed_thing)
+function attack_bullet(user, bullet)
   local pos = user:get_pos()
   local pos_head = {x = pos.x, y = pos.y + user:get_properties().eye_height, z = pos.z}
   local bullet_name = bullet.name .. '_entity'
@@ -580,27 +588,72 @@ end
 
 
 
-function shoot_melee(player, weapon, pointed_thing)
-  if pointed_thing.type ~= "object" or not pointed_thing.ref:is_player() then return end
-  local target = {{player = pointed_thing.ref, headshot = false}}
-  block_league.apply_damage(player, target, weapon, false, player:get_look_dir())
-end
-
-
-
-function shoot_end(player, weapon)
+function attack_end(player, weapon, delay)
   local p_name = player:get_player_name()
-  local arena = arena_lib.get_arena_by_player(p_name)
   local p_meta = player:get_meta()
 
-  p_meta:set_int("bl_is_shooting", 0)
+  if p_meta:get_int("bl_weapon_state") == 4 then return end
 
-  minetest.after(0.5, function()
+  p_meta:set_int("bl_weapon_state", 3)
+
+  local arena = arena_lib.get_arena_by_player(p_name)
+  local w_name = weapon.name
+
+  -- se sono armi bianche, aggiorno l'HUD qui che segnala che son state usate
+  if not weapon.magazine then
+    block_league.HUD_weapons_update(arena, p_name, w_name, true)
+    block_league.HUD_crosshair_update(p_name, w_name, true)
+  end
+
+  -- finisce attesa e ripristina eventuale fisica personalizzata
+  minetest.after(delay, function()
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+
+    if p_meta:get_int("bl_weapon_state") ~= 4 then
+      p_meta:set_int("bl_weapon_state", 0)
+    end
+
+    -- se ha la fisica personalizzata, ripristinala
+    if p_meta:get_int("bl_is_speed_locked") == 1 then
+      p_meta:set_int("bl_is_speed_locked", 0)
+
+      if player:get_attach() then
+        player:get_attach():remove()
+
+      else
+        player:set_physics_override(block_league.PHYSICS)
+
+        if arena.players[p_name].stamina == 0
+          or p_meta:get_int("bl_weapon_state") ~= 0
+          or player:get_fov() ~= 0 then
+          player:set_physics_override({speed = block_league.SPEED_LOW})
+        end
+      end
+
+    -- TEMP: se `delay` è 0.5, c'è il rischio che la funzione sotto venga chiamata
+    -- prima di questa. Serve https://github.com/minetest/minetest/issues/13477
+    elseif player:get_physics_override().speed ~= block_league.SPEED
+      and arena.players[p_name].stamina > 0
+      and p_meta:get_int("bl_weapon_state") == 0
+      and player:get_fov() == 0 then
+      player:set_physics_override({speed = block_league.SPEED})
+    end
+
+    -- ripristino colore HUD per le armi bianche (faccio qui per non aver un terzo after più in alto)
+    if not weapon.magazine then
+      local curr_weap = arena.players[p_name].current_weapon
+      block_league.HUD_weapons_update(arena, p_name, w_name, false)
+      block_league.HUD_crosshair_update(p_name, curr_weap, false)
+    end
+  end)
+
+  -- ripristina velocità dopo 0.5 secondi
+  slow_down_func[p_name] = minetest.after(0.5, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league")
       or arena.players[p_name].stamina == 0
-      or p_meta:get_int("bl_reloading") == 1
-      or p_meta:get_int("bl_is_shooting") == 1
+      or p_meta:get_int("bl_weapon_sate") ~= 0
       or p_meta:get_int("bl_is_speed_locked") == 1
+      or player:get_fov() ~= 0
       then return end
 
     player:set_physics_override({ speed = block_league.SPEED })
@@ -635,4 +688,80 @@ function after_damage(arena, p_name, damage, killed_players)
 
     arena_lib.send_message_in_arena(arena, minetest.colorize("#eea160", p_name .. " ") .. minetest.colorize("#d7ded7", S("has killed @1 players in a row!", killed_players)))
   end
+end
+
+
+
+function weapon_zoom(action, player)
+  local p_meta = player:get_meta()
+
+  if player:get_fov() ~= action.fov then
+    player:set_fov(action.fov, nil, 0.1)
+    -- TODO: applica texture, riproduci suono
+  else
+    block_league.deactivate_zoom(player)
+  end
+end
+
+function weapon_reload(player, weapon)
+  local w_name = weapon.name
+  local p_name = player:get_player_name()
+  local p_meta = player:get_meta()
+  local arena = arena_lib.get_arena_by_player(p_name)
+
+  if not arena or not arena.in_game or player:get_hp() <= 0
+     or arena.weapons_disabled or weapon.weapon_type == "melee" or not weapon.magazine
+     or weapon.magazine == 0 or p_meta:get_int("bl_weapon_state") == 4
+     or arena.players[p_name].weapons_magazine[w_name] == weapon.magazine
+    then return end
+
+  block_league.sound_play(weapon.sound_reload, p_name)
+
+  p_meta:set_int("bl_weapon_state", 4)
+
+  -- rimuovo eventuale zoom
+  if weapon.action2.type == "zoom" and player:get_fov() == weapon.action2.fov then
+    block_league.deactivate_zoom(player)
+  end
+
+  if p_meta:get_int("bl_is_speed_locked") == 0 then
+    player:set_physics_override({ speed = block_league.SPEED_LOW })
+  end
+
+  block_league.HUD_weapons_update(arena, p_name, w_name, true)
+  block_league.HUD_crosshair_update(p_name, w_name, true)
+
+  minetest.after(weapon.reload_time, function()
+    if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+    p_meta:set_int("bl_weapon_state", 0)
+
+    if p_meta:get_int("bl_is_speed_locked") == 0 then
+      local vel = arena.players[p_name].stamina > 0 and block_league.SPEED or block_league.SPEED_LOW
+      player:set_physics_override({ speed = vel })
+    end
+
+    local p_data = arena.players[p_name]
+    local curr_weap = p_data.current_weapon
+
+    p_data.weapons_magazine[w_name] = weapon.magazine
+    block_league.HUD_weapons_update(arena, p_name, w_name, false)
+    block_league.HUD_crosshair_update(p_name, curr_weap, false)
+  end)
+end
+
+
+
+function draw_particles(particle, dir, origin, range, pierce)
+  local check_coll = not pierce
+
+  minetest.add_particlespawner({
+    amount = particle.amount,
+    time = 0.3,   -- TODO: meglio funzione che approssima distanza? Time era 0.3, min/max erano impact_dist/(range * 1.5)
+    pos = vector.new(origin),
+    vel = vector.multiply(dir, range),
+    size = 2,
+    collisiondetection = check_coll,
+    collision_removal = check_coll,
+    texture = particle.image
+  })
 end

@@ -43,13 +43,13 @@ function block_league.enter_test_mode(sender)
 
   players_in_test_mode[sender] = {inv = inv:get_list("main"), physics = player:get_physics_override()}
   inv:set_list("main", items)
-  player:set_physics_override(arena_lib.mods["block_league"].in_game_physics)
+  player:set_physics_override(block_league.PHYSICS)
 
   local meta = player:get_meta()
 
   meta:set_int("bl_bouncer_delay", 0)
   meta:set_int("bl_death_delay", 0)
-  meta:set_int("bl_reloading", 0)
+  meta:set_int("bl_weapon_state", 0)
   meta:set_int("bl_is_speed_locked", 0)
 
   minetest.chat_send_player(sender, "[Block League] " .. S("You've entered test mode"))

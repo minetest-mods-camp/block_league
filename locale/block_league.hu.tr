@@ -87,7 +87,7 @@ LMB: shoot @1♥, hold down for a barrage of shots=LMB: lődd le az @1♥-et, ta
 
 # weapons/sword.lua
 2H Sword=2H kard
-Keep your friends close and your enemies further -Sun Zhu=Tartsd közel barátaidat és távolabb ellenségeidet -Sun Zhu
+Keep your friends close and your enemies further -Sun Tzu=Tartsd közel barátaidat és távolabb ellenségeidet -Sun Tzu
 LMB: push @1♥=LMT: tolni: @1♥
 RMB: dash @1♥=RMT: törni: @1♥
 

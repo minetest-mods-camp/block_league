@@ -1,20 +1,29 @@
-local function draw_particles() end
+-- per bloccare fisica
+local dummy = {
+  initial_properties = {
+    physical = true,
+    collide_with_objects = false,
+    visual = "sprite",
+    visual_size = {x = 0, y = 0, z = 0},
+    -- per debug (e commenta visual_size)
+    --textures = { "logo.png" }
+  }
+}
+
+minetest.register_entity("block_league:dummy", dummy)
 
 
-
--- TODO: split particle trails from this function
 
 -- ritorna un array di giocatori con il numero di giocatori trovati a indice 1.
 -- Se non trova giocatori diversi da se stesso ritorna nil
-function block_league.get_pointed_players(head_pos, dir, range, user, particle, has_piercing)
+function block_league.get_pointed_players(user, head_pos, dir, range, has_piercing)
 
-	local p1 = vector.add(head_pos, vector.multiply(dir, 0))
-	local p2 = vector.add(head_pos, vector.multiply(dir, range))
-
-	local ray = minetest.raycast(p1, p2, true, false)
+	local a = vector.add(head_pos, vector.multiply(dir, 0))
+	local b = vector.add(head_pos, vector.multiply(dir, range))
+	local ray = minetest.raycast(a, b)
 	local players = {}
 
-  -- controllo su ogni cosa attraversata dal raycast (p1 a p2)
+  -- controllo su ogni cosa attraversata dal raycast (da a a b)
 	for hit in ray do
     -- se è un oggetto
 		if hit.type == "object" then
@@ -47,23 +56,11 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
 			if hit.type == "node" then
 				if #players > 0 then
           if has_piercing then
-            if particle ~= nil then
-              local impact_dist = vector.distance(head_pos, hit.intersection_point)
-              draw_particles(particle, dir, p1, range, impact_dist)
-            end
             return players
           else
-            if particle ~= nil then
-              local impact_dist = vector.distance(head_pos, players[1].player:get_pos())
-              draw_particles(particle, dir, p1, range, impact_dist)
-            end
             return {players[1]}
           end
 				else
-          if particle ~= nil then
-            local impact_dist = vector.distance(head_pos, hit.intersection_point)
-            draw_particles(particle, dir, p1, range, impact_dist)
-          end
 					return nil
 				end
       end
@@ -73,48 +70,13 @@ function block_league.get_pointed_players(head_pos, dir, range, user, particle, 
   -- se ho sparato a qualcuno senza incrociare blocchi
   if #players > 0 then
       if has_piercing then
-        if particle ~= nil then
-          draw_particles(particle, dir, p1, range, 120)
-        end
         return players
       else
-        if particle ~= nil then
-          local impact_dist = vector.distance(head_pos, players[1].player:get_pos())
-          draw_particles(particle, dir, p1, range, impact_dist)
-        end
         return {players[1]}
       end
   else
-    if particle ~= nil then
-      draw_particles(particle, dir, p1, range, 120)
-    end
     return nil
   end
-end
-
-
-
-
-
-----------------------------------------------
----------------FUNZIONI LOCALI----------------
-----------------------------------------------
-
-function draw_particles(particle, dir, origin, range, impact_dist)
-  minetest.add_particlespawner({
-    amount = particle.amount,
-    time = 0.3,
-    minpos = origin,
-    maxpos = origin,
-    minvel = vector.multiply(dir, range),
-    maxvel = vector.multiply(dir, range),
-    minexptime = impact_dist/(range * 1.5),
-    maxexptime = impact_dist/(range * 1.5),
-    size = 2,
-    collisiondetection = false,
-    vertical = false,
-    texture = particle.image
-  })
 end
 
 
