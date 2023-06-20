@@ -4,6 +4,16 @@ local sounds = {}    -- KEY: p_name; VALUE: { sounds_name = handle }
 
 
 
+function block_league.is_in_the_air(obj_ref)
+  local obj_pos = obj_ref:get_pos()
+  local node_beneath = vector.new(obj_pos.x, obj_pos.y - 0.4, obj_pos.z)
+  local is_in_the_air = minetest.get_node(node_beneath).name == "air"
+
+  return is_in_the_air
+end
+
+
+
 function block_league.sound_play(sound, p_name, not_overlappable)
   local handle = minetest.sound_play(sound, {to_player = p_name})
 

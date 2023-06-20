@@ -85,9 +85,9 @@ function can_use(player, stamina)
   local meta = player:get_meta()
   if meta:get_int("bl_bouncer_delay") == 1 or
      meta:get_int("bl_death_delay") == 1 or
-     meta:get_int("bl_reloading") == 1 or
-     meta:get_int("bl_is_speed_locked") == 1 or
-     meta:get_int("bl_weap_delay") == 1 then return end
+     meta:get_int("bl_weapon_state") == 3 or
+     meta:get_int("bl_weapon_state") == 4 or
+     meta:get_int("bl_is_speed_locked") == 1 then return end
 
   meta:set_int("bl_bouncer_delay", 1)
 

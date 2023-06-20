@@ -35,13 +35,7 @@ arena_lib.register_minigame("block_league", {
   can_drop = false,
   disable_inventory = true,
   disabled_damage_types = {"fall", "punch"},
-  in_game_physics = {
-    speed = block_league.SPEED,
-    jump = 1.5,
-    gravity = 1.15,
-    sneak_glitch = true,
-    new_move = true
-  },
+  in_game_physics = block_league.PHYSICS,
 
   properties = {
     mode = 1,           -- 1 TD, 2 DM

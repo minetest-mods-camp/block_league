@@ -25,7 +25,7 @@ end
 
 
 function block_league.stamina_drain(arena, w_name)
-  -- per vedere se è online devo per forza fare minetest.ecc, dacché è inutile passare l'intero giocatore come parametro (dato che mi serve il nome)
+  -- per vedere se è connessə devo per forza fare minetest.ecc, quindi è inutile passare l'intero giocatore come parametro (dato che mi serve il nome)
   local wielder = minetest.get_player_by_name(w_name)
 
   if not arena.in_game or not wielder or wielder:get_meta():get_int("bl_has_ball") == 0 then return end

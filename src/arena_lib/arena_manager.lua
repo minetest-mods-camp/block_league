@@ -116,7 +116,6 @@ arena_lib.on_end("block_league", function(arena, players, winners, spectators)
   for pl_name, stats in pairs(players) do
     remove_HUD(pl_name)
     reset_meta(pl_name)
-    block_league.deactivate_zoom(minetest.get_player_by_name(pl_name))
     pl_name:get_skill(block_league.get_player_skill(pl_name)):disable()
 
     --block_league.update_storage(pl_name)
@@ -127,6 +126,10 @@ end)
 
 arena_lib.on_death("block_league", function(arena, p_name, reason)
   local player = minetest.get_player_by_name(p_name)
+
+  if player:get_attach() then
+    player:get_attach():remove()
+  end
 
   -- TD: se il giocatore è morto con la palla, questa si sgancia e torna a oscillare
   if arena.mode == 1 then
@@ -160,7 +163,7 @@ arena_lib.on_death("block_league", function(arena, p_name, reason)
 
   local p_meta = player:get_meta()
 
-  p_meta:set_int("bl_is_shooting", 0)
+  p_meta:set_int("bl_weapon_state", 0)
   p_meta:set_int("bl_death_delay", 1)
 
   block_league.deactivate_zoom(player)
@@ -272,13 +275,11 @@ function reset_meta(p_name)
   local p_meta = minetest.get_player_by_name(p_name):get_meta()
 
   p_meta:set_int("bl_has_ball", 0)
-  p_meta:set_int("bl_weap_delay", 0)
   p_meta:set_int("bl_bouncer_delay", 0)
   p_meta:set_int("bl_death_delay", 0)
   p_meta:set_int("bl_is_speed_locked", 0)
   p_meta:set_int("bl_immunity", 0)
-  p_meta:set_int("bl_reloading", 0)
-  p_meta:set_int("bl_is_shooting", 0)
+  p_meta:set_int("bl_weapon_state", 0)
 end
 
 
@@ -382,10 +383,9 @@ end
 
 
 function wait_for_respawn(arena, p_name, time_left)
-
   if not arena_lib.is_player_in_arena(p_name, "block_league") or arena.weapons_disabled then
     arena_lib.HUD_hide("broadcast", p_name)
-  return end
+    return end
 
   if time_left > 0 then
     arena_lib.HUD_send_msg("broadcast", p_name, S("Back in the game in @1", time_left))
@@ -393,7 +393,6 @@ function wait_for_respawn(arena, p_name, time_left)
     local player = minetest.get_player_by_name(p_name)
 
     player:get_meta():set_int("bl_death_delay", 0)
-    player:get_meta():set_int("bl_reloading", 0)
     arena_lib.HUD_hide("broadcast", p_name)
 
     -- se è nella sala d'attesa

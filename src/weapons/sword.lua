@@ -1,92 +1,103 @@
 local S = minetest.get_translator("block_league")
-local dmg = 7
+
+local dmg1      = 3
+local dmg1hold  = 6.8
+local dmg1air   = 3.7
+local dmg2      = 7
 
 block_league.register_weapon("block_league:sword", {
 
   description = S("2H Sword"),
-  profile_description = S("Keep your friends close and your enemies further -Sun Zhu"),
-  action1 = S("push, @1♥", "<style color=#f66c77>" .. dmg),
-  action2 = S("dash forward, @1♥", "<style color=#f66c77>" .. dmg),
+  profile_description = S("Keep your friends close and your enemies further -Sun Tzu"),
 
   wield_image = "bl_sword.png",
   wield_scale = {x=1.3, y=1.3, z=1.3},
   inventory_image = "bl_sword.png",
   crosshair = "bl_sword_crosshair.png",
 
-  weapon_type = 3,
+  weapon_type = "melee",
 
-  damage = dmg,
-  knockback = 40,
-  fire_delay = 1.2,
-  weap_secondary_delay = 2.5,
-  range = 6,
+  --[[action1 = {
+    type = "punch",
+    description = S("slash, @1♥", "<style color=#f66c77>" .. dmg1),
+    damage = dmg1,
+    delay = 0.4,
+    sound = "bl_sword_hit",
+  },]]
 
-  sound_shoot = "bl_sword_hit",
+  -- TODO: questa dovrebbe diventare action1_hold una volta che sarà possibile
+  -- personalizzare l'animazione dell'oggetto tenuto in mano. Vedasi
+  -- https://github.com/minetest/minetest/issues/2811
+  action1 = {
+    type = "punch",
+    description = S("push, @1♥", "<style color=#f66c77>" .. dmg1hold),
+    damage = dmg1hold,
+    knockback = 40,
+    delay = 1.2,
+    sound = "bl_sword_hit",
+  },
 
-  on_right_click = function(arena, weapon, user, pointed_thing)
-    local p_meta = user:get_meta()
+  --[[action1_air = {
+    type = "custom",
+    description = S("Dive onto the ground and stun enemies in front of you, @1♥", "<style color=#f66c77>" .. dmg1air),
+    damage = dmg1air,
+    -- loading_time = 0.3,
+    delay = 1, -- poi abbassa a 0.7
+    physics_override = "FREEZE",
+    sound = "bl_sword_dash",
 
-    if p_meta:get_int("bl_reloading") == 1 or
-       p_meta:get_int("bl_is_shooting") == 1
-       then return end
+    on_use = function(player, weapon, action)
+      local dummy = player:get_attach()
+      dummy:set_velocity({x = 0, y = -16, z = 0})
 
-    local p_name = user:get_player_name()
-    local w_name = weapon.name
+      minetest.after(0.5, function()
+        local ent_pos = dummy:get_pos()
+        minetest.add_particlespawner({
+          amount = 50,
+          time = 0.6,
+          minpos = ent_pos,
+          maxpos = ent_pos,
+          minvel = {x=-2, y=-2, z=-2},
+          maxvel = {x=2, y=2, z=2},
+          minsize = 1,
+          maxsize = 3,
+          texture = "arenalib_winparticle.png"
+        })
 
-    block_league.sound_play("bl_sword_dash", p_name)
-    p_meta:set_int("bl_is_speed_locked", 1)
+        -- TODO: metti particellare appropriato; dannegga chi è in zona, 30° x lato
 
-    block_league.HUD_weapons_update(arena, p_name, w_name, true)
-    block_league.HUD_crosshair_update(p_name, w_name, true)
+        minetest.after(0.5, function()
+          dummy:remove()
+        end)
+      end)
+    end
+  },]]
 
-    local dir = user:get_look_dir()
-    local pos = user:get_pos()
-    local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-    local pointed_players = block_league.get_pointed_players(pos_head, dir, 5, user, nil, true)
+  action2 = {
+    type = "custom",
+    description = S("dash forward, @1♥", "<style color=#f66c77>" .. dmg2),
+    damage = dmg2,
+    delay = 2.5,
+    physics_override = { speed = 0.5, jump = 0 },
+    sound = "bl_sword_dash",
 
-    dir.y = 0
+    on_use = function(player, weapon, action)
+      local dir = player:get_look_dir()
+      local pos = player:get_pos()
+      local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
+      local pointed_players = block_league.get_pointed_players(player, pos_head, dir, 5, true)
 
-    local player_vel = user:get_velocity()
-    local sprint = vector.multiply(dir,18)
+      dir.y = 0
 
-    user:add_velocity(sprint)
-    player_vel = vector.multiply(player_vel, -0.7)
-    user:add_velocity(player_vel)
-    user:set_physics_override({
-      speed = 0.5,
-      jump = 0
-    })
+      local player_vel = player:get_velocity()
+      local sprint = vector.multiply(dir,18)
 
-    minetest.after(2.5, function()
-      if not arena_lib.is_player_in_arena(p_name, "block_league") then return end
+      player:add_velocity(sprint)
+      player_vel = vector.multiply(player_vel, -0.7)
+      player:add_velocity(player_vel)
 
-      local p_data = arena.players[p_name]
-      local vel
-
-      if p_data.stamina > 0 then
-        if p_meta:get_int("bl_reloading") == 1 or p_meta:get_int("bl_is_shooting") == 1 then
-          vel = block_league.SPEED_LOW
-        else
-          vel = block_league.SPEED
-        end
-      else
-        vel = block_league.SPEED_LOW
-      end
-
-      user:set_physics_override({
-        speed = vel,
-        jump = 1.5
-      })
-
-      local curr_weap = p_data.current_weapon
-
-      block_league.HUD_weapons_update(arena, p_name, w_name)
-      block_league.HUD_crosshair_update(p_name, curr_weap, false)
-
-      user:get_meta():set_int("bl_is_speed_locked", 0)
-    end)
-
-    if not pointed_players then return end
-    block_league.apply_damage(user, pointed_players, weapon, false)
-  end
+      if not pointed_players then return end
+      block_league.apply_damage(player, pointed_players, weapon, action)
+    end
+  }
 })

@@ -63,7 +63,7 @@ function round_start(arena)
     end
 
     block_league.refill_weapons(arena, pl_name)
-    player:get_meta():set_int("bl_reloading", 0)
+    player:get_meta():set_int("bl_weapon_state", 0)
     player:get_meta():set_int("bl_death_delay", 0)
 
     player:set_physics_override({ speed = block_league.SPEED })

@@ -359,7 +359,7 @@ function after_point(teamID, arena)
   arena.weapons_disabled = true
 
   for pl_name, _ in pairs(arena.players) do
-    minetest.get_player_by_name(pl_name):get_meta():set_int("bl_is_shooting", 0)
+    minetest.get_player_by_name(pl_name):get_meta():set_int("bl_weapon_state", 0)
   end
 
   -- se rimane troppo poco tempo, aspetta la fine del match

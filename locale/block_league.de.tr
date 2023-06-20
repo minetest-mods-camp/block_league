@@ -86,7 +86,7 @@ LMB: shoot @1♥, hold down for a barrage of shots=LMT: schießen @1♥, gedrüc
 
 # weapons/sword.lua
 2H Sword=2H-Schwert
-Keep your friends close and your enemies further -Sun Zhu=Halte deine Freunde nah und deine Feinde noch näher – Sun Tsu
+Keep your friends close and your enemies further -Sun Tzu=Halte deine Freunde nah und deine Feinde noch näher – Sunzi
 LMB: push @1♥=LMT: schubsen: @1♥
 RMB: dash @1♥=RMT: sausen: @1♥
 
