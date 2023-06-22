@@ -82,10 +82,8 @@ block_league.register_weapon("block_league:sword", {
     sound = "bl_sword_dash",
 
     on_use = function(player, weapon, action)
+      local pointed_players = block_league.get_pointed_players(player, 5, true)
       local dir = player:get_look_dir()
-      local pos = player:get_pos()
-      local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-      local pointed_players = block_league.get_pointed_players(player, pos_head, dir, 5, true)
 
       dir.y = 0
 

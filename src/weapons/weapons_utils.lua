@@ -1,3 +1,10 @@
+local function cast_raycast() end
+local function get_player_left_dir() end
+local function get_player_up_dir() end
+local function debug_particles() end
+
+
+
 -- per bloccare fisica
 local dummy = {
   initial_properties = {
@@ -14,12 +21,67 @@ minetest.register_entity("block_league:dummy", dummy)
 
 
 
+-- I cast a 2x2 grid (assisted aim) to prevent the 0.1 delay. The grid value is
+-- actually hardcoded because:
+-- 1. it works and I don't need more features from it
+-- 2. I haven't got enough knowledge about vectors and rotations anyway
+function block_league.get_pointed_players(player, range, has_piercing)
+  local hit_pointed_things = {}
+  local left_dir = get_player_left_dir(player)
+  local head_up_dir = get_player_up_dir(player)
+  local look_dir = player:get_look_dir()
+  local center = player:get_pos() + look_dir + {x=0, y=1.475, z=0}
+
+  local grid_width = 0.18
+  local r_amount = 2
+  local x_step = (grid_width / r_amount) * (-left_dir)
+  local y_step = (grid_width / r_amount) * head_up_dir
+  local ray_pos = center + (x_step / r_amount) + (y_step / r_amount)
+
+  for row = 1, r_amount do
+    for column = 1, r_amount do
+      local pthings = cast_raycast(player, ray_pos, look_dir, range, has_piercing)
+      --debug_particles(look_dir, ray_pos, 30)
+
+      if pthings then
+        -- rimuovo giocator3 già colpit3 da altro raggio
+        for k, possible_target in pairs(pthings) do
+          local pl_name = possible_target.player:get_player_name()
+          for _, target in pairs(hit_pointed_things) do
+            if pl_name == target.player:get_player_name() then
+              pthings[k] = nil
+              break
+            end
+          end
+        end
+
+        table.insert_all(hit_pointed_things, pthings)
+      end
+
+      ray_pos = ray_pos - x_step
+    end
+
+     ray_pos = ray_pos - y_step
+     ray_pos = ray_pos + x_step * r_amount
+  end
+
+  return hit_pointed_things
+end
+
+
+
+
+
+----------------------------------------------
+---------------FUNZIONI LOCALI----------------
+----------------------------------------------
+
 -- ritorna un array di giocatori con il numero di giocatori trovati a indice 1.
 -- Se non trova giocatori diversi da se stesso ritorna nil
-function block_league.get_pointed_players(user, head_pos, dir, range, has_piercing)
+function cast_raycast(user, origin, dir, range, has_piercing)
 
-	local a = vector.add(head_pos, vector.multiply(dir, 0))
-	local b = vector.add(head_pos, vector.multiply(dir, range))
+	local a = vector.add(origin, vector.multiply(dir, 0))
+	local b = vector.add(origin, vector.multiply(dir, range))
 	local ray = minetest.raycast(a, b)
 	local players = {}
 
@@ -77,6 +139,34 @@ function block_league.get_pointed_players(user, head_pos, dir, range, has_pierci
   else
     return nil
   end
+end
+
+
+
+function get_player_left_dir(player)
+  local yaw = player:get_look_horizontal()
+  local pl_left_dir = vector.new(math.cos(yaw), 0, math.sin(yaw))
+
+  return vector.normalize(pl_left_dir)
+end
+
+
+
+function get_player_up_dir(player)
+  return vector.rotate_around_axis(player:get_look_dir(), get_player_left_dir(player), math.pi/2)
+end
+
+
+
+function debug_particles(dir, origin, range)
+  minetest.add_particlespawner({
+    amount = 5,
+    time = 0.3,
+    pos = vector.new(origin),
+    vel = vector.multiply(dir, range),
+    size = 2,
+    texture = "bl_smg_trail.png"
+  })
 end
 
 

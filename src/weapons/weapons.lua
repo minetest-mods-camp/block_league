@@ -314,6 +314,9 @@ function block_league.hitter_or_suicide(arena, player, dmg_rcvd_table, no_hitter
 end
 
 
+
+
+
 ----------------------------------------------
 ---------------FUNZIONI LOCALI----------------
 ----------------------------------------------
@@ -569,12 +572,11 @@ end
 
 
 function attack_hitscan(user, weapon, action)
-  local dir = user:get_look_dir()
-  local pos = user:get_pos()
-  local pos_head = {x = pos.x, y = pos.y+1.475, z = pos.z}
-  local pointed_players = block_league.get_pointed_players(user, pos_head, dir, action.range or melee_range, action.pierce)
+  local pointed_players = block_league.get_pointed_players(user, action.range or melee_range, action.pierce)
 
   if action.trail then
+    local dir = user:get_look_dir()
+    local pos_head = vector.add(vector.add(user:get_pos(), vector.new(0,1.475,0)), dir)
     draw_particles(action.trail, dir, pos_head, action.range, action.pierce)
   end
 
