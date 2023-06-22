@@ -343,13 +343,11 @@ end
 function calc_action(weapon, action_id, player)
   local is_holdable = ((action_id == 1 and weapon.action1_hold) or (action_id == 2 and weapon.action2_hold)) and true
   local in_the_air = weapon.weapon_type == "melee" and block_league.is_in_the_air(player)
-  local action
+  local action, held_action
 
   if not in_the_air and is_holdable then
-    local held_key = action_id == 1 and "LMB" or "RMB"
-    wait_for_held_action(weapon, held_key, player, 0.3)
-    return
-
+    action = action_id == 1 and weapon.action1_hold or weapon.action2_hold
+    held_action = true
   else
     if action_id == 1 then
       action = (in_the_air and weapon.action1_air) and weapon.action1_air or weapon.action1
@@ -362,10 +360,18 @@ function calc_action(weapon, action_id, player)
 
   set_attack_stance(player, action)
 
+  -- TODO: funzione per tempo d'attesa, prob sotto va poi messo in funzione a parte
+
   if action.attack_on_release then
     local held_key = action_id == 1 and "LMB" or "RMB"
+
+    player:get_meta():set_int("bl_weapon_state", 2)
     wait_for_charged_action(weapon, action, held_key, player, action.load_time, 0)
-  --elseif -- TODO: fare separata wait_for_load_action
+  elseif held_action then
+    local held_key = action_id == 1 and "LMB" or "RMB"
+
+    player:get_meta():set_int("bl_weapon_state", 2)
+    wait_for_held_action(weapon, action, held_key, player, 0.3)
   else
     run_action(weapon, action, player)
   end
@@ -373,19 +379,16 @@ end
 
 
 
--- TODO: per held e charged, weapon_state dovrebbe essere 2 dall'inizio. Nell'if
--- can_use delle due funzioni azzerare weapon_state se false
-function wait_for_held_action(weapon, held_key, player, countdown)
+function wait_for_held_action(weapon, action, held_key, player, countdown)
   minetest.after(0.1, function()
-    if not can_use_weapon(player, weapon, {}) then return end
+    if not can_use_weapon(player, weapon, action, true) then return end
 
     if player:get_player_control()[held_key] then
       if countdown <= 0 then
-        local action = held_key == "LMB" and weapon.action1_hold or weapon.action2_hold
         run_action(weapon, action, player)
       else
         countdown = countdown - 0.1
-        wait_for_held_action(weapon, held_key, player, countdown)
+        wait_for_held_action(weapon, action, held_key, player, countdown)
       end
     else
       local action = held_key == "LMB" and weapon.action1 or weapon.action2
@@ -398,7 +401,7 @@ end
 
 function wait_for_charged_action(weapon, action, held_key, player, load_time, time)
   minetest.after(0.1, function()
-    if not can_use_weapon(player, weapon, action) then return end
+    if not can_use_weapon(player, weapon, action, nil, true) then return end
 
     if player:get_player_control()[held_key] then
       if load_time > time then
@@ -414,29 +417,37 @@ end
 
 
 
-function can_use_weapon(player, weapon, action)
+function can_use_weapon(player, weapon, action, held, charged)
   local p_name = player:get_player_name()
-
-  if not arena_lib.is_player_in_arena(p_name) or player:get_hp() <= 0 then return end
-
   local p_meta = player:get_meta()
 
-  if action.type == "zoom" then
-    if p_meta:get_int("bl_weapon_state") == 4 or
-       p_meta:get_int("bl_death_delay") == 1 then
-      return
+  if not arena_lib.is_player_in_arena(p_name)
+     or player:get_hp() <= 0
+     or p_meta:get_int("bl_death_delay") == 1 then
+    return end
 
-    else return true end
+  if action.type == "zoom" then
+    return p_meta:get_int("bl_weapon_state") ~= 4
   end
 
   local arena = arena_lib.get_arena_by_player(p_name)
-  local w_magazine = arena.players[p_name].weapons_magazine[weapon.name]
+  if arena.weapons_disabled then return end
 
-  if p_meta:get_int("bl_weapon_state") ~= 0 or
-     p_meta:get_int("bl_death_delay") == 1 or
-     arena.weapons_disabled or
-     (weapon.magazine and (w_magazine <= 0 or action.ammo_per_use > w_magazine)) then
+  if held then
+    if p_meta:get_int("bl_weapon_state") > 2 then
+      return end
+
+  elseif charged then
+    if p_meta:get_int("bl_weapon_state") > 2 then
     return end
+
+  else
+    local w_magazine = arena.players[p_name].weapons_magazine[weapon.name]
+
+    if p_meta:get_int("bl_weapon_state") ~= 0 or
+     (weapon.magazine and (w_magazine <= 0 or action.ammo_per_use > w_magazine)) then
+      return end
+  end
 
   return true
 end
