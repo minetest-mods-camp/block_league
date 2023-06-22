@@ -373,6 +373,8 @@ end
 
 
 
+-- TODO: per held e charged, weapon_state dovrebbe essere 2 dall'inizio. Nell'if
+-- can_use delle due funzioni azzerare weapon_state se false
 function wait_for_held_action(weapon, held_key, player, countdown)
   minetest.after(0.1, function()
     if not can_use_weapon(player, weapon, {}) then return end
@@ -417,10 +419,17 @@ function can_use_weapon(player, weapon, action)
 
   if not arena_lib.is_player_in_arena(p_name) or player:get_hp() <= 0 then return end
 
-  if action.type == "zoom" then return true end
+  local p_meta = player:get_meta()
+
+  if action.type == "zoom" then
+    if p_meta:get_int("bl_weapon_state") == 4 or
+       p_meta:get_int("bl_death_delay") == 1 then
+      return
+
+    else return true end
+  end
 
   local arena = arena_lib.get_arena_by_player(p_name)
-  local p_meta = player:get_meta()
   local w_magazine = arena.players[p_name].weapons_magazine[weapon.name]
 
   if p_meta:get_int("bl_weapon_state") ~= 0 or
