@@ -281,13 +281,17 @@ function block_league.deactivate_zoom(player)
   --TODO: rimuovere HUD zoom armi
   player:set_fov(0, nil, 0.1)
 
+  local p_name = player:get_player_name()
+
   -- TODO: mettere FOV personalizzato così da evitare questo controllo; essendo un
   -- FPS, è più che sensato
-  if not arena_lib.is_player_in_arena(player:get_player_name()) then return end
+  if not arena_lib.is_player_in_arena(p_name) then return end
 
   local p_meta = player:get_meta()
+  local arena = arena_lib.get_arena_by_player(p_name)
 
-  if p_meta:get_int("bl_weapon_state") == 0 and
+  if arena.players[p_name].stamina > 0 and
+     p_meta:get_int("bl_weapon_state") == 0 and
      p_meta:get_int("bl_is_speed_locked") == 0 then
     player:set_physics_override({speed = block_league.SPEED})
   end
