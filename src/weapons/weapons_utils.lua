@@ -32,7 +32,7 @@ function block_league.get_pointed_players(player, range, has_piercing)
   local look_dir = player:get_look_dir()
   local center = player:get_pos() + look_dir + {x=0, y=1.475, z=0}
 
-  local grid_width = 0.18
+  local grid_width = 0.2
   local r_amount = 2
   local x_step = (grid_width / r_amount) * (-left_dir)
   local y_step = (grid_width / r_amount) * head_up_dir
