@@ -677,7 +677,7 @@ function attack_end(player, weapon, delay)
   slow_down_func[p_name] = minetest.after(0.5, function()
     if not arena_lib.is_player_in_arena(p_name, "block_league")
       or arena.players[p_name].stamina == 0
-      or p_meta:get_int("bl_weapon_sate") ~= 0
+      or p_meta:get_int("bl_weapon_state") ~= 0
       or p_meta:get_int("bl_is_speed_locked") == 1
       or player:get_fov() ~= 0
       then return end
@@ -728,6 +728,8 @@ function weapon_zoom(action, player)
     block_league.deactivate_zoom(player)
   end
 end
+
+
 
 function weapon_reload(player, weapon)
   local w_name = weapon.name
